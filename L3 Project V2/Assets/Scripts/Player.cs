@@ -4,41 +4,98 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public float s;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private Animator anim;
 
     public float speed = 8;
     public float jumpingPower = 20;
+    public float bowTime;
+    public GameObject longarrow;
+    public float arrowSpeed;
     float horizontal;
     bool facingRight = true;
+    bool Jumping = false;
+    float time = 0;
+    public bool Drawing = false;
 
     // Update is called once per frame
     void Update()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
 
-        if (Input.GetKeyDown(KeyCode.Z) && IsGrounded())
+        if (Input.GetKey(KeyCode.C) && Drawing)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
+            if (time + bowTime <= Time.time)    // arrow shoot
+            {
+                GameObject a = Instantiate(longarrow);
+                if (facingRight)
+                {
+                    a.transform.position = new Vector3(transform.position.x + 0.5f, transform.position.y + 0.2f, 0);
+                    a.GetComponent<Rigidbody2D>().velocity = new Vector2(arrowSpeed, 0);
+                }
+                else
+                {
+                    a.transform.position = new Vector3(transform.position.x - 0.5f, transform.position.y + 0.2f, 0);
+                    a.GetComponent<Rigidbody2D>().velocity = new Vector2(-arrowSpeed, 0);
+                }
+                Drawing = false;
+                anim.SetBool("Drawing", false);
+            }
+            else    // still drawing
+                return;
+        }
+        else if (Input.GetKeyUp(KeyCode.C) && Drawing)
+        {
+            Drawing = false;
+            anim.SetBool("Drawing", false);
         }
 
-        if (Input.GetKeyUp(KeyCode.Z) && rb.velocity.y > 0)
+        else if (IsGrounded())
         {
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                time = Time.time;
+                Drawing = true;
+                anim.SetBool("Drawing", true);
+                return;
+            }
+            if (Jumping)
+            {
+                anim.SetBool("Jumping", false);
+                Jumping = false;
+            }
+            else if (Input.GetKeyDown(KeyCode.Z))
+            {
+                Debug.Log("EI");
+                StartCoroutine("Jump");
+            }
         }
+        else
+            if (anim.GetBool("Jumping"))
+                Jumping = true;
+        if (Input.GetKeyUp(KeyCode.Z) && rb.velocity.y > 0)
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
 
         Flip();
     }
 
     private void FixedUpdate()
     {
+        if (Drawing)
+            horizontal = 0;
         rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
+        if (horizontal != 0)
+            anim.SetBool("Walking", true);
+        else
+            anim.SetBool("Walking", false);
     }
 
     private bool IsGrounded()
     {
-        return Physics2D.OverlapCircle(groundCheck.position, 1.5f, groundLayer);
+        return Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundLayer);
     }
 
     private void Flip()
@@ -50,5 +107,12 @@ public class Player : MonoBehaviour
             localScale.x *= -1;
             transform.localScale = localScale;
         }
+    }
+
+    private IEnumerator Jump()
+    {
+        anim.SetBool("Jumping", true);
+        yield return new WaitForSeconds(s);
+        rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
     }
 }
