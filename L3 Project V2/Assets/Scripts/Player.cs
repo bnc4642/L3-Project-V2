@@ -19,9 +19,8 @@ public class Player : MonoBehaviour
     bool facingRight = true;
     bool Jumping = false;
     float time = 0;
-    public bool Drawing = false;
+    bool Drawing = false;
 
-    // Update is called once per frame
     void Update()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
@@ -68,10 +67,7 @@ public class Player : MonoBehaviour
                 Jumping = false;
             }
             else if (Input.GetKeyDown(KeyCode.Z))
-            {
-                Debug.Log("EI");
                 StartCoroutine("Jump");
-            }
         }
         else
             if (anim.GetBool("Jumping"))

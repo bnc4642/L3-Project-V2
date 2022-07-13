@@ -1005,6 +1005,48 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: CharacterSheet_38
+      rect:
+        serializedVersion: 2
+        x: 177
+        y: 16
+        width: 10
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0aa888530ff93ec4eae8f0b851c5c24f
+      internalID: 469906739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CharacterSheet_39
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 16
+        width: 10
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39ca863c5760dbc4b82cccf9b9fe1985
+      internalID: 1811257798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -1041,11 +1083,13 @@ TextureImporter:
       CharacterSheet_14: 1671237583308018195
       CharacterSheet_35: -5107886992479768333
       CharacterSheet_6: -279133644238819022
+      CharacterSheet_39: 1811257798
       CharacterSheet_24: 440808146732544455
       CharacterSheet_9: -8492410670495441705
       CharacterSheet_10: 4048138136090361788
       CharacterSheet_28: -4858984526360441567
       CharacterSheet_36: -7191310360802979801
+      CharacterSheet_38: 469906739
       CharacterSheet_11: -2313408394707340494
       CharacterSheet_2: 4457059312207414977
       CharacterSheet_5: -7205907187406109100
