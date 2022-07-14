@@ -133,10 +133,7 @@ public class Player : MonoBehaviour
         if (Time.time < lockedTill) return currentState;
         // Priorities
         if (Drawing)
-        {
-            Debug.Log(Convert.ToInt32(facingRight));
             return Draw;
-        }
         //if (crouching) return Crouch;
         if (Jumping) return Jump;
         if (Falling) return Fall;
@@ -152,7 +149,7 @@ public class Player : MonoBehaviour
 
         int LockState(int s, float t)
         {
-            lockedTill = Time.time + time;
+            lockedTill = Time.time + t;
             return s;
         }
     }
@@ -182,7 +179,7 @@ public class Player : MonoBehaviour
         rb.gravityScale = originalGravity;
         isDashing = false;
         yield return new WaitForSeconds(dashingCooldown);
-        if (!Jumping)
+        if (!Jumping && !Falling)
             canDash = true;
     }
 
