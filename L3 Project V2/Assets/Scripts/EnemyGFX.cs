@@ -10,7 +10,9 @@ public class EnemyGFX : MonoBehaviour
     public float attackTime;
     public float radius;
     public LayerMask player;
+    public LayerMask playerWeapon;
 
+    private int health = 6;
     private float attackingTime;
     private int currentState = 0;
     private float lockedTill = 0;
@@ -20,21 +22,21 @@ public class EnemyGFX : MonoBehaviour
 
     void Update()
     {
-        int state;
+        int state=0;
         if (Time.time < lockedTill) return;
         else if (Physics2D.OverlapCircle(transform.position, radius, player) && Time.time > attackingTime)
         {
-            attackingTime = Time.time + attackTime + 0.5f;
+            aiPath.maxSpeed = 40;
+            attackingTime = Time.time + attackTime + 1.5f;
             lockedTill = Time.time + attackTime;
             state = Attack;
-            Debug.Log("1.                " + state);
         }
         else
         {
+            aiPath.maxSpeed = 3;
             state = Fly;
         }
-        Debug.Log("2.                " + state);
-        if (aiPath.target.position.x < transform.position.x)
+        if (aiPath.destination.x < transform.position.x)
         {
             transform.localScale = new Vector3(1, 1, 1);
         }
@@ -43,13 +45,27 @@ public class EnemyGFX : MonoBehaviour
             transform.localScale = new Vector3(-1, 1, 1);
         }
 
-        Debug.Log("3.                " + state);
-
         if (state == currentState) { }
         else
         {
             anim.CrossFade(state, 0, 0);
             currentState = state;
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (((1 << collision.gameObject.layer) & playerWeapon) != 0)
+        {
+            aiPath.target.gameObject.GetComponentInChildren<ScreenShake>().TriggerShake(0.5f, 5f);
+            health -= collision.gameObject.GetComponent<Weapon>().damage;
+            if (health <= 0)
+                Die();
+        }
+    }
+
+    public void Die()
+    {
+        Debug.Log("Die");
     }
 }

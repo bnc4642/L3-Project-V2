@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
     [SerializeField] private Animator anim;
     [SerializeField] private TrailRenderer tr;
     public GameObject longarrow;
+    public LayerMask Enemy;
+    public float DamagePush;
 
     float arrowSpeed = 50;
     float speed = 8;
@@ -21,19 +23,21 @@ public class Player : MonoBehaviour
     bool Jumping = false;
     bool Falling = false;
     bool Drawing = false;
+    bool damaged = false;
 
     bool canDash = true;
     private bool isDashing;
     private float dashingPower = 12;
     private float dashingTime = 0.15f;
     private float dashingCooldown = 0.3f;
+    private int health = 10;
 
     private static readonly int Idle = Animator.StringToHash("PlayerIdle2");
     private static readonly int Walk = Animator.StringToHash("PlayerWalk");
     private static readonly int Jump = Animator.StringToHash("PlayerJumpUp");
     private static readonly int Fall = Animator.StringToHash("PlayerFall");
-    private static readonly int Land = Animator.StringToHash("Land");
     private static readonly int Draw = Animator.StringToHash("PlayerLongbow");
+    //private static readonly int Land = Animator.StringToHash("Land");
     //private static readonly int Crouch = Animator.StringToHash("Crouch");
 
     private float lockedTill = 0;
@@ -120,11 +124,12 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (damaged)
+            Debug.Log("Damaged");
         //walk
         if (Drawing)
             horizontal = 0;
-        if (isDashing) { }
-        else
+        if (!(isDashing || damaged))
             rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
     }
 
@@ -132,6 +137,8 @@ public class Player : MonoBehaviour
     {
         if (Time.time < lockedTill) return currentState;
         // Priorities
+        else if (damaged)
+            damaged = false;
         if (Drawing)
             return Draw;
         //if (crouching) return Crouch;
@@ -172,13 +179,21 @@ public class Player : MonoBehaviour
         isDashing = true;
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0;
+        gameObject.GetComponent<BoxCollider2D>().enabled = false;
+        groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = true;
         rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0);
         tr.emitting = true;
+
         yield return new WaitForSeconds(dashingTime);
+
         tr.emitting = false;
         rb.gravityScale = originalGravity;
+        gameObject.GetComponent<BoxCollider2D>().enabled = true;
+        groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = false;
         isDashing = false;
+
         yield return new WaitForSeconds(dashingCooldown);
+
         if (!Jumping && !Falling)
             canDash = true;
     }
@@ -194,5 +209,30 @@ public class Player : MonoBehaviour
             localScale.x *= -1;
             transform.localScale = localScale;
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (((1 << collision.gameObject.layer) & Enemy) != 0)
+        {
+            if (!damaged)
+            {
+                damaged = true;
+                lockedTill = Time.time + 0.1f;
+                if (collision.gameObject.transform.position.x < transform.position.x)
+                    rb.velocity = new Vector2(DamagePush, DamagePush/3);
+                else
+                    rb.velocity = new Vector2(-DamagePush, DamagePush/3);
+
+                GetComponentInChildren<ScreenShake>().TriggerShake(1.5f, 10f);
+                health -= collision.gameObject.GetComponent<Weapon>().damage;
+                if (health <= 0)
+                    Die();
+            }
+        }
+    }
+    public void Die()
+    {
+        Debug.Log("Die");
     }
 }
