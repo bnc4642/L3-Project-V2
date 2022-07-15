@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4260975714365319784}
   - component: {fileID: 4260975714365319786}
   - component: {fileID: 4260975714365319787}
-  - component: {fileID: 4260975714365319780}
   m_Layer: 8
   m_Name: MosquitoGFX
   m_TagString: Untagged
@@ -130,6 +129,8 @@ MonoBehaviour:
   playerWeapon:
     serializedVersion: 2
     m_Bits: 1024
+  dmg: 3
+  invicibilityFrames: 0.2
 --- !u!58 &4260975714365319787
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -146,19 +147,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: -0.1}
   serializedVersion: 2
   m_Radius: 0.59157765
---- !u!114 &4260975714365319780
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4260975714365319790}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c1fc826520652a42bb5f58a4a27bc14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 3
 --- !u!1 &4260975715071036132
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,7 +181,7 @@ Transform:
   m_Children:
   - {fileID: 4260975714365319791}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4260975715071036134
 MonoBehaviour:
@@ -291,4 +279,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 632ae7eb1d4ce49d38a1e38ee7efe7c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guid: a3da67729b69edbc-63fd76b3543e8dfc
+  guid: b1d3328835a37991-0eff2399cef87b99

@@ -27,6 +27,14 @@ public class Player : MonoBehaviour
     bool Drawing = false;
     bool damaged = false;
 
+    bool knifing = false;
+    bool knifing2 = false;
+    bool knifing3 = false;
+    bool consecHit = false;
+    public Transform attackPoint;
+    public float radius;
+    public int damage;
+
     bool canDash = true;
     private bool isDashing;
     private float dashingPower = 12;
@@ -39,6 +47,9 @@ public class Player : MonoBehaviour
     private static readonly int Jump = Animator.StringToHash("PlayerJumpUp");
     private static readonly int Fall = Animator.StringToHash("PlayerFall");
     private static readonly int Draw = Animator.StringToHash("PlayerLongbow");
+    private static readonly int Knife = Animator.StringToHash("PlayerKnife1");
+    private static readonly int Knife2 = Animator.StringToHash("PlayerKnife2");
+    private static readonly int Knife3 = Animator.StringToHash("PlayerKnife3");
     //private static readonly int Land = Animator.StringToHash("Land");
     //private static readonly int Crouch = Animator.StringToHash("Crouch");
 
@@ -69,8 +80,6 @@ public class Player : MonoBehaviour
                 time = Time.time;
                 Drawing = true;
             }
-
-
         }
         else // if not on ground, must be jumping
         {
@@ -82,6 +91,26 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKeyUp(KeyCode.Z) && rb.velocity.y > 0) // the longer they wait, the higher they go
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+
+        //knife
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            if (!consecHit && !knifing && !knifing2 && !knifing3)
+                StartCoroutine(KnifeStab());
+            else if (consecHit)
+                consecHit = false;
+        }
+
+        if (knifing || knifing2 || knifing3)
+        {
+            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, radius, Enemy);
+
+            foreach (Collider2D enemy in hitEnemies)
+            {
+                if (enemy.GetComponent<EnemyGFX>() != null) 
+                    StartCoroutine(enemy.GetComponent<EnemyGFX>().Hit(damage));
+            }
+        }
 
 
         //shoot
@@ -137,8 +166,15 @@ public class Player : MonoBehaviour
     {
         if (Time.time < lockedTill) return currentState;
         // Priorities
-        else if (damaged)
+
+        if (damaged)
             damaged = false;
+        if (knifing)
+            return Knife;
+        else if(knifing2)
+            return Knife2;
+        else if (knifing3)
+            return Knife3;
         if (Drawing)
             return Draw;
         //if (crouching) return Crouch;
@@ -161,9 +197,31 @@ public class Player : MonoBehaviour
         //}
     }
 
-    private IEnumerator Knife()
+    private IEnumerator KnifeStab()
     {
-        yield return new WaitForSeconds(2);
+        knifing = true;
+        yield return new WaitForSeconds(0.15f);
+        consecHit = true;
+        yield return new WaitForSeconds(0.14f);
+        knifing = false;
+        if (!consecHit)
+        {
+            knifing2 = true;
+            yield return new WaitForSeconds(0.12f);
+            consecHit = true;
+            yield return new WaitForSeconds(0.13f);
+            knifing2 = false;
+            if (!consecHit)
+            {
+                knifing3 = true;
+                yield return new WaitForSeconds(0.12f);
+                consecHit = true;
+                yield return new WaitForSeconds(0.13f);
+                knifing3 = false;
+            }
+            
+        }
+        consecHit = false;
     }
 
     private IEnumerator ToJump()
@@ -211,24 +269,22 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void Hit(GameObject enemy, int dmg)
     {
-        if (((1 << collision.gameObject.layer) & Enemy) != 0)
+        if (!damaged)
         {
-            if (!damaged)
-            {
-                damaged = true;
-                lockedTill = Time.time + 0.1f;
-                if (collision.gameObject.transform.position.x < transform.position.x)
-                    rb.velocity = new Vector2(DamagePush, DamagePush/3);
-                else
-                    rb.velocity = new Vector2(-DamagePush, DamagePush/3);
+            damaged = true;
+            lockedTill = Time.time + 0.1f;
+            transitioner.transition.SetTrigger("Hurt");
+            if (enemy.gameObject.transform.position.x < transform.position.x)
+                rb.velocity = new Vector2(DamagePush, DamagePush / 3);
+            else
+                rb.velocity = new Vector2(-DamagePush, DamagePush / 3);
 
-                GetComponentInChildren<ScreenShake>().TriggerShake(1.5f, 10f);
-                health -= collision.gameObject.GetComponent<Weapon>().damage;
-                if (health <= 0)
-                    Die();
-            }
+            GetComponentInChildren<ScreenShake>().TriggerShake(1.5f, 10f);
+            health -= dmg;
+            if (health <= 0)
+                Die();
         }
     }
 
@@ -247,5 +303,13 @@ public class Player : MonoBehaviour
     public void Die()
     {
         Debug.Log("Die");
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (attackPoint == null)
+            return;
+
+        Gizmos.DrawWireSphere(attackPoint.position, radius);
     }
 }

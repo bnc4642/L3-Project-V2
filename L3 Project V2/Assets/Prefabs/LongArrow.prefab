@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 1007248259124745605}
   - component: {fileID: 3347953255347285341}
   - component: {fileID: 2112855800051761925}
-  - component: {fileID: 8706975680646142508}
   m_Layer: 10
   m_Name: LongArrow
   m_TagString: Untagged
@@ -153,16 +152,3 @@ MonoBehaviour:
   enemy:
     serializedVersion: 2
     m_Bits: 256
---- !u!114 &8706975680646142508
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4999472352357544752}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c1fc826520652a42bb5f58a4a27bc14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 2
