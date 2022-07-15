@@ -331,7 +331,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 330d616825e299d4f99a5936538938b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 519420032}
+  cam: {fileID: 519420032}
   shakeTime: 0
   shakeAmount: 0.2
   damping: 10
@@ -1059,7 +1059,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aiPath: {fileID: 1186814457}
   anim: {fileID: 949156212}
-  attackTime: 0.3
+  attackTime: 1
   radius: 3.2
   player:
     serializedVersion: 2

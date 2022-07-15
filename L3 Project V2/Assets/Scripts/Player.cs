@@ -12,7 +12,9 @@ public class Player : MonoBehaviour
     [SerializeField] private TrailRenderer tr;
     public GameObject longarrow;
     public LayerMask Enemy;
+    public LayerMask Transition;
     public float DamagePush;
+    public LevelLoader transitioner;
 
     float arrowSpeed = 50;
     float speed = 8;
@@ -124,8 +126,6 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (damaged)
-            Debug.Log("Damaged");
         //walk
         if (Drawing)
             horizontal = 0;
@@ -154,11 +154,11 @@ public class Player : MonoBehaviour
 
         return rb.velocity.y > 0 ? Jump : Fall;
 
-        int LockState(int s, float t)
-        {
-            lockedTill = Time.time + t;
-            return s;
-        }
+        //int LockState(int s, float t)
+        //{
+            //lockedTill = Time.time + t;
+            //return s;
+        //}
     }
 
     private IEnumerator Knife()
@@ -231,6 +231,19 @@ public class Player : MonoBehaviour
             }
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (((1 << collision.gameObject.layer) & Transition) != 0)
+        {
+            // prepare any possible cutscenes
+            // save player data and input it into next scene
+            // output player into the correct location, and make them walk
+            // (make the corrosponding transitioners have the same name, so you can check for the right one, and output them correctly).
+            StartCoroutine(transitioner.LoadLevel(collision.gameObject.GetComponent<Transitioner>().nextScene));
+        }
+    }
+
     public void Die()
     {
         Debug.Log("Die");

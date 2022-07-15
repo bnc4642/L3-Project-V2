@@ -26,7 +26,7 @@ public class EnemyGFX : MonoBehaviour
         if (Time.time < lockedTill) return;
         else if (Physics2D.OverlapCircle(transform.position, radius, player) && Time.time > attackingTime)
         {
-            aiPath.maxSpeed = 40;
+            aiPath.maxSpeed = 200;
             attackingTime = Time.time + attackTime + 1.5f;
             lockedTill = Time.time + attackTime;
             state = Attack;
@@ -53,11 +53,12 @@ public class EnemyGFX : MonoBehaviour
         }
     }
 
+    [System.Obsolete]
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (((1 << collision.gameObject.layer) & playerWeapon) != 0)
         {
-            aiPath.target.gameObject.GetComponentInChildren<ScreenShake>().TriggerShake(0.5f, 5f);
+            aiPath.target.GetComponentInChildren<ScreenShake>().TriggerShake(0.5f, 5f);
             health -= collision.gameObject.GetComponent<Weapon>().damage;
             if (health <= 0)
                 Die();

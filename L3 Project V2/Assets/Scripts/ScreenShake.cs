@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ScreenShake : MonoBehaviour
 {
-    public Transform camera;
+    public Transform cam;
 
     public float shakeTime = 0;
     public float shakeAmount = 0.7f;
@@ -15,7 +15,7 @@ public class ScreenShake : MonoBehaviour
     {
         if (shakeTime > 0)
         {
-            camera.localPosition = initPos + Random.insideUnitSphere * shakeAmount;
+            cam.localPosition = initPos + Random.insideUnitSphere * shakeAmount;
             shakeTime -= Time.deltaTime * damping;
         }
     }
@@ -24,6 +24,6 @@ public class ScreenShake : MonoBehaviour
     {
         damping = d;
         shakeTime = t;
-        initPos = camera.localPosition;
+        initPos = cam.localPosition;
     }
 }

@@ -14,11 +14,11 @@ TagManager:
   - Ground
   - Player
   - Enemy
-  - Wall
+  - SceneTransition
   - PlayerWeapon
   - EnemyWeapon
-  - 
-  - 
+  - Background
+  - Foreground
   - 
   - 
   - 
