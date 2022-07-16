@@ -7,8 +7,7 @@ public class EnemyGFX : MonoBehaviour
 {
     public AIPath aiPath;
     public Animator anim;
-    public float attackTime;
-    public float radius;
+    public float attackTime = 0.4f;
     public LayerMask player;
     public LayerMask playerWeapon;
     public int dmg;
@@ -18,7 +17,7 @@ public class EnemyGFX : MonoBehaviour
     private float attackingTime;
     private int currentState = 0;
     private float lockedTill = 0;
-    private bool invincibilityFraming;
+    private float timeHit;
 
     private static readonly int Attack = Animator.StringToHash("MosqAttack");
     private static readonly int Fly = Animator.StringToHash("MosqFollow");
@@ -28,7 +27,7 @@ public class EnemyGFX : MonoBehaviour
         int state = 0;
         if (Time.time < lockedTill)
             return;
-        if (Physics2D.OverlapCircle(transform.position, radius, player) && Time.time > attackingTime)
+        if (Physics2D.OverlapCircle(transform.position, 3.2f, player) && Time.time > attackingTime)
         {
             aiPath.maxSpeed = 25;
             attackingTime = Time.time + attackTime + 1.5f;
@@ -63,27 +62,35 @@ public class EnemyGFX : MonoBehaviour
             collision.gameObject.GetComponent<Player>().Hit(this.gameObject, dmg);
     }
 
-    public IEnumerator Hit(int dmg)
+    public void Hit(int dmg)
     {
-        if (!invincibilityFraming)
+        if (Time.time > timeHit + invicibilityFrames)
         {
             aiPath.target.GetComponentInChildren<ScreenShake>().TriggerShake(0.5f, 5f);
             health -= dmg;
             if (health <= 0)
-                Die();
-            else
-                invincibilityFraming = true;
-            yield return new WaitForSeconds(invicibilityFrames);
-            invincibilityFraming = false;
+                StartCoroutine(Die());
+            timeHit = Time.time;
+            Debug.Log(health);
         }
     }
 
-    public void Die()
+    private IEnumerator Die()
     {
-        Debug.Log("Die");
+        anim.CrossFade(Animator.StringToHash("MosqDeath"), 0, 0);
+        Debug.Log("working");
+        yield return new WaitForSeconds(0.3f);
+        Debug.Log("working");
+        foreach (ParticleSystem effect in GetComponentsInChildren<ParticleSystem>())
+        {
+            effect.Play();
+        }
 
-        this.enabled = false;
+        GetComponent<SpriteRenderer>().enabled = false;
+        
         GetComponent<Collider2D>().enabled = false;
         GetComponentInParent<AIPath>().enabled = false;
+
+        this.enabled = false;
     }
 }

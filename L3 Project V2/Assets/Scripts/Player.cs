@@ -108,7 +108,7 @@ public class Player : MonoBehaviour
             foreach (Collider2D enemy in hitEnemies)
             {
                 if (enemy.GetComponent<EnemyGFX>() != null) 
-                    StartCoroutine(enemy.GetComponent<EnemyGFX>().Hit(damage));
+                    enemy.GetComponent<EnemyGFX>().Hit(damage);
             }
         }
 
