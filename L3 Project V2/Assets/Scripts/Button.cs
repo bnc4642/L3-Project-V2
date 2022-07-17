@@ -10,6 +10,11 @@ public class Button : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             GetComponent<Animator>().Play(Identifier, -1, 0);
+            string[] parts = Identifier.Split('_');
+            if (parts[0] == "BookClick")
+            {
+                StartCoroutine(GetComponentInParent<Inventory>().FlipPage(parts[1]));
+            }
         }
     }
 }
