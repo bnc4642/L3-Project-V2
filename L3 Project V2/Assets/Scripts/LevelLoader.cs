@@ -8,6 +8,15 @@ public class LevelLoader : MonoBehaviour
     public Animator transition;
 
     public float TransitionTime = 1;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            StartCoroutine(LoadLevel(0));
+        }
+    }
+
     public IEnumerator LoadLevel(int levelIndex)
     {
         transition.SetTrigger("Start");

@@ -20,3 +20,33 @@ else
                 }
             }
         }
+
+
+
+
+private IEnumerator KnifeStab()
+    {
+        knifing = true;
+        yield return new WaitForSeconds(0.15f);
+        consecHit = true;
+        yield return new WaitForSeconds(0.14f);
+        knifing = false;
+        if (!consecHit)
+        {
+            knifing2 = true;
+            yield return new WaitForSeconds(0.12f);
+            consecHit = true;
+            yield return new WaitForSeconds(0.13f);
+            knifing2 = false;
+            if (!consecHit)
+            {
+                knifing3 = true;
+                yield return new WaitForSeconds(0.12f);
+                consecHit = true;
+                yield return new WaitForSeconds(0.13f);
+                knifing3 = false;
+            }
+            
+        }
+        consecHit = false;
+    }

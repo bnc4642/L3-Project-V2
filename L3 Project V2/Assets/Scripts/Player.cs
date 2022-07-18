@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     bool Jumping = false;
     bool Falling = false;
     bool Drawing = false;
+    bool Stabbing = false;
     bool damaged = false;
 
     bool knifing = false;
@@ -40,16 +41,14 @@ public class Player : MonoBehaviour
     private float dashingPower = 12;
     private float dashingTime = 0.15f;
     private float dashingCooldown = 0.3f;
-    private int health = 10;
+    public int health = 10;
 
-    private static readonly int Idle = Animator.StringToHash("PlayerIdle2");
-    private static readonly int Walk = Animator.StringToHash("PlayerWalk");
-    private static readonly int Jump = Animator.StringToHash("PlayerJumpUp");
-    private static readonly int Fall = Animator.StringToHash("PlayerFall");
+    private static readonly int Idle = Animator.StringToHash("PlayerIdle3");
+    private static readonly int Walk = Animator.StringToHash("PlayerRun2");
+    private static readonly int Jump = Animator.StringToHash("PlayerJumpFirst");
+    private static readonly int Fall = Animator.StringToHash("PlayerFall2");
     private static readonly int Draw = Animator.StringToHash("PlayerLongbow");
-    private static readonly int Knife = Animator.StringToHash("PlayerKnife1");
-    private static readonly int Knife2 = Animator.StringToHash("PlayerKnife2");
-    private static readonly int Knife3 = Animator.StringToHash("PlayerKnife3");
+    private static readonly int Stab = Animator.StringToHash("PlayerStab3");
     //private static readonly int Land = Animator.StringToHash("Land");
     //private static readonly int Crouch = Animator.StringToHash("Crouch");
 
@@ -74,6 +73,14 @@ public class Player : MonoBehaviour
                 canDash = true;
             }
 
+            //knife
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                if (!consecHit && !Stabbing)
+                    StartCoroutine(ToStab());
+                else if (consecHit)
+                    consecHit = false;
+            }
 
             if (Input.GetKeyDown(KeyCode.C))
             { // arrow business
@@ -92,16 +99,9 @@ public class Player : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Z) && rb.velocity.y > 0) // the longer they wait, the higher they go
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
 
-        //knife
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            if (!consecHit && !knifing && !knifing2 && !knifing3)
-                StartCoroutine(KnifeStab());
-            else if (consecHit)
-                consecHit = false;
-        }
+        
 
-        if (knifing || knifing2 || knifing3)
+        if (Stabbing)
         {
             Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, radius, Enemy);
 
@@ -156,7 +156,7 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         //walk
-        if (Drawing)
+        if (Drawing || Stabbing)
             horizontal = 0;
         if (!(isDashing || damaged))
             rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
@@ -169,12 +169,8 @@ public class Player : MonoBehaviour
 
         if (damaged)
             damaged = false;
-        if (knifing)
-            return Knife;
-        else if(knifing2)
-            return Knife2;
-        else if (knifing3)
-            return Knife3;
+        if (Stabbing)
+            return Stab;
         if (Drawing)
             return Draw;
         //if (crouching) return Crouch;
@@ -197,38 +193,18 @@ public class Player : MonoBehaviour
         //}
     }
 
-    private IEnumerator KnifeStab()
-    {
-        knifing = true;
-        yield return new WaitForSeconds(0.15f);
-        consecHit = true;
-        yield return new WaitForSeconds(0.14f);
-        knifing = false;
-        if (!consecHit)
-        {
-            knifing2 = true;
-            yield return new WaitForSeconds(0.12f);
-            consecHit = true;
-            yield return new WaitForSeconds(0.13f);
-            knifing2 = false;
-            if (!consecHit)
-            {
-                knifing3 = true;
-                yield return new WaitForSeconds(0.12f);
-                consecHit = true;
-                yield return new WaitForSeconds(0.13f);
-                knifing3 = false;
-            }
-            
-        }
-        consecHit = false;
-    }
-
     private IEnumerator ToJump()
     {
         Jumping = true;
         yield return new WaitForSeconds(0.05f);
         rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
+    }
+
+    private IEnumerator ToStab()
+    {
+        Stabbing = true;
+        yield return new WaitForSeconds(0.3f);
+        Stabbing = false;
     }
 
     private IEnumerator Dash()

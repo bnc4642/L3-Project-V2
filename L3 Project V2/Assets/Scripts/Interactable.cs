@@ -29,6 +29,8 @@ public class Interactable : MonoBehaviour
         }
     }
 
-    public virtual void Interact() { // override this
-                                     }
+    public virtual void Interact() 
+    { 
+        // override this
+    }
 }
