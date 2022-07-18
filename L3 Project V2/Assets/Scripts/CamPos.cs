@@ -15,6 +15,7 @@ public class CamPos : MonoBehaviour
 
     [SerializeField] private Transform target;
 
+
     void FixedUpdate()
     {
         Vector3 targetPosition = target.position + offset;

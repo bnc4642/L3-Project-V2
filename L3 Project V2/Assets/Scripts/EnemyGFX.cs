@@ -62,29 +62,28 @@ public class EnemyGFX : MonoBehaviour
             collision.gameObject.GetComponent<Player>().Hit(this.gameObject, dmg);
     }
 
-    public void Hit(int dmg)
+    public void Hit(int dmg,int zRot)
     {
         if (Time.time > timeHit + invicibilityFrames)
         {
+            GetComponentsInChildren<ParticleSystem>()[3].gameObject.transform.rotation = Quaternion.Euler(0, 0, zRot);
+            GetComponentsInChildren<ParticleSystem>()[3].Play();
             aiPath.target.GetComponentInChildren<ScreenShake>().TriggerShake(0.5f, 5f);
             health -= dmg;
             if (health <= 0)
                 StartCoroutine(Die());
             timeHit = Time.time;
-            Debug.Log(health);
         }
     }
 
     private IEnumerator Die()
     {
         anim.CrossFade(Animator.StringToHash("MosqDeath"), 0, 0);
-        Debug.Log("working");
         yield return new WaitForSeconds(0.3f);
-        Debug.Log("working");
-        foreach (ParticleSystem effect in GetComponentsInChildren<ParticleSystem>())
-        {
-            effect.Play();
-        }
+        GetComponentsInChildren<ParticleSystem>()[3].enableEmission = false;
+        GetComponentsInChildren<ParticleSystem>()[0].Play();
+        GetComponentsInChildren<ParticleSystem>()[1].Play();
+        GetComponentsInChildren<ParticleSystem>()[2].Play();
 
         GetComponent<SpriteRenderer>().enabled = false;
         

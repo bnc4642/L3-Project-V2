@@ -17,8 +17,8 @@ public class Player : MonoBehaviour
     public LevelLoader transitioner;
 
     float arrowSpeed = 50;
-    float speed = 8;
-    float jumpingPower = 20;
+    public float speed = 6;
+    public float jumpingPower = 20;
     float horizontal;
     bool facingRight = true;
     float time = 0;
@@ -28,9 +28,6 @@ public class Player : MonoBehaviour
     bool Stabbing = false;
     bool damaged = false;
 
-    bool knifing = false;
-    bool knifing2 = false;
-    bool knifing3 = false;
     bool consecHit = false;
     public Transform attackPoint;
     public float radius;
@@ -38,9 +35,9 @@ public class Player : MonoBehaviour
 
     bool canDash = true;
     private bool isDashing;
-    private float dashingPower = 12;
+    private float dashingPower = 40;
     private float dashingTime = 0.15f;
-    private float dashingCooldown = 0.3f;
+    private float dashingCooldown = 0.2f;
     public int health = 10;
 
     private static readonly int Idle = Animator.StringToHash("PlayerIdle3");
@@ -107,8 +104,14 @@ public class Player : MonoBehaviour
 
             foreach (Collider2D enemy in hitEnemies)
             {
-                if (enemy.GetComponent<EnemyGFX>() != null) 
-                    enemy.GetComponent<EnemyGFX>().Hit(damage);
+                if (enemy.GetComponent<EnemyGFX>() != null)
+                {
+                    if (facingRight)
+                        enemy.GetComponent<EnemyGFX>().Hit(damage, 0);
+                    else if (!facingRight)
+                        enemy.GetComponent<EnemyGFX>().Hit(damage, 180);
+
+                }
             }
         }
 
@@ -122,6 +125,7 @@ public class Player : MonoBehaviour
             {
                 a.transform.position = new Vector3(transform.position.x + 0.5f, transform.position.y + 0.2f, 0);
                 a.GetComponent<Rigidbody2D>().velocity = new Vector2(arrowSpeed, 0);
+                a.GetComponent<Projectile>().facingRight = true;
             }
             else
             {
@@ -143,7 +147,8 @@ public class Player : MonoBehaviour
             StartCoroutine("Dash");
 
 
-        Flip();
+        if (!Stabbing && !Drawing)
+            Flip();
 
         //animation
         var state = GetState();
