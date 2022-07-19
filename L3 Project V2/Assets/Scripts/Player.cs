@@ -15,10 +15,11 @@ public class Player : MonoBehaviour
     public LayerMask Transition;
     public float DamagePush;
     public LevelLoader transitioner;
+    public float width = 1.15f;
 
     float arrowSpeed = 50;
-    public float speed = 6;
-    public float jumpingPower = 20;
+    float speed = 18;
+    float jumpingPower = 35;
     float horizontal;
     bool facingRight = true;
     float time = 0;
@@ -27,8 +28,9 @@ public class Player : MonoBehaviour
     bool Drawing = false;
     bool Stabbing = false;
     bool damaged = false;
+    public bool pogoFalling = false;
+    bool pogoStabbing = false;
 
-    bool consecHit = false;
     public Transform attackPoint;
     public float radius;
     public int damage;
@@ -46,6 +48,8 @@ public class Player : MonoBehaviour
     private static readonly int Fall = Animator.StringToHash("PlayerFall2");
     private static readonly int Draw = Animator.StringToHash("PlayerLongbow");
     private static readonly int Stab = Animator.StringToHash("PlayerStab3");
+    private static readonly int pogoFall = Animator.StringToHash("PlayerPogoFall");
+    private static readonly int pogoStab = Animator.StringToHash("PlayerPogoStab");
     //private static readonly int Land = Animator.StringToHash("Land");
     //private static readonly int Crouch = Animator.StringToHash("Crouch");
 
@@ -68,15 +72,15 @@ public class Player : MonoBehaviour
             { // if on ground and finished jumping
                 Falling = false;
                 canDash = true;
+                if (pogoFalling)
+                    StartCoroutine(ToPogoStab(0));
             }
 
             //knife
             if (Input.GetKeyDown(KeyCode.X))
             {
-                if (!consecHit && !Stabbing)
+                if (!Stabbing)
                     StartCoroutine(ToStab());
-                else if (consecHit)
-                    consecHit = false;
             }
 
             if (Input.GetKeyDown(KeyCode.C))
@@ -85,12 +89,16 @@ public class Player : MonoBehaviour
                 Drawing = true;
             }
         }
-        else // if not on ground, must be jumping
+        else // if not on ground
         {
-            if (rb.velocity.y <= 0)
+            if (rb.velocity.y <= 0) // tip point
             {
                 Falling = true;
                 Jumping = false;
+                if (Input.GetKeyDown(KeyCode.X))
+                {
+                    pogoFalling = true;
+                }
             }
         }
         if (Input.GetKeyUp(KeyCode.Z) && rb.velocity.y > 0) // the longer they wait, the higher they go
@@ -98,7 +106,7 @@ public class Player : MonoBehaviour
 
         
 
-        if (Stabbing)
+        if (Stabbing || pogoFalling)
         {
             Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, radius, Enemy);
 
@@ -106,11 +114,11 @@ public class Player : MonoBehaviour
             {
                 if (enemy.GetComponent<EnemyGFX>() != null)
                 {
-                    if (facingRight)
-                        enemy.GetComponent<EnemyGFX>().Hit(damage, 0);
-                    else if (!facingRight)
-                        enemy.GetComponent<EnemyGFX>().Hit(damage, 180);
-
+                    if (pogoFalling)
+                    {
+                        StartCoroutine(ToPogoStab(1));
+                    }
+                    StartCoroutine(enemy.GetComponent<EnemyGFX>().Hit(damage, facingRight));
                 }
             }
         }
@@ -161,7 +169,7 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         //walk
-        if (Drawing || Stabbing)
+        if (Drawing || Stabbing || pogoFalling)
             horizontal = 0;
         if (!(isDashing || damaged))
             rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
@@ -172,8 +180,12 @@ public class Player : MonoBehaviour
         if (Time.time < lockedTill) return currentState;
         // Priorities
 
-        if (damaged)
+        if (damaged && Time.time < lockedTill + 0.3)
             damaged = false;
+        if (pogoFalling)
+            return pogoFall;
+        if (pogoStabbing)
+            return pogoStab;
         if (Stabbing)
             return Stab;
         if (Drawing)
@@ -208,8 +220,19 @@ public class Player : MonoBehaviour
     private IEnumerator ToStab()
     {
         Stabbing = true;
+        if (facingRight)
+            rb.velocity = new Vector2(-3, rb.velocity.y);
         yield return new WaitForSeconds(0.3f);
         Stabbing = false;
+    }
+
+    private IEnumerator ToPogoStab(int enemyStab)
+    {
+        pogoFalling = false;
+        pogoStabbing = true;
+        rb.velocity = new Vector2(enemyStab * 30 * Input.GetAxisRaw("Horizontal"), enemyStab * 40);
+        yield return new WaitForSeconds(0.3f);
+        pogoStabbing = false;
     }
 
     private IEnumerator Dash()
@@ -237,7 +260,7 @@ public class Player : MonoBehaviour
             canDash = true;
     }
 
-    private bool IsGrounded() { return Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundLayer); }
+    private bool IsGrounded() { return Physics2D.OverlapBox(groundCheck.position, new Vector2(width, 0.1f), 0, groundLayer); }
 
     private void Flip()
     {
@@ -255,7 +278,7 @@ public class Player : MonoBehaviour
         if (!damaged)
         {
             damaged = true;
-            lockedTill = Time.time + 0.1f;
+            lockedTill = Time.time + 0.2f;
             transitioner.transition.SetTrigger("Hurt");
             if (enemy.gameObject.transform.position.x < transform.position.x)
                 rb.velocity = new Vector2(DamagePush, DamagePush / 3);
@@ -292,5 +315,6 @@ public class Player : MonoBehaviour
             return;
 
         Gizmos.DrawWireSphere(attackPoint.position, radius);
+        Gizmos.DrawWireCube(groundCheck.position, new Vector3(width, 0.1f, 1));
     }
 }

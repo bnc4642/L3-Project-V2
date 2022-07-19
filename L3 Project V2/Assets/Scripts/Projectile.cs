@@ -13,10 +13,7 @@ public class Projectile : MonoBehaviour
     {
         if (((1 << collision.gameObject.layer) & enemy) != 0)
         {
-            if (facingRight)
-                collision.gameObject.GetComponent<EnemyGFX>().Hit(dmg, 0);
-            else if (!facingRight)
-                collision.gameObject.GetComponent<EnemyGFX>().Hit(dmg, 180);
+            StartCoroutine(collision.gameObject.GetComponent<EnemyGFX>().Hit(dmg, facingRight));
             GetComponent<BoxCollider2D>().enabled = false;
             GetComponent<SpriteRenderer>().enabled = false;
             yield return new WaitForSeconds(collision.gameObject.GetComponent<EnemyGFX>().attackTime + 0.3f);

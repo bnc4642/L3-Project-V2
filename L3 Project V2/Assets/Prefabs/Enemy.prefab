@@ -9780,7 +9780,7 @@ Transform:
   m_Children:
   - {fileID: 3816226684780231718}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3816226683940150447
 MonoBehaviour:
@@ -9878,7 +9878,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 632ae7eb1d4ce49d38a1e38ee7efe7c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guid: 83391bf77a42190b-e4373a5c1e8b759e
+  guid: 53b0993b1ff3c9bc-7e60553bde677b24
 --- !u!1 &3816226684780231719
 GameObject:
   m_ObjectHideFlags: 0
@@ -10027,9 +10027,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.1}
+  m_Offset: {x: 0.22, y: -0.62}
   serializedVersion: 2
-  m_Radius: 1.8367816
+  m_Radius: 1.3021448
 --- !u!198 &1620389444825906958
 ParticleSystem:
   m_ObjectHideFlags: 0
