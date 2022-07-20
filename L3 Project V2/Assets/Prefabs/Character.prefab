@@ -127,21 +127,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 1258719320265126704}
   groundCheck: {fileID: 1258719321447946203}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
   anim: {fileID: 1258719320265126706}
   tr: {fileID: 1258719320265126669}
   longarrow: {fileID: 4999472352357544752, guid: ea45ebc308a23764fb53a76d775f5791, type: 3}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
   Enemy:
     serializedVersion: 2
     m_Bits: 256
   Transition:
     serializedVersion: 2
     m_Bits: 512
-  DamagePush: 20
   transitioner: {fileID: 0}
-  width: 0
+  width: 1.1
   pogoFalling: 0
   attackPoint: {fileID: 1258719321028732945}
   radius: 0.54
@@ -370,6 +369,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 330d616825e299d4f99a5936538938b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  xMin: 0
+  xMax: 0
+  yMin: 0
+  yMax: 0
   cam: {fileID: 0}
   shakeTime: 0
   shakeAmount: 0.2

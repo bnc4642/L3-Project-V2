@@ -2660,7 +2660,8 @@ PrefabInstance:
       propertyPath: orthographic size
       value: 90
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2687266469554505532, guid: 5fa34d1ec77b65d4c9784c0e6e385597, type: 3}
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 5fa34d1ec77b65d4c9784c0e6e385597, type: 3}
 --- !u!4 &7171566885561726455 stripped
@@ -2732,6 +2733,18 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 519420032}
+    - target: {fileID: 1258719321075152667, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: xMax
+      value: 4.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1258719321075152667, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: xMin
+      value: -2.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1258719321075152667, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: yMax
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}

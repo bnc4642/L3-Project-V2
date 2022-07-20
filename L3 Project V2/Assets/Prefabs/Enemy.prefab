@@ -9878,7 +9878,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 632ae7eb1d4ce49d38a1e38ee7efe7c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guid: 53b0993b1ff3c9bc-7e60553bde677b24
+  guid: 1fe6253679caa0e0-0ab0460a1d425b0d
 --- !u!1 &3816226684780231719
 GameObject:
   m_ObjectHideFlags: 0
@@ -10003,17 +10003,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a764a941b72b3e4428ed256d1496e399, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aiPath: {fileID: 3816226683940150444}
   anim: {fileID: 3816226684780231713}
-  attackTime: 0.4
+  health: 10
   player:
     serializedVersion: 2
     m_Bits: 128
   playerWeapon:
     serializedVersion: 2
     m_Bits: 1024
+  attackingTime: 0
+  aiPath: {fileID: 3816226683940150444}
+  attackTime: 0.4
   dmg: 3
-  invicibilityFrames: 0.2
+  timeDisabled: 0
+  damagePush: 15
 --- !u!58 &3816226684780231714
 CircleCollider2D:
   m_ObjectHideFlags: 0

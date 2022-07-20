@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2687266469554505533}
   - component: {fileID: 2687266469554505666}
   - component: {fileID: 2687266469554505664}
-  - component: {fileID: 2687266469554505532}
   - component: {fileID: 2687266469554505534}
   - component: {fileID: 2687266469554505529}
   m_Layer: 0
@@ -34,7 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &2687266469554505666
 Camera:
@@ -87,23 +86,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2687266469554505665}
   m_Enabled: 1
---- !u!114 &2687266469554505532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2687266469554505665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4fe10980fc80d2468f929ec27504b5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  xMin: -2.8
-  xMax: 4.8
-  yMin: 0
-  yMax: 6
-  target: {fileID: 0}
 --- !u!114 &2687266469554505534
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -7,13 +7,13 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
-    [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Animator anim;
     [SerializeField] private TrailRenderer tr;
-    public GameObject longarrow;
-    public LayerMask Enemy;
-    public LayerMask Transition;
-    public float DamagePush;
+    [SerializeField] private GameObject longarrow;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask Enemy;
+    [SerializeField] private LayerMask Transition;
+    readonly float DamagePush = 20;
     public LevelLoader transitioner;
     public float width = 1.15f;
 
@@ -85,7 +85,7 @@ public class Player : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.C))
             { // arrow business
-                time = Time.time;
+                lockedTill = Time.time + 0.5f;
                 Drawing = true;
             }
         }
@@ -95,10 +95,10 @@ public class Player : MonoBehaviour
             {
                 Falling = true;
                 Jumping = false;
-                if (Input.GetKeyDown(KeyCode.X))
-                {
-                    pogoFalling = true;
-                }
+            }
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                pogoFalling = true;
             }
         }
         if (Input.GetKeyUp(KeyCode.Z) && rb.velocity.y > 0) // the longer they wait, the higher they go
@@ -112,13 +112,15 @@ public class Player : MonoBehaviour
 
             foreach (Collider2D enemy in hitEnemies)
             {
-                if (enemy.GetComponent<EnemyGFX>() != null)
+                if (enemy.GetComponent<Mosquito>() != null)
                 {
                     if (pogoFalling)
                     {
                         StartCoroutine(ToPogoStab(1));
+                        StartCoroutine(enemy.GetComponent<Mosquito>().Hit(damage, 2));
                     }
-                    StartCoroutine(enemy.GetComponent<EnemyGFX>().Hit(damage, facingRight));
+                    else
+                        StartCoroutine(enemy.GetComponent<Mosquito>().Hit(damage, Convert.ToInt32(facingRight)));
                 }
             }
         }
@@ -133,7 +135,7 @@ public class Player : MonoBehaviour
             {
                 a.transform.position = new Vector3(transform.position.x + 0.5f, transform.position.y + 0.2f, 0);
                 a.GetComponent<Rigidbody2D>().velocity = new Vector2(arrowSpeed, 0);
-                a.GetComponent<Projectile>().facingRight = true;
+                a.GetComponent<Projectile>().FacingRight = true;
             }
             else
             {
@@ -141,11 +143,14 @@ public class Player : MonoBehaviour
                 a.transform.position = new Vector3(transform.position.x - 0.5f, transform.position.y + 0.2f, 0);
                 a.GetComponent<Rigidbody2D>().velocity = new Vector2(-arrowSpeed, 0);
             }
-                
+
             Drawing = false;
         }
         else if (Input.GetKeyUp(KeyCode.C)) // if released arrow button
+        {
             Drawing = false;    // stop drawing
+            lockedTill = 0;
+        }
 
         
         //dash
@@ -177,6 +182,9 @@ public class Player : MonoBehaviour
 
     private int GetState()
     {
+        //use a switch case ( maybe just use simple values for anims? idk)
+
+
         if (Time.time < lockedTill) return currentState;
         // Priorities
 
@@ -189,9 +197,11 @@ public class Player : MonoBehaviour
         if (Stabbing)
             return Stab;
         if (Drawing)
+        {
             return Draw;
-        //if (crouching) return Crouch;
-        if (Jumping) return Jump;
+        }
+            //if (crouching) return Crouch;
+            if (Jumping) return Jump;
         if (Falling) return Fall;
 
         if (IsGrounded())
@@ -285,7 +295,7 @@ public class Player : MonoBehaviour
             else
                 rb.velocity = new Vector2(-DamagePush, DamagePush / 3);
 
-            GetComponentInChildren<ScreenShake>().TriggerShake(1.5f, 10f);
+            GetComponentInChildren<CameraManager>().TriggerShake(1.5f, 10f);
             health -= dmg;
             if (health <= 0)
                 Die();

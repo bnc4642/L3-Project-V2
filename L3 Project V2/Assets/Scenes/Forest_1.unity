@@ -350,7 +350,7 @@ PrefabInstance:
       objectReference: {fileID: 707222611}
     - target: {fileID: 2687266469554505533, guid: 5fa34d1ec77b65d4c9784c0e6e385597, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2687266469554505533, guid: 5fa34d1ec77b65d4c9784c0e6e385597, type: 3}
       propertyPath: m_LocalPosition.x
@@ -360,7 +360,8 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 1.1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2687266469554505532, guid: 5fa34d1ec77b65d4c9784c0e6e385597, type: 3}
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 5fa34d1ec77b65d4c9784c0e6e385597, type: 3}
 --- !u!1 &645669756
@@ -807,7 +808,7 @@ Transform:
   - {fileID: 1773947343}
   - {fileID: 645669757}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1586581516
 GameObject:
@@ -842,7 +843,7 @@ Transform:
   - {fileID: 691760734}
   - {fileID: 1072948259}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1643858189
 GameObject:
@@ -1278,6 +1279,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1258719320265126705, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1258719320265126705, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.22
       objectReference: {fileID: 0}
@@ -1289,6 +1294,22 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 721411252}
+    - target: {fileID: 1258719321075152667, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: xMax
+      value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: 1258719321075152667, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: xMin
+      value: -21
+      objectReference: {fileID: 0}
+    - target: {fileID: 1258719321075152667, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: yMax
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1258719321075152667, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: yMin
+      value: 1.1
+      objectReference: {fileID: 0}
     - target: {fileID: 3398530395082004906, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
       propertyPath: m_Offset.y
       value: 0.59

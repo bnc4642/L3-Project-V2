@@ -7,7 +7,7 @@ public class LevelLoader : MonoBehaviour
 {
     public Animator transition;
 
-    public float TransitionTime = 1;
+    public float transitionTime = 1;
 
     private void Update()
     {
@@ -21,7 +21,7 @@ public class LevelLoader : MonoBehaviour
     {
         transition.SetTrigger("Start");
 
-        yield return new WaitForSeconds(TransitionTime);
+        yield return new WaitForSeconds(transitionTime);
 
         SceneManager.LoadScene(levelIndex);
     }

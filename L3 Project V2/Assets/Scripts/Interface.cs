@@ -7,8 +7,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using Newtonsoft.Json;
 
-public class Inventory : MonoBehaviour
+public class Interface : MonoBehaviour
 {
+
     private int pageNum = 0;
     private bool flipping;
 
@@ -54,7 +55,7 @@ public class Inventory : MonoBehaviour
                 pageNum--;
             }
         }
-        else 
+        else
         {
             if (pageNum < 8)
             {
@@ -83,9 +84,13 @@ public class Inventory : MonoBehaviour
             }
         }
         GetComponent<SpriteRenderer>().sprite = heights[pageNum];
+
+        WriteToJsonFile(Application.persistentDataPath + "/gamesave.save", FormSave());
+
+        ReadFromJsonFile<Save>(Application.persistentDataPath + "/gamesave.save");
     }
 
-    private Save CreateSaveGameObject()
+    private Save FormSave()
     {
         Save save = new Save();
         foreach (Boss boss in bosses)
@@ -97,46 +102,6 @@ public class Inventory : MonoBehaviour
         save.health = player.health;
 
         return save;
-    }
-
-    public void SaveGame()
-    {
-        Save save = CreateSaveGameObject();
-
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Create(Application.persistentDataPath + "/gamesave.save");
-        bf.Serialize(file, save);
-        file.Close();
-    }
-
-    public void LoadGame()
-    {
-        if (File.Exists(Application.persistentDataPath + "/gamesave.save"))
-        {
-
-
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(Application.persistentDataPath + "/gamesave.save", FileMode.Open);
-            Save save = (Save)bf.Deserialize(file);
-            file.Close();
-
-            foreach (Boss boss in bosses)
-            {
-                boss.defeated = true;
-            }
-            for (int i = 0; i < save.bossesUndefeated.Count; i++)
-            {
-                bosses[i].defeated = false;
-            }
-
-            player.health = save.health;
-
-            // etc.
-        }
-        else
-        {
-            Debug.Log("No game saved!");
-        }
     }
 
     public static void WriteToJsonFile<T>(string filePath, T objectToWrite, bool append = false) where T : new()
@@ -170,5 +135,4 @@ public class Inventory : MonoBehaviour
                 reader.Close();
         }
     }
-
 }

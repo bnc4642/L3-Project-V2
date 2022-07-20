@@ -822,7 +822,8 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -0.2
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2687266469554505532, guid: 5fa34d1ec77b65d4c9784c0e6e385597, type: 3}
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 5fa34d1ec77b65d4c9784c0e6e385597, type: 3}
 --- !u!4 &305484111 stripped
@@ -2924,6 +2925,22 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 305484111}
+    - target: {fileID: 1258719321075152667, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: xMax
+      value: 20.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1258719321075152667, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: xMin
+      value: -21.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1258719321075152667, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: yMax
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1258719321075152667, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: yMin
+      value: -0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 7171566883618629392, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
       propertyPath: m_Name
       value: Character

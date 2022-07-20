@@ -9,10 +9,7 @@ public class Interactable : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
-        {
             interactable = true;
-            
-        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -24,9 +21,7 @@ public class Interactable : MonoBehaviour
     private void Update()
     {
         if (interactable && Input.GetKeyDown(KeyCode.F))
-        {
             Interact();
-        }
     }
 
     public virtual void Interact() 
