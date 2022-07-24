@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 
 public class Interface : MonoBehaviour
 {
+    private int saveNum = 0;
 
     private int pageNum = 0;
     private bool flipping;
@@ -85,9 +86,9 @@ public class Interface : MonoBehaviour
         }
         GetComponent<SpriteRenderer>().sprite = heights[pageNum];
 
-        WriteToJsonFile(Application.persistentDataPath + "/gamesave.save", FormSave());
+        WriteToJsonFile(Application.persistentDataPath + "/gamesave" + saveNum + ".save", FormSave());
 
-        ReadFromJsonFile<Save>(Application.persistentDataPath + "/gamesave.save");
+        LoadSave(saveNum); 
     }
 
     private Save FormSave()
@@ -102,6 +103,23 @@ public class Interface : MonoBehaviour
         save.health = player.health;
 
         return save;
+    }
+
+    private void LoadSave(int saveNum)
+    {
+        Save save = ReadFromJsonFile<Save>(Application.persistentDataPath + "/gamesave"+saveNum+".save");
+
+        player.health = save.health;
+
+        foreach (Boss boss in bosses)
+        {
+            boss.defeated = true;
+        }
+
+        foreach (int boss in save.bossesUndefeated)
+        {
+            bosses[boss].defeated = false;
+        }
     }
 
     public static void WriteToJsonFile<T>(string filePath, T objectToWrite, bool append = false) where T : new()

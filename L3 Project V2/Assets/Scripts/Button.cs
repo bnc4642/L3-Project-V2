@@ -13,7 +13,7 @@ public class Button : MonoBehaviour
             string[] parts = Identifier.Split('_');
             if (parts[0] == "BookClick")
             {
-                StartCoroutine(GetComponentInParent<Inventory>().FlipPage(parts[1]));
+                StartCoroutine(GetComponentInParent<Interface>().FlipPage(parts[1]));
             }
         }
     }

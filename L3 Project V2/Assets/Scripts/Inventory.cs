@@ -9,166 +9,20 @@ using Newtonsoft.Json;
 
 public class Inventory : MonoBehaviour
 {
-    private int pageNum = 0;
-    private bool flipping;
-
-    public GameObject[,] pages = new GameObject[2, 9];
-
-    public Sprite[] heights;
-    public GameObject pf;
-
-    private List<Boss> bosses = new List<Boss>();
-    public Player player;
-
-    public IEnumerator FlipPage(string Dir)
+    ArrayList stuff = new ArrayList() { };
+    
+    public void AddStuff<T>(int index, T thing)
     {
-        if (flipping)
-        {
-            yield return null;
-        }
-        else if (Dir.Equals("l"))
-        {
-            if (pageNum > 0)
-            {
-                flipping = true;
-                pf.GetComponent<SpriteRenderer>().enabled = true;
-                pf.GetComponent<Animator>().Play("Flip_l", -1, 0);
-                yield return new WaitForSeconds(0.23f);
-                pf.GetComponent<SpriteRenderer>().enabled = false;
-                flipping = false;
-                if (pageNum == 1) // red tag
-                {
-                    transform.GetChild(6).gameObject.SetActive(false);
-                    transform.GetChild(7).gameObject.SetActive(true);
-                }
-                else if (pageNum == 5) // green tag
-                {
-                    transform.GetChild(2).gameObject.SetActive(false);
-                    transform.GetChild(3).gameObject.SetActive(true);
-                }
-                else if (pageNum == 8) // green tag
-                {
-                    transform.GetChild(4).gameObject.SetActive(false);
-                    transform.GetChild(5).gameObject.SetActive(true);
-                }
-                pageNum--;
-            }
-        }
-        else 
-        {
-            if (pageNum < 8)
-            {
-                flipping = true;
-                pf.GetComponent<SpriteRenderer>().enabled = true;
-                pf.GetComponent<Animator>().Play("Flip_r", -1, 0);
-                yield return new WaitForSeconds(0.23f);
-                pf.GetComponent<SpriteRenderer>().enabled = false;
-                flipping = false;
-                if (pageNum == 0) // red tag
-                {
-                    transform.GetChild(6).gameObject.SetActive(true);
-                    transform.GetChild(7).gameObject.SetActive(false);
-                }
-                else if (pageNum == 4) // green tag
-                {
-                    transform.GetChild(2).gameObject.SetActive(true);
-                    transform.GetChild(3).gameObject.SetActive(false);
-                }
-                else if (pageNum == 7) // green tag
-                {
-                    transform.GetChild(4).gameObject.SetActive(true);
-                    transform.GetChild(5).gameObject.SetActive(false);
-                }
-                pageNum++;
-            }
-        }
-        GetComponent<SpriteRenderer>().sprite = heights[pageNum];
+        stuff[index] = thing;
     }
 
-    private Save CreateSaveGameObject()
+    public void RemoveStuff(int index)
     {
-        Save save = new Save();
-        foreach (Boss boss in bosses)
-        {
-            if (!boss.defeated)
-                save.bossesUndefeated.Add(boss.bossNum);
-        }
-
-        save.health = player.health;
-
-        return save;
+        stuff[index] = null;
     }
 
-    public void SaveGame()
+    public void Inspect()
     {
-        Save save = CreateSaveGameObject();
 
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Create(Application.persistentDataPath + "/gamesave.save");
-        bf.Serialize(file, save);
-        file.Close();
     }
-
-    public void LoadGame()
-    {
-        if (File.Exists(Application.persistentDataPath + "/gamesave.save"))
-        {
-
-
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(Application.persistentDataPath + "/gamesave.save", FileMode.Open);
-            Save save = (Save)bf.Deserialize(file);
-            file.Close();
-
-            foreach (Boss boss in bosses)
-            {
-                boss.defeated = true;
-            }
-            for (int i = 0; i < save.bossesUndefeated.Count; i++)
-            {
-                bosses[i].defeated = false;
-            }
-
-            player.health = save.health;
-
-            // etc.
-        }
-        else
-        {
-            Debug.Log("No game saved!");
-        }
-    }
-
-    public static void WriteToJsonFile<T>(string filePath, T objectToWrite, bool append = false) where T : new()
-    {
-        TextWriter writer = null;
-        try
-        {
-            var contentsToWriteToFile = JsonConvert.SerializeObject(objectToWrite);
-            writer = new StreamWriter(filePath, append);
-            writer.Write(contentsToWriteToFile);
-        }
-        finally
-        {
-            if (writer != null)
-                writer.Close();
-        }
-    }
-
-    public static T ReadFromJsonFile<T>(string filePath) where T : new()
-    {
-        TextReader reader = null;
-        try
-        {
-            reader = new StreamReader(filePath);
-            var fileContents = reader.ReadToEnd();
-            return JsonConvert.DeserializeObject<T>(fileContents);
-        }
-        finally
-        {
-            if (reader != null)
-                reader.Close();
-        }
-    }
-
 }
