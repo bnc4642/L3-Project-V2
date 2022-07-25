@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f1da0b6abdb7d45aa4315eccab639b, type: 3}
+  m_Name: FlatUp
+  m_EditorClassIdentifier: 
+  cels:
+  - sprite: {fileID: 1621069319, guid: 9532aba58ae278940949e42ac885b05b, type: 3}
+    drivers:
+      keys:
+      - flatUp
+      values: 01000000
+  - sprite: {fileID: 338533886, guid: 9532aba58ae278940949e42ac885b05b, type: 3}
+    drivers:
+      keys:
+      - flatUp
+      values: 02000000
+  - sprite: {fileID: -1068386823, guid: 9532aba58ae278940949e42ac885b05b, type: 3}
+    drivers:
+      keys:
+      - flatUp
+      values: 03000000
+  - sprite: {fileID: 851306333, guid: 9532aba58ae278940949e42ac885b05b, type: 3}
+    drivers:
+      keys:
+      - flatUp
+      values: 04000000
+  - sprite: {fileID: 753912762, guid: 9532aba58ae278940949e42ac885b05b, type: 3}
+    drivers:
+      keys:
+      - flatUp
+      values: 04000000
+  controlDriver:
+    name: flatUp
+    autoIncrement: 0
+    percentageBased: 0
+    guid: 5c375275-4e1c-43ac-9c6c-b5140d03829c
+  drivers:
+    keys: []
+    values: 

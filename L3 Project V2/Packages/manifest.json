@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.aarthificial.reanimation": "file:C:/Users/Ben/Downloads/reanimation-master/reanimation-master",
     "com.unity.2d.animation": "8.0.1",
     "com.unity.2d.pixel-perfect": "5.0.1",
     "com.unity.2d.psdimporter": "7.0.0",

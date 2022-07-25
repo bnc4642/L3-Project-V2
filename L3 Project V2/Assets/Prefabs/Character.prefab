@@ -377,6 +377,7 @@ MonoBehaviour:
   shakeTime: 0
   shakeAmount: 0.2
   damping: 10
+  cameraSpeed: 30
 --- !u!1 &1258719321447946200
 GameObject:
   m_ObjectHideFlags: 0

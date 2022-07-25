@@ -5,9 +5,10 @@ using System;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private Animator anim;
+
+    public Rigidbody2D rb;
+    public Transform groundCheck;
+    public Animator anim;
     [SerializeField] private TrailRenderer tr;
     [SerializeField] private GameObject longarrow;
     [SerializeField] private LayerMask groundLayer;
@@ -20,8 +21,7 @@ public class Player : MonoBehaviour
     float arrowSpeed = 50;
     float speed = 18;
     float jumpingPower = 35;
-    float horizontal;
-    bool facingRight = true;
+    
     float time = 0;
     bool Jumping = false;
     bool Falling = false;
@@ -30,6 +30,10 @@ public class Player : MonoBehaviour
     bool damaged = false;
     public bool pogoFalling = false;
     bool pogoStabbing = false;
+
+    public float horizontal;
+    public PlayerState State = PlayerState.Movement;
+    public bool facingRight = true;
 
     public Transform attackPoint;
     public float radius;
@@ -270,7 +274,7 @@ public class Player : MonoBehaviour
             canDash = true;
     }
 
-    private bool IsGrounded() { return Physics2D.OverlapBox(groundCheck.position, new Vector2(width, 0.1f), 0, groundLayer); }
+    public bool IsGrounded() { return Physics2D.OverlapBox(groundCheck.position, new Vector2(width, 0.1f), 0, groundLayer); }
 
     private void Flip()
     {

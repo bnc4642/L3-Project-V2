@@ -12,7 +12,6 @@ public class CameraManager : MonoBehaviour
 
     public Transform cam;
 
-    private Vector3 shakeVelocity = Vector3.zero;
     public float shakeTime = 0;
     public float shakeAmount = 0.7f;
     public float damping = 1;
@@ -23,7 +22,9 @@ public class CameraManager : MonoBehaviour
         Vector3 targetPosition = transform.position + new Vector3(0, 0, -10);
         targetPosition.x = Mathf.Clamp(targetPosition.x, xMin, xMax);
         targetPosition.y = Mathf.Clamp(targetPosition.y, yMin, yMax);
-        cam.position = Vector3.SmoothDamp(cam.position, targetPosition, ref shakeVelocity, 0.25f);
+        //cam.position = Vector3.SmoothDamp(cam.position, targetPosition, ref Velocity, 0.25f);
+        float t = RoundToMultiple(cameraSpeed * Time.deltaTime, multiple);
+        cam.position = Vector3.Lerp(cam.position, targetPosition, t);
 
         if (shakeTime > 0)
         {
@@ -37,5 +38,14 @@ public class CameraManager : MonoBehaviour
         damping = d;
         shakeTime = t;
         initPos = cam.localPosition;
+    }
+
+    public float cameraSpeed;
+
+    private float multiple = 0.25f;
+
+    private float RoundToMultiple(float value, float multipleOf)
+    {
+        return (int)((value / multipleOf) + 0.5f) * multipleOf;
     }
 }

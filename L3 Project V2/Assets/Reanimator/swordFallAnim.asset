@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f1da0b6abdb7d45aa4315eccab639b, type: 3}
+  m_Name: swordFallAnim
+  m_EditorClassIdentifier: 
+  cels:
+  - sprite: {fileID: -626309678, guid: 7e51453b598e8cb48b679c9b79c707c8, type: 3}
+    drivers:
+      keys:
+      - swordFallAnim
+      values: 01000000
+  - sprite: {fileID: 906296012, guid: 7e51453b598e8cb48b679c9b79c707c8, type: 3}
+    drivers:
+      keys:
+      - swordFallAnim
+      values: 02000000
+  - sprite: {fileID: 353376048, guid: 7e51453b598e8cb48b679c9b79c707c8, type: 3}
+    drivers:
+      keys:
+      - swordFallAnim
+      values: 03000000
+  - sprite: {fileID: -842932348, guid: 7e51453b598e8cb48b679c9b79c707c8, type: 3}
+    drivers:
+      keys:
+      - swordFallAnim
+      values: 03000000
+  controlDriver:
+    name: swordFallAnim
+    autoIncrement: 0
+    percentageBased: 0
+    guid: 93949c41-a527-4aaf-9a81-459258c617c2
+  drivers:
+    keys: []
+    values: 
