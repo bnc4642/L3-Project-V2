@@ -25,13 +25,19 @@ public class PlayerRenderer : MonoBehaviour
 
     private void Update()
     {
+        int n;
+        if (controller.direction.y < 0)
+            n = 0;
+        else if (controller.direction.y > 0)
+            n = 2;
+        else
+            n = 1;
         //reanimator.Flip = controller.facingRight;
         reanimator.Set(Drivers.State, (int)controller.State);
         reanimator.Set(Drivers.IsGrounded, controller.IsGrounded());
         reanimator.Set(Drivers.IsMoving, controller.direction.x != 0);
         reanimator.Set(Drivers.JumpDirection, controller.rb.velocity.y > 0);
         reanimator.Set(Drivers.IsRunJumping, controller.rb.velocity.x != 0);
-        float n = controller.direction.y + 1;
         reanimator.Set(Drivers.AttackDirection, n);
     }
 

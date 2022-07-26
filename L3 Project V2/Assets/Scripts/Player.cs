@@ -9,7 +9,6 @@ public class Player : MonoBehaviour
 
     public Rigidbody2D rb;
     public Transform groundCheck;
-    public Animator anim;
     [SerializeField] private TrailRenderer tr;
     [SerializeField] private GameObject longarrow;
     [SerializeField] private LayerMask groundLayer;
@@ -200,7 +199,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if (direction.y == -1)
+            if (direction.y < 0)
                 pogoFalling = true;
         }
     }
@@ -227,7 +226,7 @@ public class Player : MonoBehaviour
         //jump
         if (jumping && grounded)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
+            rb.velocity = new Vector2(rb.velocity.x, 350);
             Debug.Log(rb.velocity.y);
         }
         if (grounded && falling)
