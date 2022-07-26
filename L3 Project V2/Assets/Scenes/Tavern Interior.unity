@@ -712,17 +712,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &649801871 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1410904144909478472, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
-  m_PrefabInstance: {fileID: 1618827077}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec05901965c912e4d84f058c02b1d25d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &795782498 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1258719320265126708, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
@@ -1752,6 +1741,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1382212950 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2585337539578498167, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
+  m_PrefabInstance: {fileID: 1618827077}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1468393263
 GameObject:
   m_ObjectHideFlags: 0
@@ -1976,7 +1970,8 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1410904144909478472, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
 --- !u!1 &1697741373
@@ -2343,6 +2338,25 @@ Transform:
   m_Father: {fileID: 926621645}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1995760927 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1258719321075152665, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+  m_PrefabInstance: {fileID: 8282498601659041478}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1995760930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1995760927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec05901965c912e4d84f058c02b1d25d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transition: {fileID: 1382212950}
+  transitionTime: 1
 --- !u!1 &2121701919
 GameObject:
   m_ObjectHideFlags: 0
@@ -2669,6 +2683,11 @@ PrefabInstance:
     - {fileID: 2687266469554505532, guid: 5fa34d1ec77b65d4c9784c0e6e385597, type: 3}
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 5fa34d1ec77b65d4c9784c0e6e385597, type: 3}
+--- !u!20 &2687266469853069246 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 2687266469554505666, guid: 5fa34d1ec77b65d4c9784c0e6e385597, type: 3}
+  m_PrefabInstance: {fileID: 2687266469853069245}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7171566885561726455 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1258719320265126705, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
@@ -2705,6 +2724,64 @@ MonoBehaviour:
   - groundSwordAnim
   - jumpIdleAnim
   - swordFallToIdleAnim
+--- !u!114 &7171566885561726458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 795782498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: dae50a7675ab4c548a7f48105e2d5a29, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b401c441-e7d0-44bc-bb67-82674e030b0c
+    m_ActionName: Gameplay/Jump[/Keyboard/z]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e85ffb6d-1a69-4614-8880-45c5eb85c27c
+    m_ActionName: Gameplay/Move[/Keyboard/leftArrow,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 27afacbd-0211-4a4e-bc80-36e596a9ff75
+    m_ActionName: Gameplay/Attack[/Keyboard/x]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5b67b647-eda2-446c-9480-2378f3fdc7da
+    m_ActionName: Gameplay/Dash[/Keyboard/shift]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 06dfd4ab-bef2-485a-a135-923e2138cd2d
+    m_ActionName: Gameplay/Crouch[/Keyboard/ctrl]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 3418860b-f42c-4f1d-8922-8e8b5944aa45
+    m_ActionName: Gameplay/Shield[/Keyboard/c]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 45f32967-fd3b-4b62-903f-2978102b2e29
+    m_ActionName: Gameplay/Input[/Keyboard/d]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: Keyboard & Mouse
+  m_DefaultActionMap: Gameplay
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 2687266469853069246}
 --- !u!1001 &8282498601659041478
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2764,7 +2841,7 @@ PrefabInstance:
     - target: {fileID: 1258719320265126707, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
       propertyPath: transitioner
       value: 
-      objectReference: {fileID: 649801871}
+      objectReference: {fileID: 1995760930}
     - target: {fileID: 1258719320265126708, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
       propertyPath: m_Name
       value: Character

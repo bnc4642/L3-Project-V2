@@ -14,7 +14,7 @@ TagManager:
   - Ground
   - Player
   - Enemy
-  - SceneTransition
+  - Interactable
   - PlayerWeapon
   - EnemyWeapon
   - Background

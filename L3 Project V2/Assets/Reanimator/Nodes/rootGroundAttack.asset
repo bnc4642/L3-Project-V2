@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodes:
   - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: fb6bd32d7a254e04597865044bc8e822, type: 2}
+  - {fileID: 11400000, guid: be8a09d1494de344bbff9d7cb8ae2ff7, type: 2}
   controlDriver:
-    name: 
+    name: attackDirection
     autoIncrement: 0
     percentageBased: 0
     guid: d49ef2a8-afec-4add-a242-bc7895808c28

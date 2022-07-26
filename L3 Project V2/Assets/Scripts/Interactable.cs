@@ -18,12 +18,6 @@ public class Interactable : MonoBehaviour
             interactable = false;
     }
 
-    private void Update()
-    {
-        if (interactable && Input.GetKeyDown(KeyCode.F))
-            Interact();
-    }
-
     public virtual void Interact() 
     { 
         // override this

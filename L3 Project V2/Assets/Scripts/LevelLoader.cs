@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class LevelLoader : MonoBehaviour
 {
@@ -9,12 +10,9 @@ public class LevelLoader : MonoBehaviour
 
     public float transitionTime = 1;
 
-    private void Update()
+    public void OnEscape()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            StartCoroutine(LoadLevel(0));
-        }
+        StartCoroutine(LoadLevel(0));
     }
 
     public IEnumerator LoadLevel(int levelIndex)

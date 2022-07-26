@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
@@ -21,18 +22,17 @@ public class Player : MonoBehaviour
     float arrowSpeed = 50;
     float speed = 18;
     float jumpingPower = 35;
-    
-    float time = 0;
-    bool Jumping = false;
-    bool Falling = false;
-    bool Drawing = false;
-    bool Stabbing = false;
-    bool damaged = false;
-    public bool pogoFalling = false;
-    bool pogoStabbing = false;
 
-    public float horizontal;
+    bool jumping = false;
+    bool falling = false;
+    bool interactable = false;
+    float attackingTime = 0;
+    float damagedTime = 0;
+    public bool pogoFalling = false;
+
+    public Vector2 direction;
     public PlayerState State = PlayerState.Movement;
+    public bool grounded = false;
     public bool facingRight = true;
 
     public Transform attackPoint;
@@ -40,245 +40,227 @@ public class Player : MonoBehaviour
     public int damage;
 
     bool canDash = true;
-    private bool isDashing;
     private float dashingPower = 40;
     private float dashingTime = 0.15f;
-    private float dashingCooldown = 0.2f;
     public int health = 10;
 
-    private static readonly int Idle = Animator.StringToHash("PlayerIdle3");
-    private static readonly int Walk = Animator.StringToHash("PlayerRun2");
-    private static readonly int Jump = Animator.StringToHash("PlayerJumpFirst");
-    private static readonly int Fall = Animator.StringToHash("PlayerFall2");
-    private static readonly int Draw = Animator.StringToHash("PlayerLongbow");
-    private static readonly int Stab = Animator.StringToHash("PlayerStab3");
-    private static readonly int pogoFall = Animator.StringToHash("PlayerPogoFall");
-    private static readonly int pogoStab = Animator.StringToHash("PlayerPogoStab");
-    //private static readonly int Land = Animator.StringToHash("Land");
-    //private static readonly int Crouch = Animator.StringToHash("Crouch");
-
-    private float lockedTill = 0;
-    private int currentState;
-
-    void Update()
+    public void OnMove(InputValue value)
     {
-        horizontal = Input.GetAxisRaw("Horizontal");
+        direction = value.Get<Vector2>();
+    }
 
-        //Current abilities.
-        // walk, dash, jump, shoot
+    public void OnJump(InputValue value)
+    {
+        if (!grounded) return;
 
-        //jump
-        if (IsGrounded())
+        jumping = value.Get<float>() > 0.5f;
+    }
+    
+    public void OnAttack(InputValue value)
+    {
+        EnterAttackState();
+    }
+
+    public void OnDash(InputValue value)
+    {
+        EnterDashState();
+    }
+
+    public void OnThrow(InputValue value)
+    {
+        GameObject a = Instantiate(longarrow);  // shoot arrow
+
+        if (facingRight)
         {
-            if (Input.GetKeyDown(KeyCode.Z)) // if on ground, then jump
-                StartCoroutine("ToJump");
-            if (Falling)
-            { // if on ground and finished jumping
-                Falling = false;
-                canDash = true;
-                if (pogoFalling)
-                    StartCoroutine(ToPogoStab(0));
-            }
-
-            //knife
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                if (!Stabbing)
-                    StartCoroutine(ToStab());
-            }
-
-            if (Input.GetKeyDown(KeyCode.C))
-            { // arrow business
-                lockedTill = Time.time + 0.5f;
-                Drawing = true;
-            }
+            a.transform.position = new Vector3(transform.position.x + 0.5f, transform.position.y + 0.2f, 0);
+            a.GetComponent<Rigidbody2D>().velocity = new Vector2(arrowSpeed, 0);
+            a.GetComponent<Projectile>().FacingRight = true;
         }
-        else // if not on ground
+        else
         {
-            if (rb.velocity.y <= 0) // tip point
-            {
-                Falling = true;
-                Jumping = false;
-            }
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                pogoFalling = true;
-            }
+            a.transform.localScale = new Vector3(-3, 3, 1);
+            a.transform.position = new Vector3(transform.position.x - 0.5f, transform.position.y + 0.2f, 0);
+            a.GetComponent<Rigidbody2D>().velocity = new Vector2(-arrowSpeed, 0);
         }
-        if (Input.GetKeyUp(KeyCode.Z) && rb.velocity.y > 0) // the longer they wait, the higher they go
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+    }
 
-        
+    public void OnShield(InputValue value)
+    {
 
-        if (Stabbing || pogoFalling)
-        {
-            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, radius, Enemy);
+    }
 
-            foreach (Collider2D enemy in hitEnemies)
-            {
-                if (enemy.GetComponent<Mosquito>() != null)
-                {
-                    if (pogoFalling)
-                    {
-                        StartCoroutine(ToPogoStab(1));
-                        StartCoroutine(enemy.GetComponent<Mosquito>().Hit(damage, 2));
-                    }
-                    else
-                        StartCoroutine(enemy.GetComponent<Mosquito>().Hit(damage, Convert.ToInt32(facingRight)));
-                }
-            }
-        }
+    public void OnInteract(InputValue value)
+    {
+        if (interactable)
+            Debug.Log("Interact");
+    }
 
+    public void OnMagic(InputValue value)
+    {
 
-        //shoot
-        if (Input.GetKey(KeyCode.C) && Drawing && time + 0.5f <= Time.time) // if holding arrow button
-        {
-            GameObject a = Instantiate(longarrow);  // shoot arrow
-
-            if (facingRight)
-            {
-                a.transform.position = new Vector3(transform.position.x + 0.5f, transform.position.y + 0.2f, 0);
-                a.GetComponent<Rigidbody2D>().velocity = new Vector2(arrowSpeed, 0);
-                a.GetComponent<Projectile>().FacingRight = true;
-            }
-            else
-            {
-                a.transform.localScale = new Vector3(-3, 3, 1);
-                a.transform.position = new Vector3(transform.position.x - 0.5f, transform.position.y + 0.2f, 0);
-                a.GetComponent<Rigidbody2D>().velocity = new Vector2(-arrowSpeed, 0);
-            }
-
-            Drawing = false;
-        }
-        else if (Input.GetKeyUp(KeyCode.C)) // if released arrow button
-        {
-            Drawing = false;    // stop drawing
-            lockedTill = 0;
-        }
-
-        
-        //dash
-        if (isDashing)
-            return;
-        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
-            StartCoroutine("Dash");
-
-
-        if (!Stabbing && !Drawing)
-            Flip();
-
-        //animation
-        var state = GetState();
-
-        if (state == currentState) return;
-        anim.CrossFade(state, 0, 0);
-        currentState = state;
     }
 
     private void FixedUpdate()
     {
-        //walk
-        if (Drawing || Stabbing || pogoFalling)
-            horizontal = 0;
-        if (!(isDashing || damaged))
-            rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
-    }
+        grounded = IsGrounded();
+        interactable = Physics2D.OverlapCircle(transform.position, 1, LayerMask.NameToLayer("Interactable"));
+        if (attackingTime < Time.time && State != PlayerState.Dash) Flip();
 
-    private int GetState()
-    {
-        //use a switch case ( maybe just use simple values for anims? idk)
-
-
-        if (Time.time < lockedTill) return currentState;
-        // Priorities
-
-        if (damaged && Time.time < lockedTill + 0.3)
-            damaged = false;
-        if (pogoFalling)
-            return pogoFall;
-        if (pogoStabbing)
-            return pogoStab;
-        if (Stabbing)
-            return Stab;
-        if (Drawing)
+        switch (State)
         {
-            return Draw;
+            case PlayerState.Movement:
+                UpdateMovementState();
+                break;
+            case PlayerState.Attack:
+                UpdateAttackState();
+                break;
+            case PlayerState.Hit:
+                UpdateHitState();
+                break;
+            case PlayerState.Dash:
+                UpdateDashState();
+                break;
         }
-            //if (crouching) return Crouch;
-            if (Jumping) return Jump;
-        if (Falling) return Fall;
-
-        if (IsGrounded())
-        {
-            if (horizontal == 0)
-                return Idle;
-            else return Walk;
-        }
-
-        return rb.velocity.y > 0 ? Jump : Fall;
-
-        //int LockState(int s, float t)
-        //{
-            //lockedTill = Time.time + t;
-            //return s;
-        //}
     }
 
-    private IEnumerator ToJump()
+    private void EnterDashState()
     {
-        Jumping = true;
-        yield return new WaitForSeconds(0.05f);
-        rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
-    }
+        if (!canDash || dashingTime > Time.time) return;
+        State = PlayerState.Dash;
 
-    private IEnumerator ToStab()
-    {
-        Stabbing = true;
-        if (facingRight)
-            rb.velocity = new Vector2(-3, rb.velocity.y);
-        yield return new WaitForSeconds(0.3f);
-        Stabbing = false;
-    }
-
-    private IEnumerator ToPogoStab(int enemyStab)
-    {
-        pogoFalling = false;
-        pogoStabbing = true;
-        rb.velocity = new Vector2(enemyStab * 30 * Input.GetAxisRaw("Horizontal"), enemyStab * 40);
-        yield return new WaitForSeconds(0.3f);
-        pogoStabbing = false;
-    }
-
-    private IEnumerator Dash()
-    {
         canDash = false;
-        isDashing = true;
-        float originalGravity = rb.gravityScale;
         rb.gravityScale = 0;
         gameObject.GetComponent<BoxCollider2D>().enabled = false;
         groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = true;
         rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0);
         tr.emitting = true;
-
-        yield return new WaitForSeconds(dashingTime);
-
-        tr.emitting = false;
-        rb.gravityScale = originalGravity;
-        gameObject.GetComponent<BoxCollider2D>().enabled = true;
-        groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = false;
-        isDashing = false;
-
-        yield return new WaitForSeconds(dashingCooldown);
-
-        if (!Jumping && !Falling)
-            canDash = true;
     }
 
+    private void UpdateDashState()
+    {
+        if (dashingTime - 0.4f > Time.time) return;
+
+        tr.emitting = false;
+        rb.gravityScale = 10;
+        gameObject.GetComponent<BoxCollider2D>().enabled = true;
+        groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+        EnterMovementState();
+    }
+
+    private void EnterHitState(Collision2D collision, int dmg)
+    {
+        if (State != PlayerState.Hit && damagedTime > Time.time) return;
+        State = PlayerState.Hit;
+
+        damagedTime = Time.time + 0.8f;
+        transitioner.transition.SetTrigger("Hurt");
+        if (collision.gameObject.transform.position.x < transform.position.x)
+            rb.velocity = new Vector2(DamagePush, DamagePush / 3);
+        else
+            rb.velocity = new Vector2(-DamagePush, DamagePush / 3);
+
+        GetComponentInChildren<CameraManager>().TriggerShake(1.5f, 10f);
+        health -= dmg;
+        if (health <= 0)
+            Die();
+    }
+
+    private void UpdateHitState()
+    {
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, radius, Enemy);
+
+        foreach (Collider2D enemy in hitEnemies)
+        {
+            if (enemy.GetComponent<Enemy>() != null)
+            {
+                if (pogoFalling)
+                {
+                    StartCoroutine(ToPogoStab(1));
+                    StartCoroutine(enemy.GetComponent<Mosquito>().Hit(damage, 2));
+                }
+                else
+                    StartCoroutine(enemy.GetComponent<Mosquito>().Hit(damage, Convert.ToInt32(facingRight)));
+            }
+        }
+
+        if (damagedTime - 0.5 < Time.time)
+            EnterMovementState();
+    }
+
+    private void EnterAttackState()
+    {
+        if (State == PlayerState.Attack || State == PlayerState.Dash || attackingTime > Time.time) return;
+
+        State = PlayerState.Attack;
+
+        if (grounded)
+        {
+            if (direction.y == 0)
+                attackingTime = 0.5f + Time.time;
+        }
+        else
+        {
+            if (direction.y == -1)
+                pogoFalling = true;
+        }
+    }
+
+    private void UpdateAttackState()
+    {
+        if (attackingTime < Time.time)
+            EnterMovementState();
+    }
+
+    private void EnterMovementState()
+    {
+        State = PlayerState.Movement;
+    }
+
+    private void UpdateMovementState()
+    {
+        //walk
+        if (State == PlayerState.Attack)
+            direction.x = 0;
+        if (State != PlayerState.Dash && damagedTime - 0.5 < Time.time)
+            rb.velocity = new Vector2(direction.x * speed, rb.velocity.y);
+
+        //jump
+        if (jumping && grounded)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
+            Debug.Log(rb.velocity.y);
+        }
+        if (grounded && falling)
+        { // if on ground and finished jumping
+            falling = false;
+            canDash = true;
+            if (pogoFalling)
+                StartCoroutine(ToPogoStab(0));
+        }
+
+        if (jumping && rb.velocity.y > 0) // the longer they wait, the higher they go
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+        if (rb.velocity.y <= 0) // tip point
+        {
+            falling = true;
+            jumping = false;
+        }
+
+    }
+
+    private IEnumerator ToPogoStab(int enemyStab)
+    {
+        pogoFalling = false;
+        //pogoStabbing = true;
+        rb.velocity = new Vector2(enemyStab * 30 * direction.x, enemyStab * 40);
+        yield return new WaitForSeconds(0.3f);
+        //pogoStabbing = false;
+    }
     public bool IsGrounded() { return Physics2D.OverlapBox(groundCheck.position, new Vector2(width, 0.1f), 0, groundLayer); }
 
     private void Flip()
     {
-        if (facingRight && horizontal < 0 || !facingRight && horizontal > 0)
+        if (facingRight && direction.x < 0 || !facingRight && direction.x > 0)
         {
             facingRight = !facingRight;
             Vector3 localScale = transform.localScale;
@@ -289,21 +271,7 @@ public class Player : MonoBehaviour
 
     public void Hit(GameObject enemy, int dmg)
     {
-        if (!damaged)
-        {
-            damaged = true;
-            lockedTill = Time.time + 0.2f;
-            transitioner.transition.SetTrigger("Hurt");
-            if (enemy.gameObject.transform.position.x < transform.position.x)
-                rb.velocity = new Vector2(DamagePush, DamagePush / 3);
-            else
-                rb.velocity = new Vector2(-DamagePush, DamagePush / 3);
-
-            GetComponentInChildren<CameraManager>().TriggerShake(1.5f, 10f);
-            health -= dmg;
-            if (health <= 0)
-                Die();
-        }
+        EnterHitState(enemy.GetComponent<Collision2D>(), dmg);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
