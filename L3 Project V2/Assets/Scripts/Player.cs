@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     bool jumping = false;
     bool falling = false;
     bool interactable = false;
+    bool attacking = false;
     float attackingTime = 0;
     float damagedTime = 0;
     public bool pogoFalling = false;
@@ -145,6 +146,15 @@ public class Player : MonoBehaviour
         rb.gravityScale = 10;
         gameObject.GetComponent<BoxCollider2D>().enabled = true;
         groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+
+        if (attacking)
+        {
+            State = PlayerState.Attack;
+            EnterAttackState();
+            attacking = false;
+            return;
+        }
+
         EnterMovementState();
     }
 
@@ -174,7 +184,11 @@ public class Player : MonoBehaviour
 
     private void EnterAttackState()
     {
-        if (State == PlayerState.Attack || State == PlayerState.Dash || attackingTime > Time.time) return;
+        if (State == PlayerState.Dash)
+            attacking = true;
+
+        if (!attacking && (State == PlayerState.Attack || State == PlayerState.Dash || attackingTime > Time.time)) return;
+        else if (attacking && State == PlayerState.Dash) return;
 
         State = PlayerState.Attack;
 
@@ -191,6 +205,8 @@ public class Player : MonoBehaviour
 
     private void UpdateAttackState()
     {
+        if (attackingTime - 0.4 > Time.time)
+            Flip();
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, radius, Enemy);
 
         foreach (Collider2D enemy in hitEnemies)
@@ -208,10 +224,13 @@ public class Player : MonoBehaviour
         {
             if (!grounded)
                 Jump();
-            
+
             if (attackingTime < Time.time)
+            {
+                Flip();
                 EnterMovementState();
-            rb.velocity = new Vector2(direction.x * speed, rb.velocity.y);
+            }
+            rb.velocity = new Vector2(direction.x * speed*0.3f, rb.velocity.y);
         }
         else if (grounded)
         {
@@ -221,7 +240,7 @@ public class Player : MonoBehaviour
         }
     }
 
-        private void EnterMovementState()
+    private void EnterMovementState()
     {
         State = PlayerState.Movement;
     }
