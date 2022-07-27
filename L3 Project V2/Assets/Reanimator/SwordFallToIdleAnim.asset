@@ -35,8 +35,9 @@ MonoBehaviour:
       values: 04000000
   - sprite: {fileID: -1376066113, guid: 7e51453b598e8cb48b679c9b79c707c8, type: 3}
     drivers:
-      keys: []
-      values: 
+      keys:
+      - idleTransition
+      values: 01000000
   controlDriver:
     name: swordFallToIdleAnim
     autoIncrement: 0

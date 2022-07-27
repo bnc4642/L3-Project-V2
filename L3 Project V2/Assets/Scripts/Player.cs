@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.InputSystem;
+using Aarthificial.Reanimation;
 
 public class Player : MonoBehaviour
 {
@@ -20,7 +21,6 @@ public class Player : MonoBehaviour
 
     float arrowSpeed = 50;
     float speed = 18;
-    float jumpingPower = 35;
 
     bool jumping = false;
     bool falling = false;
@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
     float attackingTime = 0;
     float damagedTime = 0;
     public bool pogoFalling = false;
+    private bool jumped = false;
 
     public Vector2 direction;
     public PlayerState State = PlayerState.Movement;
@@ -39,8 +40,8 @@ public class Player : MonoBehaviour
     public int damage;
 
     bool canDash = true;
-    private float dashingPower = 40;
-    private float dashingTime = 0.15f;
+    private float dashingPower = 100;
+    private float dashingTime = 1.4f;
     public int health = 10;
 
     public void OnMove(InputValue value)
@@ -50,9 +51,9 @@ public class Player : MonoBehaviour
 
     public void OnJump(InputValue value)
     {
-        if (!grounded) return;
-
         jumping = value.Get<float>() > 0.5f;
+        if (!jumping)
+            jumped = false;
     }
     
     public void OnAttack(InputValue value)
@@ -103,11 +104,11 @@ public class Player : MonoBehaviour
     {
         grounded = IsGrounded();
         interactable = Physics2D.OverlapCircle(transform.position, 1, LayerMask.NameToLayer("Interactable"));
-        if (attackingTime < Time.time && State != PlayerState.Dash) Flip();
 
         switch (State)
         {
             case PlayerState.Movement:
+                Flip();
                 UpdateMovementState();
                 break;
             case PlayerState.Attack:
@@ -133,11 +134,12 @@ public class Player : MonoBehaviour
         groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = true;
         rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0);
         tr.emitting = true;
+        dashingTime = Time.time + .6f;
     }
 
     private void UpdateDashState()
     {
-        if (dashingTime - 0.4f > Time.time) return;
+        if (dashingTime - 0.5f > Time.time) return;
 
         tr.emitting = false;
         rb.gravityScale = 10;
@@ -146,7 +148,7 @@ public class Player : MonoBehaviour
         EnterMovementState();
     }
 
-    private void EnterHitState(Collision2D collision, int dmg)
+    public void EnterHitState(Collision2D collision, int dmg)
     {
         if (State != PlayerState.Hit && damagedTime > Time.time) return;
         State = PlayerState.Hit;
@@ -166,22 +168,6 @@ public class Player : MonoBehaviour
 
     private void UpdateHitState()
     {
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, radius, Enemy);
-
-        foreach (Collider2D enemy in hitEnemies)
-        {
-            if (enemy.GetComponent<Enemy>() != null)
-            {
-                if (pogoFalling)
-                {
-                    StartCoroutine(ToPogoStab(1));
-                    StartCoroutine(enemy.GetComponent<Mosquito>().Hit(damage, 2));
-                }
-                else
-                    StartCoroutine(enemy.GetComponent<Mosquito>().Hit(damage, Convert.ToInt32(facingRight)));
-            }
-        }
-
         if (damagedTime - 0.5 < Time.time)
             EnterMovementState();
     }
@@ -192,25 +178,50 @@ public class Player : MonoBehaviour
 
         State = PlayerState.Attack;
 
-        if (grounded)
+        if (!grounded && direction.y < 0)
         {
-            if (direction.y == 0)
-                attackingTime = 0.5f + Time.time;
+            attackingTime = 0.15f + Time.time;
+            rb.velocity = new Vector2(0, rb.velocity.y);
+            pogoFalling = true;
+            GetComponent<Reanimator>().Set("swordFallAnim", 0);
         }
-        else
-        {
-            if (direction.y < 0)
-                pogoFalling = true;
-        }
+        else if (direction.y == 0 || (grounded && direction.y < 0))
+            attackingTime = 0.5f + Time.time;
     }
 
     private void UpdateAttackState()
     {
-        if (attackingTime < Time.time)
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, radius, Enemy);
+
+        foreach (Collider2D enemy in hitEnemies)
+        {
+            if (enemy.GetComponent<Enemy>() != null)
+            {
+                if (pogoFalling)
+                    StartCoroutine(enemy.GetComponent<Mosquito>().Hit(damage, 2));
+                else
+                    StartCoroutine(enemy.GetComponent<Mosquito>().Hit(damage, Convert.ToInt32(facingRight)));
+            }
+        }
+
+        if (!pogoFalling)
+        {
+            if (!grounded)
+                Jump();
+            
+            if (attackingTime < Time.time)
+                EnterMovementState();
+            rb.velocity = new Vector2(direction.x * speed, rb.velocity.y);
+        }
+        else if (grounded)
+        {
+            pogoFalling = false;
+            GetComponent<Reanimator>().Set("idleTransition", 0);
             EnterMovementState();
+        }
     }
 
-    private void EnterMovementState()
+        private void EnterMovementState()
     {
         State = PlayerState.Movement;
     }
@@ -218,43 +229,34 @@ public class Player : MonoBehaviour
     private void UpdateMovementState()
     {
         //walk
-        if (State == PlayerState.Attack)
-            direction.x = 0;
         if (State != PlayerState.Dash && damagedTime - 0.5 < Time.time)
             rb.velocity = new Vector2(direction.x * speed, rb.velocity.y);
 
+        Jump();
+    }
+
+    private void Jump()
+    {
         //jump
-        if (jumping && grounded)
+        if (!jumped && jumping && grounded)
         {
-            rb.velocity = new Vector2(rb.velocity.x, 350);
-            Debug.Log(rb.velocity.y);
+            jumped = true;
+            rb.velocity = new Vector2(rb.velocity.x, 40);
         }
         if (grounded && falling)
         { // if on ground and finished jumping
             falling = false;
             canDash = true;
-            if (pogoFalling)
-                StartCoroutine(ToPogoStab(0));
         }
 
         if (jumping && rb.velocity.y > 0) // the longer they wait, the higher they go
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.95f);
+        else if (rb.velocity.y > 0)
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
-        if (rb.velocity.y <= 0) // tip point
-        {
+        else if (rb.velocity.y <= 0) // tip point
             falling = true;
-            jumping = false;
-        }
-
     }
 
-    private IEnumerator ToPogoStab(int enemyStab)
-    {
-        pogoFalling = false;
-        //pogoStabbing = true;
-        rb.velocity = new Vector2(enemyStab * 30 * direction.x, enemyStab * 40);
-        yield return new WaitForSeconds(0.3f);
-        //pogoStabbing = false;
-    }
     public bool IsGrounded() { return Physics2D.OverlapBox(groundCheck.position, new Vector2(width, 0.1f), 0, groundLayer); }
 
     private void Flip()
@@ -266,11 +268,6 @@ public class Player : MonoBehaviour
             localScale.x *= -1;
             transform.localScale = localScale;
         }
-    }
-
-    public void Hit(GameObject enemy, int dmg)
-    {
-        EnterHitState(enemy.GetComponent<Collision2D>(), dmg);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
