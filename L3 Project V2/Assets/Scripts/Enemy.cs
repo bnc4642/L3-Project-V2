@@ -100,8 +100,8 @@ public class Enemy : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (((1 << collision.gameObject.layer) & player) != 0)
-            collision.gameObject.GetComponent<Player>().Hit(this.gameObject, dmg);
+        //if (((1 << collision.gameObject.layer) & player) != 0)
+            //collision.gameObject.GetComponent<Player>().EnterHitState(this.GetComponent<Collision2D>(), dmg);
     }
 
     public virtual IEnumerator Hit(int dmg, int orrientation)

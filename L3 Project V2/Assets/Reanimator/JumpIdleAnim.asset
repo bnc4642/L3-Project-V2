@@ -20,8 +20,9 @@ MonoBehaviour:
       values: 01000000
   - sprite: {fileID: 604469115, guid: 9532aba58ae278940949e42ac885b05b, type: 3}
     drivers:
-      keys: []
-      values: 
+      keys:
+      - idleTransition
+      values: 01000000
   controlDriver:
     name: jumpIdleAnim
     autoIncrement: 0

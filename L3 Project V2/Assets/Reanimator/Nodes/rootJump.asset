@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: rootJump
   m_EditorClassIdentifier: 
   nodes:
+  - {fileID: 11400000, guid: 35080fe58a07a5a44b8557853566ccd7, type: 2}
   - {fileID: 11400000, guid: 5b2c7d2f05ffeb245a24cac08cee7dfe, type: 2}
-  - {fileID: 0}
   controlDriver:
     name: jumpDirection
     autoIncrement: 0

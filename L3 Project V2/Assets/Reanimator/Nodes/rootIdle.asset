@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: rootIdle
   m_EditorClassIdentifier: 
   nodes:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 99a356fe11296a14d8eeced1a468a06a, type: 2}
   - {fileID: 11400000, guid: e4080d168aa6d234db7ec32dad5ac08d, type: 2}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: f9d2e742353f45d48a629f3324deb8aa, type: 2}
   controlDriver:
     name: idleTransition
     autoIncrement: 0
