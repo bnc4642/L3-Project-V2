@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f1da0b6abdb7d45aa4315eccab639b, type: 3}
+  m_Name: 03CharacterAirSlashUp_animation
+  m_EditorClassIdentifier: 
+  cels:
+  - sprite: {fileID: 1757046635, guid: e7c52287696054948b52f6a64fee8ad9, type: 3}
+    drivers:
+      keys:
+      - airSlashUp
+      values: 01000000
+  - sprite: {fileID: -1991877945, guid: e7c52287696054948b52f6a64fee8ad9, type: 3}
+    drivers:
+      keys:
+      - airSlashUp
+      values: 02000000
+  - sprite: {fileID: 1079578, guid: e7c52287696054948b52f6a64fee8ad9, type: 3}
+    drivers:
+      keys:
+      - airSlashUp
+      values: 03000000
+  - sprite: {fileID: -101281773, guid: e7c52287696054948b52f6a64fee8ad9, type: 3}
+    drivers:
+      keys:
+      - jump
+      values: 04000000
+  controlDriver:
+    name: airSlashUp
+    autoIncrement: 0
+    percentageBased: 0
+    guid: 3fc461cc-47e7-47e2-a10a-a3067e9a4485
+  drivers:
+    keys: []
+    values: 

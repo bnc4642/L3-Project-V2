@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c1b935bc3bfd4944ab93c4a574dfd0da, type: 3}
-  m_Name: rootAttack
+  m_Name: rootAirMovement
   m_EditorClassIdentifier: 
   nodes:
-  - {fileID: 11400000, guid: 871240c6503b3344b80d194bb69b365f, type: 2}
-  - {fileID: 11400000, guid: 05de0caf4783716438819986d0070776, type: 2}
+  - {fileID: 11400000, guid: 980571315eab21a429e0ab04d7794e29, type: 2}
+  - {fileID: 11400000, guid: 0054c7cb002a49542931e989847c9254, type: 2}
   controlDriver:
-    name: isGrounded
+    name: isJumping
     autoIncrement: 0
     percentageBased: 0
-    guid: 8f510a4b-2265-4d53-8c53-a839e9e31c61
+    guid: c9040611-e4ed-46db-bf24-8b2c4a2be18c
   drivers:
-    keys: []
-    values: 
+    keys:
+    - idleTransition
+    values: 02000000

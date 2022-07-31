@@ -41,6 +41,7 @@ public class Player : MonoBehaviour
     public int damage;
 
     bool canDash = true;
+    bool wantToDash = false;
     private float dashingPower = 100;
     private float dashingTime = 1.4f;
     public int health = 10;
@@ -64,6 +65,7 @@ public class Player : MonoBehaviour
 
     public void OnDash(InputValue value)
     {
+        wantToDash = true;
         EnterDashState();
     }
 
@@ -93,7 +95,7 @@ public class Player : MonoBehaviour
     public void OnInteract(InputValue value)
     {
         if (interactable)
-            Debug.Log("Interact");
+            Interact();
     }
 
     public void OnMagic(InputValue value)
@@ -126,7 +128,9 @@ public class Player : MonoBehaviour
 
     private void EnterDashState()
     {
+        wantToDash = true;
         if (!canDash || dashingTime > Time.time) return;
+        wantToDash = false;
         State = PlayerState.Dash;
 
         canDash = false;
@@ -179,7 +183,9 @@ public class Player : MonoBehaviour
     private void UpdateHitState()
     {
         if (damagedTime - 0.5 < Time.time)
+        {
             EnterMovementState();
+        }
     }
 
     private void EnterAttackState()
@@ -220,24 +226,19 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (!pogoFalling)
-        {
-            if (!grounded)
-                Jump();
+        if (!grounded)
+            Jump();
 
-            if (attackingTime < Time.time)
-            {
-                Flip();
-                EnterMovementState();
-            }
-            rb.velocity = new Vector2(direction.x * speed*0.3f, rb.velocity.y);
-        }
-        else if (grounded)
+        if (attackingTime < Time.time)
         {
-            pogoFalling = false;
-            GetComponent<Reanimator>().Set("idleTransition", 0);
-            EnterMovementState();
+            Flip();
+
+            if (wantToDash)
+                EnterDashState();
+            else
+                EnterMovementState();
         }
+        rb.velocity = new Vector2(direction.x * speed*0.3f, rb.velocity.y);
     }
 
     private void EnterMovementState()
@@ -247,11 +248,16 @@ public class Player : MonoBehaviour
 
     private void UpdateMovementState()
     {
+        // if(wallColliderLeft && direction.x < 0 || wallColliderRight && direction.x > 0) wallHolding = true;
+
         //walk
-        if (State != PlayerState.Dash && damagedTime - 0.5 < Time.time)
+        if (State != PlayerState.Dash && damagedTime - 0.5 < Time.time) // && !wallHolding
             rb.velocity = new Vector2(direction.x * speed, rb.velocity.y);
 
-        Jump();
+        // if (wallHolding && !grounded)
+            // WallJump()
+        // else
+            Jump();
     }
 
     private void Jump()
@@ -276,6 +282,30 @@ public class Player : MonoBehaviour
             falling = true;
     }
 
+    private void WallJump()
+    {
+        //jump
+        if (!jumped && jumping) // && wallHolding
+        {
+            jumped = true;
+            rb.velocity = new Vector2(rb.velocity.x, 40);
+        }
+        if (grounded && falling)
+        { // if on ground and finished jumping
+            falling = false;
+            canDash = true;
+        }
+
+        // add a velocity to the right if facing right, or to the left, and prevent player movement for a fraction of a second
+
+        if (jumping && rb.velocity.y > 0) // the longer they wait, the higher they go
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.95f);
+        else if (rb.velocity.y > 0)
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+        else if (rb.velocity.y <= 0) // tip point
+            falling = true;
+    }
+
     public bool IsGrounded() { return Physics2D.OverlapBox(groundCheck.position, new Vector2(width, 0.1f), 0, groundLayer); }
 
     private void Flip()
@@ -287,6 +317,11 @@ public class Player : MonoBehaviour
             localScale.x *= -1;
             transform.localScale = localScale;
         }
+    }
+
+    private  void Interact()
+    {
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f1da0b6abdb7d45aa4315eccab639b, type: 3}
+  m_Name: 03CharacterAirStab_animation
+  m_EditorClassIdentifier: 
+  cels:
+  - sprite: {fileID: 2030247674, guid: da57d9fdbba248e4aaa3dfdb392be0cd, type: 3}
+    drivers:
+      keys:
+      - airStab
+      values: 01000000
+  - sprite: {fileID: -679559767, guid: da57d9fdbba248e4aaa3dfdb392be0cd, type: 3}
+    drivers:
+      keys:
+      - airStab
+      values: 02000000
+  - sprite: {fileID: -516336421, guid: da57d9fdbba248e4aaa3dfdb392be0cd, type: 3}
+    drivers:
+      keys:
+      - airStab
+      values: 03000000
+  - sprite: {fileID: 876344132, guid: da57d9fdbba248e4aaa3dfdb392be0cd, type: 3}
+    drivers:
+      keys:
+      - jump
+      values: 04000000
+  controlDriver:
+    name: airStab
+    autoIncrement: 0
+    percentageBased: 0
+    guid: 697a0a8f-e6a5-4618-8f45-845e0bd7ba7e
+  drivers:
+    keys: []
+    values: 

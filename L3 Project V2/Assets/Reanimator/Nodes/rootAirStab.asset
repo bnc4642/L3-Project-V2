@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c1b935bc3bfd4944ab93c4a574dfd0da, type: 3}
-  m_Name: rootAttack
+  m_Name: rootAirStab
   m_EditorClassIdentifier: 
   nodes:
-  - {fileID: 11400000, guid: 871240c6503b3344b80d194bb69b365f, type: 2}
-  - {fileID: 11400000, guid: 05de0caf4783716438819986d0070776, type: 2}
+  - {fileID: 11400000, guid: 687152bcdd0b43249bedbe54c9e90113, type: 2}
+  - {fileID: 11400000, guid: 48fd086420f1d654f9b222834425e020, type: 2}
+  - {fileID: 11400000, guid: 2d2ff257ac6991c46aef48cd4b4e7a98, type: 2}
   controlDriver:
-    name: isGrounded
+    name: 
     autoIncrement: 0
     percentageBased: 0
-    guid: 8f510a4b-2265-4d53-8c53-a839e9e31c61
+    guid: ceb61fbf-3a50-4384-8266-0d5e4093e525
   drivers:
     keys: []
     values: 

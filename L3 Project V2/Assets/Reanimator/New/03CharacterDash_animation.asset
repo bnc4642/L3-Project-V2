@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f1da0b6abdb7d45aa4315eccab639b, type: 3}
+  m_Name: 03CharacterDash_animation
+  m_EditorClassIdentifier: 
+  cels:
+  - sprite: {fileID: 830151073, guid: 6a7625c094c14a54b80f32d66becede0, type: 3}
+    drivers:
+      keys:
+      - dash
+      values: 01000000
+  - sprite: {fileID: -789434804, guid: 6a7625c094c14a54b80f32d66becede0, type: 3}
+    drivers:
+      keys:
+      - dash
+      values: 02000000
+  - sprite: {fileID: -390123168, guid: 6a7625c094c14a54b80f32d66becede0, type: 3}
+    drivers:
+      keys:
+      - dash
+      values: 03000000
+  - sprite: {fileID: 317780724, guid: 6a7625c094c14a54b80f32d66becede0, type: 3}
+    drivers:
+      keys: []
+      values: 
+  controlDriver:
+    name: dash
+    autoIncrement: 0
+    percentageBased: 0
+    guid: 35a5ef28-963e-4b7e-8f2f-d799fa1f38c9
+  drivers:
+    keys: []
+    values: 

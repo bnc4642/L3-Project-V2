@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f1da0b6abdb7d45aa4315eccab639b, type: 3}
+  m_Name: 03CharacterHeal_animation
+  m_EditorClassIdentifier: 
+  cels:
+  - sprite: {fileID: 1701345379, guid: 719ba30617e7d0c459caa76fb53fce95, type: 3}
+    drivers:
+      keys:
+      - heal
+      values: 01000000
+  - sprite: {fileID: 609173076, guid: 719ba30617e7d0c459caa76fb53fce95, type: 3}
+    drivers:
+      keys:
+      - heal
+      values: 02000000
+  - sprite: {fileID: -699241427, guid: 719ba30617e7d0c459caa76fb53fce95, type: 3}
+    drivers:
+      keys:
+      - heal
+      values: 03000000
+  - sprite: {fileID: 1186848328, guid: 719ba30617e7d0c459caa76fb53fce95, type: 3}
+    drivers:
+      keys:
+      - heal
+      values: 04000000
+  - sprite: {fileID: 1350852401, guid: 719ba30617e7d0c459caa76fb53fce95, type: 3}
+    drivers:
+      keys:
+      - heal
+      values: 05000000
+  - sprite: {fileID: -1330318175, guid: 719ba30617e7d0c459caa76fb53fce95, type: 3}
+    drivers:
+      keys:
+      - heal
+      values: 06000000
+  - sprite: {fileID: 892476955, guid: 719ba30617e7d0c459caa76fb53fce95, type: 3}
+    drivers:
+      keys:
+      - heal
+      values: 07000000
+  - sprite: {fileID: 447229154, guid: 719ba30617e7d0c459caa76fb53fce95, type: 3}
+    drivers:
+      keys:
+      - heal
+      values: 08000000
+  - sprite: {fileID: -2059195188, guid: 719ba30617e7d0c459caa76fb53fce95, type: 3}
+    drivers:
+      keys:
+      - idle
+      values: 00000000
+  controlDriver:
+    name: heal
+    autoIncrement: 0
+    percentageBased: 0
+    guid: ced72e73-7b0b-4088-9625-df858a9c5e62
+  drivers:
+    keys: []
+    values: 

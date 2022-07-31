@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f1da0b6abdb7d45aa4315eccab639b, type: 3}
+  m_Name: 03CharacterWallAnims_animation
+  m_EditorClassIdentifier: 
+  cels:
+  - sprite: {fileID: -1235763269, guid: f3ad6976a6a9e72499afdc056184a59a, type: 3}
+    drivers:
+      keys:
+      - wallCling
+      values: 01000000
+  - sprite: {fileID: -1602943799, guid: f3ad6976a6a9e72499afdc056184a59a, type: 3}
+    drivers:
+      keys:
+      - wallCling
+      values: 02000000
+  - sprite: {fileID: -407193168, guid: f3ad6976a6a9e72499afdc056184a59a, type: 3}
+    drivers:
+      keys: []
+      values: 
+  controlDriver:
+    name: wallCling
+    autoIncrement: 0
+    percentageBased: 0
+    guid: ef2993de-092a-4ef6-9279-101aa6f90238
+  drivers:
+    keys: []
+    values: 

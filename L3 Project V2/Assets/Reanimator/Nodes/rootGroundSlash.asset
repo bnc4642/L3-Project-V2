@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c1b935bc3bfd4944ab93c4a574dfd0da, type: 3}
-  m_Name: rootRunJump
+  m_Name: rootGroundSlash
   m_EditorClassIdentifier: 
   nodes:
-  - {fileID: 11400000, guid: 35080fe58a07a5a44b8557853566ccd7, type: 2}
-  - {fileID: 11400000, guid: 5b2c7d2f05ffeb245a24cac08cee7dfe, type: 2}
+  - {fileID: 11400000, guid: 24561abd17a96624eae9f4b789e301a5, type: 2}
+  - {fileID: 11400000, guid: 0091922c66dae1b43a28702a632efdbe, type: 2}
   controlDriver:
-    name: jumpDirection
+    name: 
     autoIncrement: 0
     percentageBased: 0
-    guid: 3737d28d-def0-4812-9723-042e34f2b617
+    guid: c17fe99d-69c7-4c33-a64e-62089abc46d0
   drivers:
     keys: []
     values: 

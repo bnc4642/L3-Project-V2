@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f1da0b6abdb7d45aa4315eccab639b, type: 3}
+  m_Name: 03CharacterAirJump_animation
+  m_EditorClassIdentifier: 
+  cels:
+  - sprite: {fileID: -1736845674, guid: 90c8edc6afa541d4a8301382f48a4cde, type: 3}
+    drivers:
+      keys:
+      - floatingJump
+      values: 01000000
+  - sprite: {fileID: -1896872194, guid: 90c8edc6afa541d4a8301382f48a4cde, type: 3}
+    drivers:
+      keys:
+      - floatingJump
+      values: 02000000
+  - sprite: {fileID: -293754261, guid: 90c8edc6afa541d4a8301382f48a4cde, type: 3}
+    drivers:
+      keys:
+      - floatingJump
+      values: 03000000
+  - sprite: {fileID: -1448050997, guid: 90c8edc6afa541d4a8301382f48a4cde, type: 3}
+    drivers:
+      keys:
+      - driver2
+      - jump
+      values: 0000000004000000
+  controlDriver:
+    name: floatingJump
+    autoIncrement: 0
+    percentageBased: 0
+    guid: 96184c0f-efbf-4e20-8fda-e5d2581d2ca6
+  drivers:
+    keys: []
+    values: 

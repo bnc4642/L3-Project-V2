@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f1da0b6abdb7d45aa4315eccab639b, type: 3}
+  m_Name: 03CharacterStandingSlashUp_animation
+  m_EditorClassIdentifier: 
+  cels:
+  - sprite: {fileID: -286345525, guid: 87a24d924a15fb540bd4203827083896, type: 3}
+    drivers:
+      keys:
+      - slashUp
+      values: 01000000
+  - sprite: {fileID: 926755445, guid: 87a24d924a15fb540bd4203827083896, type: 3}
+    drivers:
+      keys:
+      - slashUp
+      values: 02000000
+  - sprite: {fileID: 1893750119, guid: 87a24d924a15fb540bd4203827083896, type: 3}
+    drivers:
+      keys:
+      - slashUp
+      values: 03000000
+  - sprite: {fileID: -115598072, guid: 87a24d924a15fb540bd4203827083896, type: 3}
+    drivers:
+      keys:
+      - idle
+      values: 00000000
+  controlDriver:
+    name: slashUp
+    autoIncrement: 0
+    percentageBased: 0
+    guid: 6f5df8a1-13d4-4447-b178-3e4d9fb98efa
+  drivers:
+    keys: []
+    values: 
