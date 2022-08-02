@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodes:
   - {fileID: 11400000, guid: 35080fe58a07a5a44b8557853566ccd7, type: 2}
-  - {fileID: 11400000, guid: 5b2c7d2f05ffeb245a24cac08cee7dfe, type: 2}
+  - {fileID: 11400000, guid: ab0c5dcf58bf78946bade501a1577f7c, type: 2}
   controlDriver:
     name: jumpDirection
     autoIncrement: 0

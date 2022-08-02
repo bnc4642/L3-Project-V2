@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 using Aarthificial.Reanimation;
 
 public class Player : MonoBehaviour
@@ -15,6 +16,7 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask Enemy;
     [SerializeField] private LayerMask Transition;
+    [SerializeField] private InputActionReference actionReference;
     readonly float DamagePush = 20;
     public LevelLoader transitioner;
     public float width = 1.15f;
@@ -25,12 +27,13 @@ public class Player : MonoBehaviour
     bool jumping = false;
     bool falling = false;
     bool interactable = false;
-    bool attacking = false;
     float attackingTime = 0;
     float damagedTime = 0;
     public bool pogoFalling = false;
     private bool jumped = false;
 
+    public int attackStyle = 0;
+    public int attackingDirection = 0;
     public Vector2 direction;
     public PlayerState State = PlayerState.Movement;
     public bool grounded = false;
@@ -41,7 +44,6 @@ public class Player : MonoBehaviour
     public int damage;
 
     bool canDash = true;
-    bool wantToDash = false;
     private float dashingPower = 100;
     private float dashingTime = 1.4f;
     public int health = 10;
@@ -58,14 +60,32 @@ public class Player : MonoBehaviour
             jumped = false;
     }
     
-    public void OnAttack(InputValue value)
+    public void OnStab(InputValue value)
     {
-        EnterAttackState();
+        actionReference.action.performed += context =>
+        {
+            if (context.interaction is TapInteraction)
+            {
+                Debug.Log("This");
+            }
+        };
+        EnterAttackState(2);
+    }
+
+    public void OnSlash(InputValue value)
+    {
+        actionReference.action.performed += context =>
+        {
+            if (context.interaction is HoldInteraction)
+            {
+                Debug.Log("That");
+            }
+        };
+        EnterAttackState(3);
     }
 
     public void OnDash(InputValue value)
     {
-        wantToDash = true;
         EnterDashState();
     }
 
@@ -120,18 +140,12 @@ public class Player : MonoBehaviour
             case PlayerState.Hit:
                 UpdateHitState();
                 break;
-            case PlayerState.Dash:
-                UpdateDashState();
-                break;
         }
     }
 
     private void EnterDashState()
     {
-        wantToDash = true;
         if (!canDash || dashingTime > Time.time) return;
-        wantToDash = false;
-        State = PlayerState.Dash;
 
         canDash = false;
         rb.gravityScale = 0;
@@ -140,26 +154,6 @@ public class Player : MonoBehaviour
         rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0);
         tr.emitting = true;
         dashingTime = Time.time + .6f;
-    }
-
-    private void UpdateDashState()
-    {
-        if (dashingTime - 0.5f > Time.time) return;
-
-        tr.emitting = false;
-        rb.gravityScale = 10;
-        gameObject.GetComponent<BoxCollider2D>().enabled = true;
-        groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = false;
-
-        if (attacking)
-        {
-            State = PlayerState.Attack;
-            EnterAttackState();
-            attacking = false;
-            return;
-        }
-
-        EnterMovementState();
     }
 
     public void EnterHitState(Collision2D collision, int dmg)
@@ -188,25 +182,66 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void EnterAttackState()
+    private IEnumerator EnterAttackState(int n)
     {
-        if (State == PlayerState.Dash)
-            attacking = true;
+        if (dashingTime > Time.time)
+            yield return new WaitForSeconds(dashingTime - Time.time);
 
-        if (!attacking && (State == PlayerState.Attack || State == PlayerState.Dash || attackingTime > Time.time)) return;
-        else if (attacking && State == PlayerState.Dash) return;
-
-        State = PlayerState.Attack;
-
-        if (!grounded && direction.y < 0)
+        if (State != PlayerState.Attack && dashingTime < Time.time && attackingTime < Time.time)
         {
-            attackingTime = 0.15f + Time.time;
-            rb.velocity = new Vector2(0, rb.velocity.y);
-            pogoFalling = true;
-            GetComponent<Reanimator>().Set("swordFallAnim", 0);
+
+            attackStyle = n;
+
+            switch (direction.y)
+            {
+                case > 0:
+                    attackingDirection = 2;
+                    AttackDirection(2);
+                    break;
+                case < 0:
+                    if (grounded)
+                        AttackDirection(1);
+                    else
+                        AttackDirection(0);
+                    break;
+                default:
+                    attackingDirection = 1;
+                    AttackDirection(1);
+                    break;
+            }
+
+            State = PlayerState.Attack;
+
+            if (!grounded && direction.y < 0)
+            {
+                attackingTime = 0.15f + Time.time;
+                rb.velocity = new Vector2(0, rb.velocity.y);
+                pogoFalling = true;
+                GetComponent<Reanimator>().Set("swordFallAnim", 0);
+            }
+            else if (direction.y == 0 || (grounded && direction.y < 0))
+                attackingTime = 0.5f + Time.time;
         }
-        else if (direction.y == 0 || (grounded && direction.y < 0))
-            attackingTime = 0.5f + Time.time;
+        yield return null;
+    }
+
+    private void AttackDirection(int n)
+    {
+        if (n == 0)
+        {
+            attackPoint.position = new Vector3();
+            radius = 2;
+        }
+        else if (n == 1)
+        {
+            attackPoint.position = new Vector3();
+            radius = 2;
+        }
+        else if (n == 2)
+        {
+            attackPoint.position = new Vector3();
+            radius = 2;
+        }
     }
 
     private void UpdateAttackState()
@@ -232,11 +267,7 @@ public class Player : MonoBehaviour
         if (attackingTime < Time.time)
         {
             Flip();
-
-            if (wantToDash)
-                EnterDashState();
-            else
-                EnterMovementState();
+            EnterMovementState();
         }
         rb.velocity = new Vector2(direction.x * speed*0.3f, rb.velocity.y);
     }
@@ -250,14 +281,23 @@ public class Player : MonoBehaviour
     {
         // if(wallColliderLeft && direction.x < 0 || wallColliderRight && direction.x > 0) wallHolding = true;
 
+        if (dashingTime - 0.5f < Time.time)
+        {
+            tr.emitting = false;
+            rb.gravityScale = 10;
+            gameObject.GetComponent<BoxCollider2D>().enabled = true;
+            groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+           //rb.velocity = new Vector2(0, 0);
+        }
+
         //walk
-        if (State != PlayerState.Dash && damagedTime - 0.5 < Time.time) // && !wallHolding
+        if (dashingTime - 0.5f < Time.time && damagedTime - 0.5 < Time.time) // && !wallHolding
             rb.velocity = new Vector2(direction.x * speed, rb.velocity.y);
 
         // if (wallHolding && !grounded)
-            // WallJump()
+        // WallJump()
         // else
-            Jump();
+        Jump();
     }
 
     private void Jump()

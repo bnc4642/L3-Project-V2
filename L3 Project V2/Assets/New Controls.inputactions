@@ -24,13 +24,22 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Attack",
+                    "name": "Stab",
                     "type": "Button",
                     "id": "27afacbd-0211-4a4e-bc80-36e596a9ff75",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Tap,Hold",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Slash",
+                    "type": "Value",
+                    "id": "39826cde-45d0-4f18-b630-73e501fdd913",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Dash",
@@ -172,7 +181,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
-                    "action": "Attack",
+                    "action": "Stab",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -250,6 +259,17 @@
                     "processors": "",
                     "groups": "Keyboard & Mouse",
                     "action": "Escape",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f111e5ac-feab-4f8a-9118-8b63f20ae91d",
+                    "path": "<Keyboard>/x",
+                    "interactions": "Hold(duration=0.25)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Slash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
