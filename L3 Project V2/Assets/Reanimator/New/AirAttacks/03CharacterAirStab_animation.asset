@@ -16,17 +16,17 @@ MonoBehaviour:
   - sprite: {fileID: 2030247674, guid: da57d9fdbba248e4aaa3dfdb392be0cd, type: 3}
     drivers:
       keys:
-      - airStab
+      - atk
       values: 01000000
   - sprite: {fileID: -679559767, guid: da57d9fdbba248e4aaa3dfdb392be0cd, type: 3}
     drivers:
       keys:
-      - airStab
+      - atk
       values: 02000000
   - sprite: {fileID: -516336421, guid: da57d9fdbba248e4aaa3dfdb392be0cd, type: 3}
     drivers:
       keys:
-      - airStab
+      - atk
       values: 03000000
   - sprite: {fileID: 876344132, guid: da57d9fdbba248e4aaa3dfdb392be0cd, type: 3}
     drivers:
@@ -34,7 +34,7 @@ MonoBehaviour:
       - jump
       values: 04000000
   controlDriver:
-    name: airStab
+    name: atk
     autoIncrement: 0
     percentageBased: 0
     guid: 697a0a8f-e6a5-4618-8f45-845e0bd7ba7e

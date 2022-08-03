@@ -45,8 +45,9 @@ MonoBehaviour:
       values: 06000000
   - sprite: {fileID: 1325604203, guid: cdc90d09df25fd147874d71de553c9e3, type: 3}
     drivers:
-      keys: []
-      values: 
+      keys:
+      - jump
+      values: 00000000
   controlDriver:
     name: jump
     autoIncrement: 0

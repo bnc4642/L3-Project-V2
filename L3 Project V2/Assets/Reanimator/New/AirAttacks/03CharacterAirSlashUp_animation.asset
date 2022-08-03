@@ -16,17 +16,17 @@ MonoBehaviour:
   - sprite: {fileID: 1757046635, guid: e7c52287696054948b52f6a64fee8ad9, type: 3}
     drivers:
       keys:
-      - airSlashUp
+      - atkUp
       values: 01000000
   - sprite: {fileID: -1991877945, guid: e7c52287696054948b52f6a64fee8ad9, type: 3}
     drivers:
       keys:
-      - airSlashUp
+      - atkUp
       values: 02000000
   - sprite: {fileID: 1079578, guid: e7c52287696054948b52f6a64fee8ad9, type: 3}
     drivers:
       keys:
-      - airSlashUp
+      - atkUp
       values: 03000000
   - sprite: {fileID: -101281773, guid: e7c52287696054948b52f6a64fee8ad9, type: 3}
     drivers:
@@ -34,7 +34,7 @@ MonoBehaviour:
       - jump
       values: 04000000
   controlDriver:
-    name: airSlashUp
+    name: atkUp
     autoIncrement: 0
     percentageBased: 0
     guid: 3fc461cc-47e7-47e2-a10a-a3067e9a4485

@@ -16,17 +16,17 @@ MonoBehaviour:
   - sprite: {fileID: -2001548340, guid: 1435972332ee31a49941f162b221e48f, type: 3}
     drivers:
       keys:
-      - airStabDown
+      - atkDown
       values: 01000000
   - sprite: {fileID: -456269615, guid: 1435972332ee31a49941f162b221e48f, type: 3}
     drivers:
       keys:
-      - airStabDown
+      - atkDown
       values: 02000000
   - sprite: {fileID: 1596647743, guid: 1435972332ee31a49941f162b221e48f, type: 3}
     drivers:
       keys:
-      - airStabDown
+      - atkDown
       values: 03000000
   - sprite: {fileID: 1707675795, guid: 1435972332ee31a49941f162b221e48f, type: 3}
     drivers:
@@ -34,7 +34,7 @@ MonoBehaviour:
       - jump
       values: 04000000
   controlDriver:
-    name: airStabDown
+    name: atkDown
     autoIncrement: 0
     percentageBased: 0
     guid: 36c865a5-1be1-4458-88ae-09d36186578f

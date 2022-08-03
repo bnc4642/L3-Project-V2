@@ -19,7 +19,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2a6ded8b7a51dc1478b84b2d575f2617, type: 2}
   - {fileID: 11400000, guid: 073ad9a92d17aa94b9d1eda99919ccce, type: 2}
   controlDriver:
-    name: attackDirection
+    name: attackStyle
     autoIncrement: 0
     percentageBased: 0
     guid: ff6bf368-46a9-4d26-a2e9-c55c9ef28775

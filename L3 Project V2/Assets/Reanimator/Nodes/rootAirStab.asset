@@ -17,7 +17,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 48fd086420f1d654f9b222834425e020, type: 2}
   - {fileID: 11400000, guid: 2d2ff257ac6991c46aef48cd4b4e7a98, type: 2}
   controlDriver:
-    name: 
+    name: basicHitState
     autoIncrement: 0
     percentageBased: 0
     guid: ceb61fbf-3a50-4384-8266-0d5e4093e525

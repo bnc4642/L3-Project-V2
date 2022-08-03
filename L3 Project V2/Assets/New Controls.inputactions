@@ -29,17 +29,8 @@
                     "id": "27afacbd-0211-4a4e-bc80-36e596a9ff75",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Tap,Hold",
+                    "interactions": "Tap(duration=0.15),Hold(duration=0.3,pressPoint=0.35)",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Slash",
-                    "type": "Value",
-                    "id": "39826cde-45d0-4f18-b630-73e501fdd913",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
                 },
                 {
                     "name": "Dash",
@@ -261,15 +252,32 @@
                     "action": "Escape",
                     "isComposite": false,
                     "isPartOfComposite": false
-                },
+                }
+            ]
+        },
+        {
+            "name": "UI",
+            "id": "4649a372-d3c6-45a9-96ce-4fc576791ef0",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "5fd0bfc0-cbf8-4401-9ba6-04e9637a15c0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
                 {
                     "name": "",
-                    "id": "f111e5ac-feab-4f8a-9118-8b63f20ae91d",
-                    "path": "<Keyboard>/x",
-                    "interactions": "Hold(duration=0.25)",
+                    "id": "f21cc08f-c3ea-4bdf-8a34-0877609fb434",
+                    "path": "",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Slash",
+                    "action": "New action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

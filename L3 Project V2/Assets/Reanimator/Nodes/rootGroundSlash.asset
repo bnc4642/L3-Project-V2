@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: rootGroundSlash
   m_EditorClassIdentifier: 
   nodes:
+  - {fileID: 11400000, guid: 0091922c66dae1b43a28702a632efdbe, type: 2}
   - {fileID: 11400000, guid: 24561abd17a96624eae9f4b789e301a5, type: 2}
   - {fileID: 11400000, guid: 0091922c66dae1b43a28702a632efdbe, type: 2}
   controlDriver:
-    name: 
+    name: basicHitState
     autoIncrement: 0
     percentageBased: 0
     guid: c17fe99d-69c7-4c33-a64e-62089abc46d0

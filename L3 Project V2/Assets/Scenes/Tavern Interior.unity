@@ -2728,6 +2728,9 @@ MonoBehaviour:
   - groundSwordAnim
   - jumpIdleAnim
   - swordFallToIdleAnim
+  - atk
+  - atkUp
+  - atkDown
 --- !u!114 &7171566885561726458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2846,6 +2849,10 @@ PrefabInstance:
       propertyPath: transitioner
       value: 
       objectReference: {fileID: 1995760930}
+    - target: {fileID: 1258719320265126707, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: actionReference
+      value: 
+      objectReference: {fileID: -8466941522944551171, guid: dae50a7675ab4c548a7f48105e2d5a29, type: 3}
     - target: {fileID: 1258719320265126708, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
       propertyPath: m_Name
       value: Character

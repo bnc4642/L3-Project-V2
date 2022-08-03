@@ -16,22 +16,22 @@ MonoBehaviour:
   - sprite: {fileID: 105090765, guid: 530c7fa1c1bd31b4a9d45ee8ccc6f41b, type: 3}
     drivers:
       keys:
-      - slash
+      - atk
       values: 01000000
   - sprite: {fileID: 1647647506, guid: 530c7fa1c1bd31b4a9d45ee8ccc6f41b, type: 3}
     drivers:
       keys:
-      - slash
+      - atk
       values: 02000000
   - sprite: {fileID: -715805966, guid: 530c7fa1c1bd31b4a9d45ee8ccc6f41b, type: 3}
     drivers:
       keys:
-      - slash
+      - atk
       values: 03000000
   - sprite: {fileID: -125268282, guid: 530c7fa1c1bd31b4a9d45ee8ccc6f41b, type: 3}
     drivers:
       keys:
-      - slash
+      - atk
       values: 04000000
   - sprite: {fileID: 1807143870, guid: 530c7fa1c1bd31b4a9d45ee8ccc6f41b, type: 3}
     drivers:
@@ -39,7 +39,7 @@ MonoBehaviour:
       - idle
       values: 00000000
   controlDriver:
-    name: slash
+    name: atk
     autoIncrement: 0
     percentageBased: 0
     guid: 7c4af7d9-55f7-476b-ae37-41e325e6a92c

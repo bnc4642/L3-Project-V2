@@ -13,28 +13,28 @@ MonoBehaviour:
   m_Name: 03CharacterStandingStabUp_animation
   m_EditorClassIdentifier: 
   cels:
+  - sprite: {fileID: -1195099247, guid: 630d54052ce3ccb41bd47b8b2f0d6ab1, type: 3}
+    drivers:
+      keys:
+      - atkUp
+      values: 01000000
   - sprite: {fileID: -873111676, guid: 630d54052ce3ccb41bd47b8b2f0d6ab1, type: 3}
     drivers:
       keys:
-      - stabUp
-      values: 01000000
+      - atkUp
+      values: 02000000
   - sprite: {fileID: 1002402197, guid: 630d54052ce3ccb41bd47b8b2f0d6ab1, type: 3}
     drivers:
       keys:
-      - stabUp
-      values: 02000000
-  - sprite: {fileID: 494601352, guid: 630d54052ce3ccb41bd47b8b2f0d6ab1, type: 3}
-    drivers:
-      keys:
-      - stabUp
+      - atkUp
       values: 03000000
-  - sprite: {fileID: -1195099247, guid: 630d54052ce3ccb41bd47b8b2f0d6ab1, type: 3}
+  - sprite: {fileID: 494601352, guid: 630d54052ce3ccb41bd47b8b2f0d6ab1, type: 3}
     drivers:
       keys:
       - idle
       values: 00000000
   controlDriver:
-    name: stabUp
+    name: atkUp
     autoIncrement: 0
     percentageBased: 0
     guid: 9fcb4150-98e0-40b1-868b-296bf9fb54d8

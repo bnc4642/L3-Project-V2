@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: rootGroundStab
   m_EditorClassIdentifier: 
   nodes:
+  - {fileID: 11400000, guid: 66c31649b34d6c84cb6ec6e0973c41fe, type: 2}
   - {fileID: 11400000, guid: d28b24c421bb3574bbf14e9ba08b931f, type: 2}
   - {fileID: 11400000, guid: 66c31649b34d6c84cb6ec6e0973c41fe, type: 2}
   controlDriver:
-    name: 
+    name: basicHitState
     autoIncrement: 0
     percentageBased: 0
     guid: 32ce7871-f25c-470f-baee-3e8ee01e3027
