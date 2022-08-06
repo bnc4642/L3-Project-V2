@@ -108,14 +108,13 @@ public class Enemy : MonoBehaviour
     {
         if (Time.time > timeHit + invinciFrames)
         {
-            HitEffects(orrientation);
-
             aiPath.target.GetComponentInChildren<CameraManager>().TriggerShake(0.5f, 5f);
             health -= dmg;
             if (health <= 0)
                 StartCoroutine(Die());
             timeHit = Time.time;
             aiPath.enabled = false;
+            HitEffects(orrientation);
             yield return new WaitForSeconds(timeDisabled);
             aiPath.enabled = true;
         }
@@ -127,16 +126,24 @@ public class Enemy : MonoBehaviour
         switch (orri)
         {
             case 0:
-                GetComponentInParent<Rigidbody2D>().velocity = new Vector2(-damagePush, damagePush / 3);
-                GetComponentsInChildren<ParticleSystem>()[3].gameObject.transform.rotation = Quaternion.Euler(0, 0, 180);
+                Debug.Log("Down");
+                GetComponentInParent<Rigidbody2D>().velocity = new Vector2(0, -damagePush / 3);
+                GetComponentsInChildren<ParticleSystem>()[3].gameObject.transform.rotation = Quaternion.Euler(0, 0, 270);
                 break;
             case 1:
+                Debug.Log("Right");
                 GetComponentInParent<Rigidbody2D>().velocity = new Vector2(damagePush, damagePush / 3);
                 GetComponentsInChildren<ParticleSystem>()[3].gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
                 break;
             case 2:
+                Debug.Log("Up");
                 GetComponentInParent<Rigidbody2D>().velocity = new Vector2(0, -damagePush / 3);
-                GetComponentsInChildren<ParticleSystem>()[3].gameObject.transform.rotation = Quaternion.Euler(0, 0, 270);
+                GetComponentsInChildren<ParticleSystem>()[3].gameObject.transform.rotation = Quaternion.Euler(0, 0, 90);
+                break;
+            case 3:
+                Debug.Log("Left");
+                GetComponentInParent<Rigidbody2D>().velocity = new Vector2(-damagePush, damagePush / 3);
+                GetComponentsInChildren<ParticleSystem>()[3].gameObject.transform.rotation = Quaternion.Euler(0, 0, 180);
                 break;
             default:
                 break;
@@ -156,8 +163,9 @@ public class Enemy : MonoBehaviour
 
         GetComponent<Collider2D>().enabled = false;
         GetComponentInParent<AIPath>().enabled = false;
-
-        this.enabled = false;
+        GetComponentInParent<Rigidbody2D>().velocity = Vector3.zero;
+        yield return new WaitForSeconds(0.5f);
+        Destroy(transform.parent.gameObject);
     }
 
 }

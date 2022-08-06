@@ -8,6 +8,10 @@ using Aarthificial.Reanimation;
 
 public class Player : MonoBehaviour
 {
+    public float wallRadius;
+    public Vector2 wallPos1;
+    public Vector2 wallPos2;
+
     public Rigidbody2D rb;
     public Transform groundCheck;
     [SerializeField] private TrailRenderer tr;
@@ -20,6 +24,11 @@ public class Player : MonoBehaviour
     public PlayerState State = PlayerState.Movement;
 
 
+    public Vector2[,] attackPos = new Vector2[2, 3] { { new Vector2(-0.15f, -1.81f), new Vector2(2.02f, 0.03f), new Vector2(-0.12f, 2.36f) }, { new Vector2(0.04f, -1.41f), new Vector2(1.39f, 0.03f), new Vector2(0.16f, 1.15f) } };
+    public float[,] attackRadii = new float[2, 3] { { 1.47f, 1.52f, 1.2f }, { 1.28f, 1.52f, 1.76f } };
+    public float attackBounce;
+    public float hitBounce;
+    private Vector2 bounceEffect;
     public float width = 1.15f;
     readonly float DamagePush = 20;
     float speed = 18;
@@ -27,13 +36,14 @@ public class Player : MonoBehaviour
     private int damage = 3;
     float attackingTime = 0;
     float damagedTime = 0;
+    private bool hasHitEnemies = false;
     public int attackStyle = 0;
     public int attackingDirection = 0;
     private float dashingPower = 100;
     private float dashingTime = 1.4f;
     public Vector2 direction;
-    private Vector3 attackPoint;
-    private float radius;
+    public Vector3 attackPoint;
+    public float radius;
 
 
     bool canDash = false;
@@ -43,6 +53,7 @@ public class Player : MonoBehaviour
     private bool jumped = false;
     public bool facingRight = true;
     public bool grounded = false;
+    public bool walled = false;
     public void OnMove(InputValue value)
     {
         direction = value.Get<Vector2>();
@@ -61,7 +72,11 @@ public class Player : MonoBehaviour
         {
             if (context.interaction is TapInteraction)
             {
-                StartCoroutine(EnterAttackState(2));
+                try
+                {
+                    StartCoroutine(EnterAttackState(2));
+                }
+                catch { }
             }
             else if (context.interaction is HoldInteraction)
             {
@@ -158,77 +173,52 @@ public class Player : MonoBehaviour
         if (State != PlayerState.Attack && attackingTime < Time.time)
         {
             attackStyle = n;
-
-            switch (direction.y)
-            {
-                case > 0:
-                    attackingDirection = 2;
-                    AttackDirection(2);
-                    break;
-                case < 0:
-                    if (grounded)
-                    {
-                        attackingDirection = 1;
-                        AttackDirection(1);
-                    }
-                    else
-                    {
-                        attackingDirection = 0;
-                        AttackDirection(0);
-                    }
-                    break;
-                default:
-                    Debug.Log("1");
-                    attackingDirection = 1;
-                    AttackDirection(1);
-                    break;
-            }
-
             State = PlayerState.Attack;
+
+            if (grounded && direction.y < 0)
+                attackingDirection = 1;
+            else
+                attackingDirection = (int)direction.y + 1;
+
+            attackingTime = 0.3f + Time.time;
+            if (n == 2)
+                attackingTime = 0.25f + Time.time;
         }
         yield return new WaitForSeconds(0);
-    }
-
-    private void AttackDirection(int n)
-    {
-        if (n == 0)
-        {
-            attackingTime = 0.3f + Time.time;
-            attackPoint = new Vector3();
-            radius = 2;
-        }
-        else if (n == 1)
-        {
-            attackingTime = 0.3f + Time.time;
-            attackPoint = new Vector3();
-            radius = 2;
-        }
-        else if (n == 2)
-        {
-            attackingTime = 0.25f + Time.time;
-            attackPoint = new Vector3();
-            radius = 2;
-        }
-        else if (n == 3)
-        {
-            attackingTime = 0.3f + Time.time;
-            attackPoint = new Vector3();
-            radius = 2;
-        }
     }
 
     private void UpdateAttackState()
     {
         if (attackingTime - 0.4 > Time.time)
             Flip();
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint, radius, Enemy);
 
-        foreach (Collider2D enemy in hitEnemies)
+        attackPoint = (Vector2)transform.position + attackPos[attackStyle - 2, attackingDirection];
+        radius = attackRadii[attackStyle - 2, attackingDirection];
+
+        if (!facingRight)
+            attackPoint = new Vector2(transform.position.x - attackPos[attackStyle - 2, attackingDirection].x, transform.position.y + attackPos[attackStyle - 2, attackingDirection].y);
+
+        if (!hasHitEnemies)
         {
-            if (enemy.GetComponent<Enemy>() != null)
+            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint, radius, Enemy);
+
+            if (hitEnemies.Length != 0)
+                GetComponentInChildren<CameraManager>().TriggerShake(1f, 15f);
+
+            foreach (Collider2D enemy in hitEnemies)
             {
-                StartCoroutine(enemy.GetComponent<Enemy>().Hit(damage, Convert.ToInt32(attackingDirection)));
+                if (!facingRight && attackingDirection == 1)
+                {
+                    StartCoroutine(enemy.GetComponent<Enemy>().Hit(damage, 3));
+                    AttackBounce(3);
+                }
+                else
+                {
+                    StartCoroutine(enemy.GetComponent<Enemy>().Hit(damage, attackingDirection));
+                    AttackBounce(attackingDirection);
+                }
             }
+            hasHitEnemies = true;
         }
 
         if (!grounded)
@@ -236,10 +226,38 @@ public class Player : MonoBehaviour
 
         if (attackingTime < Time.time)
         {
+            hasHitEnemies = false;
             Flip();
             EnterMovementState();
         }
-        rb.velocity = new Vector2(direction.x * speed*0.3f, rb.velocity.y);
+        bounceEffect.x *= 0.5f;
+        bounceEffect.y *= 0.95f;
+        rb.velocity = new Vector2(direction.x * speed*0.3f, rb.velocity.y) + bounceEffect;
+    }
+
+    private void AttackBounce(int orri)
+    {
+        switch (orri)
+        {
+            case 0:
+                Debug.Log("Down");
+                bounceEffect = new Vector2(0, attackBounce/2);
+                break;
+            case 1:
+                Debug.Log("Right");
+                bounceEffect = new Vector2(-attackBounce, 0);
+                break;
+            case 2:
+                Debug.Log("Up");
+                bounceEffect = new Vector2(0, -attackBounce / 3);
+                break;
+            case 3:
+                Debug.Log("Left");
+                bounceEffect = new Vector2(attackBounce, 0);
+                break;
+            default:
+                break;
+        }
     }
 
     private void EnterMovementState()
@@ -251,6 +269,9 @@ public class Player : MonoBehaviour
     {
         // if(wallColliderLeft && direction.x < 0 || wallColliderRight && direction.x > 0) wallHolding = true;
 
+        if (grounded)
+            canDash = true;
+
         if (dashingTime - 0.5f < Time.time)
         {
             tr.emitting = false;
@@ -260,14 +281,21 @@ public class Player : MonoBehaviour
            //rb.velocity = new Vector2(0, 0);
         }
 
+        if (bounceEffect.x > 0.05)
+            bounceEffect.x *= 0.5f;
+        if (bounceEffect.y > 0.05f)
+            bounceEffect.y *= 0.6f;
+
         //walk
         if (dashingTime - 0.5f < Time.time && damagedTime - 0.5 < Time.time) // && !wallHolding
-            rb.velocity = new Vector2(direction.x * speed, rb.velocity.y);
+            rb.velocity = new Vector2(direction.x * speed, rb.velocity.y) + bounceEffect;
 
-        // if (wallHolding && !grounded)
-        // WallJump()
-        // else
-        Jump();
+        walled = IsWalled();
+
+        if (walled && !grounded)
+            WallJump();
+        else
+            Jump();
     }
 
     private void Jump()
@@ -281,10 +309,8 @@ public class Player : MonoBehaviour
         else if (grounded && falling)
         { // if on ground and finished jumping
             falling = false;
-            canDash = true;
         }
-        else if (!grounded)
-             
+
 
         if (jumping && rb.velocity.y > 0) // the longer they wait, the higher they go
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.95f);
@@ -330,6 +356,16 @@ public class Player : MonoBehaviour
     }
 
     public bool IsGrounded() { return Physics2D.OverlapBox(groundCheck.position, new Vector2(width, 0.1f), 0, groundLayer); }
+    public bool IsWalled() 
+    {
+        if (Physics2D.OverlapCircle((Vector2)transform.position + wallPos1, wallRadius, groundLayer) || Physics2D.OverlapCircle((Vector2)transform.position + wallPos2, wallRadius, groundLayer))
+        {
+            Debug.Log("Walled!");
+            return true;
+        }
+        else
+            return false;
+    }
 
     private void Flip()
     {
@@ -369,6 +405,8 @@ public class Player : MonoBehaviour
         if (attackPoint == null)
             return;
 
+        Gizmos.DrawWireSphere((Vector2)transform.position + wallPos2, wallRadius);
+        Gizmos.DrawWireSphere((Vector2)transform.position + wallPos1, wallRadius);
         Gizmos.DrawWireSphere(attackPoint, radius);
         Gizmos.DrawWireCube(groundCheck.position, new Vector3(width, 0.1f, 1));
     }

@@ -13,21 +13,16 @@ MonoBehaviour:
   m_Name: 03CharacterStandingStab_animation
   m_EditorClassIdentifier: 
   cels:
-  - sprite: {fileID: 1979992199, guid: 570e47666321dc349a482e2d99ac9aa4, type: 3}
-    drivers:
-      keys:
-      - atk
-      values: 01000000
   - sprite: {fileID: 1376442277, guid: 570e47666321dc349a482e2d99ac9aa4, type: 3}
     drivers:
       keys:
       - atk
-      values: 02000000
+      values: 01000000
   - sprite: {fileID: -2077948312, guid: 570e47666321dc349a482e2d99ac9aa4, type: 3}
     drivers:
       keys:
       - atk
-      values: 03000000
+      values: 02000000
   - sprite: {fileID: -68702497, guid: 570e47666321dc349a482e2d99ac9aa4, type: 3}
     drivers:
       keys:

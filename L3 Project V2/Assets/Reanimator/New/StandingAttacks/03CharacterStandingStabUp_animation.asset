@@ -26,11 +26,6 @@ MonoBehaviour:
   - sprite: {fileID: 1002402197, guid: 630d54052ce3ccb41bd47b8b2f0d6ab1, type: 3}
     drivers:
       keys:
-      - atkUp
-      values: 03000000
-  - sprite: {fileID: 494601352, guid: 630d54052ce3ccb41bd47b8b2f0d6ab1, type: 3}
-    drivers:
-      keys:
       - idle
       values: 00000000
   controlDriver:

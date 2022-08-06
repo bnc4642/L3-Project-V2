@@ -24,7 +24,7 @@ public class CameraManager : MonoBehaviour
         targetPosition.y = Mathf.Clamp(targetPosition.y, yMin, yMax);
         //cam.position = Vector3.SmoothDamp(cam.position, targetPosition, ref Velocity, 0.25f);
         float t = RoundToMultiple(cameraSpeed * Time.deltaTime, multiple);
-        cam.position = Vector3.Lerp(cam.position, targetPosition, t);
+        cam.position = Vector3.Lerp(cam.position, targetPosition, t);                  ///// FIX THISsssssssssssssssssssssssssssssss
 
         if (shakeTime > 0)
         {
