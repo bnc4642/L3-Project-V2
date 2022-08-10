@@ -20,7 +20,7 @@ public class Enemy : MonoBehaviour
     private float lockedTill = 0;
     private float timeHit;
     private float attackingTime = 0;
-    public float timeDisabled = 0.35f;
+    private float timeDisabled = 0.1f;
     public float invinciFrames = 0.2f;
     public LayerMask player;
     public LayerMask playerWeapon;
@@ -115,7 +115,14 @@ public class Enemy : MonoBehaviour
             timeHit = Time.time;
             aiPath.enabled = false;
             HitEffects(orrientation);
+            GetComponent<SpriteRenderer>().material.shader = Shader.Find("GUI/Text Shader");
+
             yield return new WaitForSeconds(timeDisabled);
+
+            GetComponent<SpriteRenderer>().material.shader = Shader.Find("Sprites/Default");
+
+            yield return new WaitForSeconds(timeDisabled);
+
             aiPath.enabled = true;
         }
     }

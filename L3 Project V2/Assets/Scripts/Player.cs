@@ -24,8 +24,9 @@ public class Player : MonoBehaviour
     public PlayerState State = PlayerState.Movement;
 
 
+    public GameObject[] attackVFX = new GameObject[2];
     public Vector2[,] attackPos = new Vector2[2, 3] { { new Vector2(-0.15f, -1.81f), new Vector2(2.02f, 0.03f), new Vector2(-0.12f, 2.36f) }, { new Vector2(0.04f, -1.41f), new Vector2(1.39f, 0.03f), new Vector2(0.16f, 1.15f) } };
-    public float[,] attackRadii = new float[2, 3] { { 1.47f, 1.52f, 1.2f }, { 1.28f, 1.52f, 1.76f } };
+    float[] attackRadii = new float[2] { 2.55f , 2.55f };
     public float attackBounce;
     public float hitBounce;
     private Vector2 bounceEffect;
@@ -74,13 +75,13 @@ public class Player : MonoBehaviour
             {
                 try
                 {
-                    StartCoroutine(EnterAttackState(2));
+                    StartCoroutine(EnterAttackState(3));
                 }
                 catch { }
             }
             else if (context.interaction is HoldInteraction)
             {
-                StartCoroutine(EnterAttackState(3));
+                StartCoroutine(EnterAttackState(2));
             }
         };
     }
@@ -141,7 +142,11 @@ public class Player : MonoBehaviour
 
     public void EnterHitState(Collision2D collision, int dmg)
     {
-        if (State != PlayerState.Hit && damagedTime > Time.time) return;
+        if (State != PlayerState.Hit || damagedTime > Time.time) return;
+
+        GetComponent<SpriteRenderer>().material.shader = Shader.Find("GUI/Text Shader");
+        GetComponent<SpriteRenderer>().color = Color.white;
+
         State = PlayerState.Hit;
 
         damagedTime = Time.time + 0.8f;
@@ -159,6 +164,11 @@ public class Player : MonoBehaviour
 
     private void UpdateHitState()
     {
+        if (damagedTime -0.65 < Time.time)
+        {
+            GetComponent<SpriteRenderer>().material.shader = Shader.Find("Sprites/Default");
+            GetComponent<SpriteRenderer>().color = Color.white;
+        }
         if (damagedTime - 0.5 < Time.time)
         {
             EnterMovementState();
@@ -175,16 +185,30 @@ public class Player : MonoBehaviour
             attackStyle = n;
             State = PlayerState.Attack;
 
-            if (grounded && direction.y < 0)
-                attackingDirection = 1;
+            if (direction.y > 0)
+                attackingDirection = 2;
+            else if (direction.y < 0 && !grounded)
+                attackingDirection = 0;
             else
-                attackingDirection = (int)direction.y + 1;
+                attackingDirection = 1;
+
+            attackVFX[attackStyle - 2].SetActive(true);
+            if (!facingRight)
+            {
+                attackVFX[attackStyle - 2].transform.rotation = Quaternion.Euler(0, 0, (attackingDirection - 2) * -90 - 35);
+                attackVFX[attackStyle - 2].transform.position = new Vector2(transform.position.x - attackPos[attackStyle - 2, attackingDirection].x, transform.position.y + attackPos[attackStyle - 2, attackingDirection].y);
+            }
+            else if (facingRight)
+            {
+                attackVFX[attackStyle - 2].transform.rotation = Quaternion.Euler(0, 0, (attackingDirection - 2) * 90 + 35);
+                attackVFX[attackStyle - 2].transform.position = (Vector2)transform.position + attackPos[attackStyle - 2, attackingDirection];
+            }
 
             attackingTime = 0.3f + Time.time;
             if (n == 2)
                 attackingTime = 0.25f + Time.time;
         }
-        yield return new WaitForSeconds(0);
+        yield return null;
     }
 
     private void UpdateAttackState()
@@ -193,14 +217,13 @@ public class Player : MonoBehaviour
             Flip();
 
         attackPoint = (Vector2)transform.position + attackPos[attackStyle - 2, attackingDirection];
-        radius = attackRadii[attackStyle - 2, attackingDirection];
 
         if (!facingRight)
             attackPoint = new Vector2(transform.position.x - attackPos[attackStyle - 2, attackingDirection].x, transform.position.y + attackPos[attackStyle - 2, attackingDirection].y);
 
         if (!hasHitEnemies)
         {
-            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint, radius, Enemy);
+            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint, attackRadii[attackStyle-2], Enemy);
 
             if (hitEnemies.Length != 0)
                 GetComponentInChildren<CameraManager>().TriggerShake(1f, 15f);
@@ -226,6 +249,10 @@ public class Player : MonoBehaviour
 
         if (attackingTime < Time.time)
         {
+            foreach (GameObject VFX in attackVFX)
+            {
+                VFX.SetActive(false);
+            }
             hasHitEnemies = false;
             Flip();
             EnterMovementState();
@@ -241,7 +268,8 @@ public class Player : MonoBehaviour
         {
             case 0:
                 Debug.Log("Down");
-                bounceEffect = new Vector2(0, attackBounce/2);
+                rb.velocity = new Vector2(rb.velocity.x, 40);
+                jumping = true;
                 break;
             case 1:
                 Debug.Log("Right");
@@ -317,7 +345,10 @@ public class Player : MonoBehaviour
         else if (rb.velocity.y > 0)
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
         else if (rb.velocity.y <= 0) // tip point
+        {
             falling = true;
+            jumping = false;
+        }
     }
 
     private void WallJump()
@@ -407,7 +438,7 @@ public class Player : MonoBehaviour
 
         Gizmos.DrawWireSphere((Vector2)transform.position + wallPos2, wallRadius);
         Gizmos.DrawWireSphere((Vector2)transform.position + wallPos1, wallRadius);
-        Gizmos.DrawWireSphere(attackPoint, radius);
+        Gizmos.DrawWireSphere(attackPoint, attackRadii[attackStyle]);
         Gizmos.DrawWireCube(groundCheck.position, new Vector3(width, 0.1f, 1));
     }
 }

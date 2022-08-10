@@ -1,0 +1,67 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "mapPractice.tmx",
+    "expandedProjectPaths": [
+        "TilesetPacks",
+        "."
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "TilesetPacks/Forest.tsx": {
+            "scaleInDock": 4,
+            "scaleInEditor": 3
+        },
+        "mapPractice.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 443,
+                "y": 592
+            }
+        },
+        "rule1.tmx": {
+            "scale": 4,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 70.25,
+                "y": 60.75
+            }
+        },
+        "tileRule1.tmx": {
+            "scale": 3,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 63.33333333333333,
+                "y": 49
+            }
+        }
+    },
+    "last.imagePath": "D:/GitHub-L3/L3-Project-V2/L3 Project V2/Assets/Tiled/Tilesets",
+    "map.height": 8,
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 8,
+    "openFiles": [
+        "mapPractice.tmx",
+        "TilesetPacks/Forest.tsx",
+        "rule1.tmx"
+    ],
+    "project": "Practice.tiled-project",
+    "recentFiles": [
+        "rule1.tmx",
+        "TilesetPacks/Forest.tsx",
+        "mapPractice.tmx",
+        "tileRule1.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    },
+    "tileset.transparentColor": "#000000",
+    "tileset.useTransparentColor": true
+}
