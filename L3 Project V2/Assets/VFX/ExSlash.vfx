@@ -959,7 +959,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 0.25
+      m_SerializableObject: 0.2
     m_Space: 2147483647
   m_Property:
     name: Lifetime
@@ -1435,7 +1435,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 15
+      m_SerializableObject: 20
     m_Space: 2147483647
   m_Property:
     name: a
@@ -1577,7 +1577,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"r":127.99998474121094,"g":29.79493522644043,"b":0.0,"a":2.680000066757202}'
+      m_SerializableObject: '{"r":191.0,"g":12.0,"b":0.0,"a":2.680000066757202}'
     m_Space: 2147483647
   m_Property:
     name: _Color
@@ -2643,7 +2643,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 0.3
+      m_SerializableObject: 0.25
     m_Space: 2147483647
   m_Property:
     name: Lifetime
@@ -2908,7 +2908,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"r":0.0,"g":0.0,"b":0.0,"a":3.4100000858306886}'
+      m_SerializableObject: '{"r":1.8196078538894654,"g":0.0,"b":0.5049173831939697,"a":3.4100000858306886}'
     m_Space: 2147483647
   m_Property:
     name: _Color
@@ -3394,7 +3394,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 15
+      m_SerializableObject: 20
     m_Space: 2147483647
   m_Property:
     name: a

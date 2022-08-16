@@ -5,28 +5,32 @@
     },
     "activeFile": "mapPractice.tmx",
     "expandedProjectPaths": [
-        "TilesetPacks",
-        "."
+        ".",
+        "TilesetPacks"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "TilesetPacks/Bricks.tsx": {
+            "scaleInDock": 4,
+            "scaleInEditor": 3
+        },
         "TilesetPacks/Forest.tsx": {
             "scaleInDock": 4,
             "scaleInEditor": 3
         },
         "mapPractice.tmx": {
-            "scale": 1,
+            "scale": 1.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 443,
-                "y": 592
+                "x": 634.6666666666666,
+                "y": 562.6666666666666
             }
         },
         "rule1.tmx": {
             "scale": 4,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 70.25,
+                "x": 70,
                 "y": 60.75
             }
         },
@@ -39,7 +43,7 @@
             }
         }
     },
-    "last.imagePath": "D:/GitHub-L3/L3-Project-V2/L3 Project V2/Assets/Tiled/Tilesets",
+    "last.imagePath": "C:/Users/Ben/Downloads",
     "map.height": 8,
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
@@ -48,10 +52,12 @@
     "openFiles": [
         "mapPractice.tmx",
         "TilesetPacks/Forest.tsx",
-        "rule1.tmx"
+        "rule1.tmx",
+        "TilesetPacks/Bricks.tsx"
     ],
     "project": "Practice.tiled-project",
     "recentFiles": [
+        "TilesetPacks/Bricks.tsx",
         "rule1.tmx",
         "TilesetPacks/Forest.tsx",
         "mapPractice.tmx",

@@ -77,7 +77,7 @@ public class Player : MonoBehaviour
                 {
                     StartCoroutine(EnterAttackState(3));
                 }
-                catch { }
+                catch { Debug.Log("Error"); }
             }
             else if (context.interaction is HoldInteraction)
             {
