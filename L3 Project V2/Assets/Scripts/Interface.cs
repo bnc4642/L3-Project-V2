@@ -100,6 +100,9 @@ public class Interface : MonoBehaviour
         else
         {
             Debug.Log("Doesn't Exist");
+            Canvas.GetComponentsInChildren<TMPro.TMP_InputField>()[id].enabled = true;
+            Canvas.transform.Find("SaveFile " + id).Find("Confirm").gameObject.SetActive(true);
+            Canvas.transform.Find("SaveFile " + id).Find("Cancel").gameObject.SetActive(true);
             GameEvents.current.TxtBoxSelect(id);
         }
     }
@@ -107,13 +110,19 @@ public class Interface : MonoBehaviour
     public void ConfirmSave(int id)
     {
         WriteToJsonFile(Application.persistentDataPath + "/gamesave" + Canvas.GetComponentsInChildren<TMPro.TMP_InputField>()[id].text + ".save", new Save());
+        Canvas.GetComponentsInChildren<TMPro.TMP_InputField>()[id].enabled = false;
         GameEvents.current.TxtBoxDeselect(id);
+        Canvas.transform.Find("SaveFile " + id).Find("Confirm").gameObject.SetActive(false);
+        Canvas.transform.Find("SaveFile " + id).Find("Cancel").gameObject.SetActive(false);
     }
 
     public void DenySave(int id)
     {
         GameEvents.current.SetTxtBoxValue(id, "New Game");
+        Canvas.GetComponentsInChildren<TMPro.TMP_InputField>()[id].enabled = false;
         GameEvents.current.TxtBoxDeselect(id);
+        Canvas.transform.Find("SaveFile " + id).Find("Confirm").gameObject.SetActive(false);
+        Canvas.transform.Find("SaveFile " + id).Find("Cancel").gameObject.SetActive(false);
     }
 
     private void CreateSave(int id)
