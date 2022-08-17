@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 
 public class Interface : MonoBehaviour
 {
+    public GameObject Canvas;
     private int saveNum = 0;
 
     private int pageNum = 0;
@@ -87,8 +88,37 @@ public class Interface : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = heights[pageNum];
 
         WriteToJsonFile(Application.persistentDataPath + "/gamesave" + saveNum + ".save", FormSave());
+    }
 
-        LoadSave(saveNum); 
+    public void SelectSave(int id)
+    {
+        if (File.Exists("gamesave" + Canvas.GetComponentsInChildren<TMPro.TMP_InputField>()[id].text + ".save"))
+        {
+            Debug.Log("Exists");
+            LoadSave(Canvas.GetComponentsInChildren<TMPro.TMP_InputField>()[id].text);
+        }
+        else
+        {
+            Debug.Log("Doesn't Exist");
+            GameEvents.current.TxtBoxSelect(id);
+        }
+    }
+
+    public void ConfirmSave(int id)
+    {
+        WriteToJsonFile(Application.persistentDataPath + "/gamesave" + Canvas.GetComponentsInChildren<TMPro.TMP_InputField>()[id].text + ".save", new Save());
+        GameEvents.current.TxtBoxDeselect(id);
+    }
+
+    public void DenySave(int id)
+    {
+        GameEvents.current.SetTxtBoxValue(id, "New Game");
+        GameEvents.current.TxtBoxDeselect(id);
+    }
+
+    private void CreateSave(int id)
+    {
+
     }
 
     private Save FormSave()
@@ -105,9 +135,9 @@ public class Interface : MonoBehaviour
         return save;
     }
 
-    private void LoadSave(int saveNum)
+    private void LoadSave(string saveName)
     {
-        Save save = ReadFromJsonFile<Save>(Application.persistentDataPath + "/gamesave"+saveNum+".save");
+        Save save = ReadFromJsonFile<Save>(Application.persistentDataPath + "/gamesave"+saveName+".save");
 
         player.health = save.health;
 
@@ -153,4 +183,6 @@ public class Interface : MonoBehaviour
                 reader.Close();
         }
     }
+
+
 }
