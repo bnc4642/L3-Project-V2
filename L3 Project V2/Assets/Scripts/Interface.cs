@@ -6,10 +6,16 @@ using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.UI;
 using Newtonsoft.Json;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 
 public class Interface : MonoBehaviour
 {
+    private int Id = 0;
+
     public GameObject Canvas;
+    public GameObject ExCanvas;
+    public GameObject BookCanvas;
     private int saveNum = 0;
 
     private int pageNum = 0;
@@ -22,6 +28,16 @@ public class Interface : MonoBehaviour
 
     private List<Boss> bosses = new List<Boss>();
     public Player player;
+
+    public void OnEnter(InputValue value)
+    {
+        ConfirmSave(Id);
+    }
+
+    public void PreFlipPage(string dir)
+    {
+        StartCoroutine(FlipPage(dir));
+    }
 
     public IEnumerator FlipPage(string Dir)
     {
@@ -41,18 +57,18 @@ public class Interface : MonoBehaviour
                 flipping = false;
                 if (pageNum == 1) // red tag
                 {
-                    transform.GetChild(6).gameObject.SetActive(false);
-                    transform.GetChild(7).gameObject.SetActive(true);
+                    BookCanvas.transform.GetChild(6).gameObject.SetActive(false);
+                    BookCanvas.transform.GetChild(7).gameObject.SetActive(true);
                 }
                 else if (pageNum == 5) // green tag
                 {
-                    transform.GetChild(2).gameObject.SetActive(false);
-                    transform.GetChild(3).gameObject.SetActive(true);
+                    BookCanvas.transform.GetChild(2).gameObject.SetActive(false);
+                    BookCanvas.transform.GetChild(3).gameObject.SetActive(true);
                 }
                 else if (pageNum == 8) // green tag
                 {
-                    transform.GetChild(4).gameObject.SetActive(false);
-                    transform.GetChild(5).gameObject.SetActive(true);
+                    BookCanvas.transform.GetChild(4).gameObject.SetActive(false);
+                    BookCanvas.transform.GetChild(5).gameObject.SetActive(true);
                 }
                 pageNum--;
             }
@@ -69,65 +85,67 @@ public class Interface : MonoBehaviour
                 flipping = false;
                 if (pageNum == 0) // red tag
                 {
-                    transform.GetChild(6).gameObject.SetActive(true);
-                    transform.GetChild(7).gameObject.SetActive(false);
+                    BookCanvas.transform.GetChild(6).gameObject.SetActive(true);
+                    BookCanvas.transform.GetChild(7).gameObject.SetActive(false);
                 }
                 else if (pageNum == 4) // green tag
                 {
-                    transform.GetChild(2).gameObject.SetActive(true);
-                    transform.GetChild(3).gameObject.SetActive(false);
+                    BookCanvas.transform.GetChild(2).gameObject.SetActive(true);
+                    BookCanvas.transform.GetChild(3).gameObject.SetActive(false);
                 }
                 else if (pageNum == 7) // green tag
                 {
-                    transform.GetChild(4).gameObject.SetActive(true);
-                    transform.GetChild(5).gameObject.SetActive(false);
+                    BookCanvas.transform.GetChild(4).gameObject.SetActive(true);
+                    BookCanvas.transform.GetChild(5).gameObject.SetActive(false);
                 }
                 pageNum++;
             }
         }
         GetComponent<SpriteRenderer>().sprite = heights[pageNum];
 
-        WriteToJsonFile(Application.persistentDataPath + "/gamesave" + saveNum + ".save", FormSave());
+        //WriteToJsonFile(Application.persistentDataPath + "/gamesave" + saveNum + ".save", FormSave());
     }
 
     public void SelectSave(int id)
     {
-        if (File.Exists("gamesave" + Canvas.GetComponentsInChildren<TMPro.TMP_InputField>()[id].text + ".save"))
+        if (File.Exists("gamesave" + id + ".save"))
         {
             Debug.Log("Exists");
-            LoadSave(Canvas.GetComponentsInChildren<TMPro.TMP_InputField>()[id].text);
+            LoadSave(id);
         }
         else
         {
             Debug.Log("Doesn't Exist");
             Canvas.GetComponentsInChildren<TMPro.TMP_InputField>()[id].enabled = true;
-            Canvas.transform.Find("SaveFile " + id).Find("Confirm").gameObject.SetActive(true);
-            Canvas.transform.Find("SaveFile " + id).Find("Cancel").gameObject.SetActive(true);
+            ExCanvas.transform.Find("" + id).Find("Confirm").gameObject.SetActive(true);
+            ExCanvas.transform.Find("" + id).Find("Cancel").gameObject.SetActive(true);
+            Canvas.transform.Find("SaveFile " + id).GetComponent<Button>().enabled = false;
             GameEvents.current.TxtBoxSelect(id);
         }
     }
 
     public void ConfirmSave(int id)
     {
-        WriteToJsonFile(Application.persistentDataPath + "/gamesave" + Canvas.GetComponentsInChildren<TMPro.TMP_InputField>()[id].text + ".save", new Save());
-        Canvas.GetComponentsInChildren<TMPro.TMP_InputField>()[id].enabled = false;
-        GameEvents.current.TxtBoxDeselect(id);
-        Canvas.transform.Find("SaveFile " + id).Find("Confirm").gameObject.SetActive(false);
-        Canvas.transform.Find("SaveFile " + id).Find("Cancel").gameObject.SetActive(false);
+        Debug.Log("A");
+        WriteToJsonFile(Application.persistentDataPath + "/gamesave" + id + ".save", new Save());
+        ExitSaveTyping(id);
     }
 
     public void DenySave(int id)
     {
+        Debug.Log("B");
         GameEvents.current.SetTxtBoxValue(id, "New Game");
-        Canvas.GetComponentsInChildren<TMPro.TMP_InputField>()[id].enabled = false;
-        GameEvents.current.TxtBoxDeselect(id);
-        Canvas.transform.Find("SaveFile " + id).Find("Confirm").gameObject.SetActive(false);
-        Canvas.transform.Find("SaveFile " + id).Find("Cancel").gameObject.SetActive(false);
+        ExitSaveTyping(id);
     }
+    public void SelectingID(int ID) { Id = ID; }
 
-    private void CreateSave(int id)
+    public void ExitSaveTyping(int id)
     {
-
+        Canvas.GetComponentsInChildren<TMPro.TMP_InputField>()[id].enabled = false;
+        ExCanvas.transform.Find("" + id).Find("Confirm").gameObject.SetActive(false);
+        ExCanvas.transform.Find("" + id).Find("Cancel").gameObject.SetActive(false);
+        Canvas.transform.Find("SaveFile " + id).GetComponent<Button>().enabled = true;
+        GameEvents.current.TxtBoxDeselect(id);
     }
 
     private Save FormSave()
@@ -144,9 +162,9 @@ public class Interface : MonoBehaviour
         return save;
     }
 
-    private void LoadSave(string saveName)
+    private void LoadSave(int id)
     {
-        Save save = ReadFromJsonFile<Save>(Application.persistentDataPath + "/gamesave"+saveName+".save");
+        Save save = ReadFromJsonFile<Save>(Application.persistentDataPath + "/gamesave"+id+".save");
 
         player.health = save.health;
 
@@ -193,5 +211,12 @@ public class Interface : MonoBehaviour
         }
     }
 
+    public void ChangeScene()
+    {
+        Canvas.gameObject.SetActive(false);
+        ExCanvas.gameObject.SetActive(false);
 
+        GetComponent<SpriteRenderer>().enabled = true;
+        BookCanvas.SetActive(true);
+    }
 }

@@ -269,9 +269,9 @@
             "id": "4649a372-d3c6-45a9-96ce-4fc576791ef0",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "Enter",
                     "type": "Button",
-                    "id": "5fd0bfc0-cbf8-4401-9ba6-04e9637a15c0",
+                    "id": "2c674e55-cca2-4d2b-b233-6957b0b017fd",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -281,12 +281,12 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "f21cc08f-c3ea-4bdf-8a34-0877609fb434",
-                    "path": "",
+                    "id": "76695075-c8cb-4bb7-8ede-61a571ace917",
+                    "path": "<Keyboard>/enter",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Enter",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

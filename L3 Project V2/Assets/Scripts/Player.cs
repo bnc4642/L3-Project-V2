@@ -66,7 +66,12 @@ public class Player : MonoBehaviour
         if (!jumping)
             jumped = false;
     }
-    
+
+    public void OnEnter(InputValue value)
+    {
+        Debug.Log("C");
+    }
+
     public void OnStab(InputValue value)
     {
         actionReference.action.performed += context =>
