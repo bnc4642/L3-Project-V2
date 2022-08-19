@@ -18,7 +18,7 @@ public class Interface : MonoBehaviour
     public GameObject BookCanvas;
     private int saveNum = 0;
 
-    private int pageNum = 0;
+    private int pageNum = -1;
     private bool flipping;
 
     public GameObject[,] pages = new GameObject[2, 9];
