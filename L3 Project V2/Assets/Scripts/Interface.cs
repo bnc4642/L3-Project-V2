@@ -72,10 +72,36 @@ public class Interface : MonoBehaviour
                 }
                 pageNum--;
             }
+            else
+            {
+                pageNum--;
+                GetComponent<Animator>().enabled = true;
+                GetComponent<Animator>().SetTrigger("Close");
+                yield return new WaitForSeconds(0.33f);
+                BookCanvas.transform.GetChild(8).gameObject.SetActive(true);
+                BookCanvas.transform.GetChild(3).gameObject.SetActive(false);
+                BookCanvas.transform.GetChild(5).gameObject.SetActive(false);
+                BookCanvas.transform.GetChild(7).gameObject.SetActive(false);
+                BookCanvas.transform.GetChild(0).gameObject.SetActive(false);
+                BookCanvas.transform.GetChild(1).gameObject.SetActive(false);
+            }
         }
         else
         {
-            if (pageNum < 8)
+            if (pageNum < 0)
+            {
+                GetComponent<Animator>().SetTrigger("Open");
+                BookCanvas.transform.GetChild(8).gameObject.SetActive(false);
+                pageNum++;
+                yield return new WaitForSeconds(0.33f);
+                GetComponent<Animator>().enabled = false;
+                BookCanvas.transform.GetChild(3).gameObject.SetActive(true);
+                BookCanvas.transform.GetChild(5).gameObject.SetActive(true);
+                BookCanvas.transform.GetChild(7).gameObject.SetActive(true);
+                BookCanvas.transform.GetChild(0).gameObject.SetActive(true);
+                BookCanvas.transform.GetChild(1).gameObject.SetActive(true);
+            }
+            else if (pageNum < 8)
             {
                 flipping = true;
                 pf.GetComponent<SpriteRenderer>().enabled = true;
@@ -101,7 +127,8 @@ public class Interface : MonoBehaviour
                 pageNum++;
             }
         }
-        GetComponent<SpriteRenderer>().sprite = heights[pageNum];
+        if (pageNum >= 0)
+            GetComponent<SpriteRenderer>().sprite = heights[pageNum];
 
         //WriteToJsonFile(Application.persistentDataPath + "/gamesave" + saveNum + ".save", FormSave());
     }
