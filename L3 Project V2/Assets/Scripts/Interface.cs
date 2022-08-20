@@ -135,18 +135,30 @@ public class Interface : MonoBehaviour
 
     public void SelectSave(int id)
     {
-        if (File.Exists("gamesave" + id + ".save"))
+        if (File.Exists(Application.persistentDataPath + "/gamesave" + id + ".save"))
         {
-            Debug.Log("Exists");
+            foreach (Transform btn in ExCanvas.GetComponentsInChildren<Transform>())
+            {
+                btn.gameObject.SetActive(false);
+            }
+            transform.position = new Vector2((id-1) * 13, -3.2f);
+
+            GetComponent<SpriteRenderer>().enabled = true;
+            BookCanvas.transform.GetChild(8).gameObject.SetActive(true);
+
             LoadSave(id);
         }
         else
         {
-            Debug.Log("Doesn't Exist");
-            Canvas.GetComponentsInChildren<TMPro.TMP_InputField>()[id].enabled = true;
-            ExCanvas.transform.Find("" + id).Find("Confirm").gameObject.SetActive(true);
-            ExCanvas.transform.Find("" + id).Find("Cancel").gameObject.SetActive(true);
-            Canvas.transform.Find("SaveFile " + id).GetComponent<Button>().enabled = false;
+            Canvas.transform.Find("Name " + id).gameObject.SetActive(true);
+            foreach (Transform btn in ExCanvas.GetComponentsInChildren<Transform>())
+            {
+                if (btn.gameObject.GetComponent<Button>() != null)
+                {
+                    btn.gameObject.GetComponent<Button>().enabled = false;
+                }
+            }
+            ExCanvas.transform.Find("Button " + id).GetChild(0).gameObject.SetActive(false);
             GameEvents.current.TxtBoxSelect(id);
         }
     }
