@@ -76,22 +76,27 @@ public class Interface : MonoBehaviour
             {
                 pageNum--;
                 GetComponent<Animator>().enabled = true;
-                GetComponent<Animator>().SetTrigger("Close");
-                yield return new WaitForSeconds(0.33f);
-                BookCanvas.transform.GetChild(8).gameObject.SetActive(true);
+                GetComponent<Animator>().SetTrigger("Close"+Id);
                 BookCanvas.transform.GetChild(3).gameObject.SetActive(false);
                 BookCanvas.transform.GetChild(5).gameObject.SetActive(false);
                 BookCanvas.transform.GetChild(7).gameObject.SetActive(false);
                 BookCanvas.transform.GetChild(0).gameObject.SetActive(false);
                 BookCanvas.transform.GetChild(1).gameObject.SetActive(false);
+                yield return new WaitForSeconds(0.33f);
+                BookCanvas.transform.GetChild(8).gameObject.SetActive(true);
+                BookCanvas.transform.GetChild(12).gameObject.SetActive(true);
+                BookCanvas.transform.GetChild(13).gameObject.SetActive(true);
             }
         }
         else
         {
             if (pageNum < 0)
             {
-                GetComponent<Animator>().SetTrigger("Open");
+                GetComponent<Animator>().SetTrigger("Open"+Id);
+                GetComponent<Animator>().speed = 1;
                 BookCanvas.transform.GetChild(8).gameObject.SetActive(false);
+                BookCanvas.transform.GetChild(12).gameObject.SetActive(false);
+                BookCanvas.transform.GetChild(13).gameObject.SetActive(false);
                 pageNum++;
                 yield return new WaitForSeconds(0.33f);
                 GetComponent<Animator>().enabled = false;
@@ -135,15 +140,26 @@ public class Interface : MonoBehaviour
 
     public void SelectSave(int id)
     {
+        Id = id;
         if (File.Exists(Application.persistentDataPath + "/gamesave" + id + ".save"))
         {
             foreach (Transform btn in ExCanvas.GetComponentsInChildren<Transform>())
             {
                 btn.gameObject.SetActive(false);
             }
+
+            GetComponent<Animator>().enabled = true;
+            GetComponent<Animator>().SetTrigger("Open" + Id);
+            GetComponent<Animator>().speed = 0;
+
             transform.position = new Vector2((id-1) * 13, -3.2f);
 
             GetComponent<SpriteRenderer>().enabled = true;
+            BookCanvas.transform.GetChild(12).gameObject.SetActive(true);
+            BookCanvas.transform.GetChild(13).gameObject.SetActive(true);
+            Vector2 btnPos = BookCanvas.transform.GetChild(8).GetComponent<RectTransform>().localPosition;
+            btnPos.x += (id - 1) * 32.12f;
+            BookCanvas.transform.GetChild(8).GetComponent<RectTransform>().localPosition = btnPos;
             BookCanvas.transform.GetChild(8).gameObject.SetActive(true);
 
             LoadSave(id);
@@ -165,30 +181,38 @@ public class Interface : MonoBehaviour
 
     public void ConfirmSave(int id)
     {
-        Debug.Log("A");
-        WriteToJsonFile(Application.persistentDataPath + "/gamesave" + id + ".save", new Save());
-        ExitSaveTyping(id);
+        if (Canvas.transform.Find("Name " + id).GetComponent<Text>().text != "") // Check not null
+        {
+            WriteToJsonFile(Application.persistentDataPath + "/gamesave" + id + ".save", new Save());
+            ExitSaveTyping(id, Canvas.transform.Find("Name " + id).GetComponent<Text>().text);
+        }
     }
 
     public void DenySave(int id)
     {
         Debug.Log("B");
         GameEvents.current.SetTxtBoxValue(id, "New Game");
-        ExitSaveTyping(id);
+        ExitSaveTyping(id, "New Game");
     }
-    public void SelectingID(int ID) { Id = ID; }
-
-    public void ExitSaveTyping(int id)
+    public void ExitSaveTyping(int id, string name)
     {
+        foreach (Transform btn in ExCanvas.GetComponentsInChildren<Transform>())
+        {
+            if (btn.gameObject.GetComponent<Button>() != null)
+            {
+                btn.gameObject.GetComponent<Button>().enabled = true;
+            }
+        }
+
+        ExCanvas.transform.Find("Button " + id).GetChild(0).GetComponent<Text>().text = name;
+        Canvas.transform.Find("Name " + id).gameObject.SetActive(true); // Swap text boxes from editable to non-editable
         Canvas.GetComponentsInChildren<TMPro.TMP_InputField>()[id].enabled = false;
-        ExCanvas.transform.Find("" + id).Find("Confirm").gameObject.SetActive(false);
-        ExCanvas.transform.Find("" + id).Find("Cancel").gameObject.SetActive(false);
-        Canvas.transform.Find("SaveFile " + id).GetComponent<Button>().enabled = true;
         GameEvents.current.TxtBoxDeselect(id);
     }
 
     private Save FormSave()
     {
+        // if any noticable events occured, then save upon closing the book (PD < 0)
         Save save = new Save();
         foreach (Boss boss in bosses)
         {
@@ -257,5 +281,16 @@ public class Interface : MonoBehaviour
 
         GetComponent<SpriteRenderer>().enabled = true;
         BookCanvas.SetActive(true);
+    }
+
+    public void Return()
+    {
+        // Go Back to all saves
+    }
+    public void DeleteSave()
+    {
+        // Show [Are you sure?]
+        // Then use the previous buttons as yes / no
+        // And then get a function to delete the saves.
     }
 }
