@@ -158,7 +158,7 @@ public class Interface : MonoBehaviour
             BookCanvas.transform.GetChild(12).gameObject.SetActive(true);
             BookCanvas.transform.GetChild(13).gameObject.SetActive(true);
             Vector2 btnPos = BookCanvas.transform.GetChild(8).GetComponent<RectTransform>().localPosition;
-            btnPos.x += (id - 1) * 32.12f;
+            btnPos.x = 15.3f + (id - 1) * 32.12f;
             BookCanvas.transform.GetChild(8).GetComponent<RectTransform>().localPosition = btnPos;
             BookCanvas.transform.GetChild(8).gameObject.SetActive(true);
 
@@ -285,7 +285,16 @@ public class Interface : MonoBehaviour
 
     public void Return()
     {
-        // Go Back to all saves
+        Debug.Log("Return");
+        ExCanvas.SetActive(true);
+        ExCanvas.transform.Find("Button " + 0).gameObject.SetActive(true);
+        ExCanvas.transform.Find("Button " + 1).gameObject.SetActive(true);
+        ExCanvas.transform.Find("Button " + 2).gameObject.SetActive(true);
+
+        GetComponent<SpriteRenderer>().enabled = false;
+        BookCanvas.transform.GetChild(8).gameObject.SetActive(false);
+        BookCanvas.transform.GetChild(12).gameObject.SetActive(false);
+        BookCanvas.transform.GetChild(13).gameObject.SetActive(false);
     }
     public void DeleteSave()
     {
