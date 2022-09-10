@@ -45,7 +45,8 @@ public class Player : MonoBehaviour
     public Vector2 direction;
     public Vector3 attackPoint;
     public float radius;
-
+    private float lSpeedMult = 1;
+    private float rSpeedMult = 1;
 
     bool canDash = false;
     bool jumping = false;
@@ -107,7 +108,6 @@ public class Player : MonoBehaviour
     
     private void FixedUpdate()
     {
-        Debug.Log(rb.velocity.y);
         grounded = IsGrounded();
         interactable = Physics2D.OverlapCircle(transform.position, 1, LayerMask.NameToLayer("Interactable"));
 
@@ -125,10 +125,8 @@ public class Player : MonoBehaviour
                 break;
         }
 
-        if (floating)
-        {
+        if (floating || (walled && !grounded && !jumping))
             rb.velocity = new Vector2(rb.velocity.x, 0);
-        }
     }
 
     private void EnterDashState()
@@ -320,20 +318,27 @@ public class Player : MonoBehaviour
            //rb.velocity = new Vector2(0, 0);
         }
 
-        if (bounceEffect.x > 0.05)
+        if (bounceEffect.x > 0.05 || bounceEffect.x < -0.05)
             bounceEffect.x *= 0.5f;
         if (bounceEffect.y > 0.05f)
             bounceEffect.y *= 0.6f;
+        if (lSpeedMult < 1)
+            lSpeedMult += 0.05f;
+        if (rSpeedMult < 1)
+            rSpeedMult += 0.05f;
 
         //walk
         if (dashingTime - 0.5f < Time.time && damagedTime - 0.5 < Time.time) // && !wallHolding
-            rb.velocity = new Vector2(direction.x * speed, rb.velocity.y) + bounceEffect;
+        {
+            if (direction.x < 0)
+                rb.velocity = new Vector2(direction.x * lSpeedMult * speed, rb.velocity.y) + bounceEffect;
+            else
+                rb.velocity = new Vector2(direction.x * rSpeedMult * speed, rb.velocity.y) + bounceEffect;
+        }
 
         walled = IsWalled();
 
-        if (walled && !grounded)
-            WallJump();
-        else if (!floating)
+        if (!floating)
             Jump();
 
     }
@@ -345,6 +350,17 @@ public class Player : MonoBehaviour
         {
             jumped = true;
             rb.velocity = new Vector2(rb.velocity.x, 40);
+        }
+        else if (walled && !grounded && !jumped && jumping)
+        {
+            Debug.Log("WallJump");
+            jumped = true;
+            rb.velocity = new Vector2(rb.velocity.x, 30);
+            bounceEffect.x = direction.x * -140;
+            if (direction.x > 0)
+                rSpeedMult = 0.5f;
+            else
+                lSpeedMult = 0.5f;
         }
         else if (grounded && falling)
         { // if on ground and finished jumping
@@ -365,32 +381,6 @@ public class Player : MonoBehaviour
         if (floating)
             rb.velocity = new Vector2(rb.velocity.x, 0);
     }
-
-    private void WallJump()
-    {
-        //jump
-        if (!jumped && jumping) // && wallHolding
-        {
-            jumped = true;
-            rb.velocity = new Vector2(rb.velocity.x, 40);
-        }
-        if (grounded && falling)
-        { // if on ground and finished jumping
-            falling = false;
-            canDash = true;
-        }
-        else if (grounded)
-
-        // add a velocity to the right if facing right, or to the left, and prevent player movement for a fraction of a second
-
-        if (jumping && rb.velocity.y > 0) // the longer they wait, the higher they go
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.95f);
-        else if (rb.velocity.y > 0)
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
-        else if (rb.velocity.y <= 0) // tip point
-            falling = true;
-    }
-
     private void EnterProjectileState()
     {
         State = PlayerState.Attack;
@@ -399,11 +389,10 @@ public class Player : MonoBehaviour
     public bool IsGrounded() { return Physics2D.OverlapBox(groundCheck.position, new Vector2(width, 0.1f), 0, groundLayer); }
     public bool IsWalled() 
     {
-        if (Physics2D.OverlapCircle((Vector2)transform.position + wallPos1, wallRadius, groundLayer) || Physics2D.OverlapCircle((Vector2)transform.position + wallPos2, wallRadius, groundLayer))
-        {
-            Debug.Log("Walled!");
+        if (Physics2D.OverlapCircle((Vector2)transform.position + wallPos1, wallRadius, groundLayer) && direction.x < 0)
             return true;
-        }
+        else if (Physics2D.OverlapCircle((Vector2)transform.position + wallPos2, wallRadius, groundLayer) && direction.x > 0)
+            return true;
         else
             return false;
     }
