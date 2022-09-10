@@ -7,7 +7,8 @@ public class Save
 {
     // public List<int> mapUnlocked = new List<int>(); 
     // public List<int> completedCutscenes = new List<int>(); 
-    public List<int> bossesUndefeated = new List<int>(); 
+    public List<int> bossesUndefeated = new List<int>();
+    public string name = "";
 
     // public int inkpotNo = 0;
     public int health = 0;

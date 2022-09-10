@@ -42,15 +42,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Shield",
-                    "type": "Button",
-                    "id": "3418860b-f42c-4f1d-8922-8e8b5944aa45",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Interact",
                     "type": "Button",
                     "id": "45f32967-fd3b-4b62-903f-2978102b2e29",
@@ -63,15 +54,6 @@
                     "name": "Throw",
                     "type": "Button",
                     "id": "0234968d-fc2b-4c2e-9784-131e8a1f4c41",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Magic",
-                    "type": "Button",
-                    "id": "eb1b52ab-82fe-426d-8283-243c4c8b3cd1",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -94,6 +76,33 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Heal",
+                    "type": "Button",
+                    "id": "5600767a-09d2-4334-b29f-b372e41bcd1d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Slam",
+                    "type": "Button",
+                    "id": "08cb3182-4ef9-4601-a9a0-ef3e90b4fc7e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Float",
+                    "type": "Value",
+                    "id": "b96c4b9e-e690-423b-9524-66d1d627ebb6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -198,19 +207,8 @@
                 },
                 {
                     "name": "",
-                    "id": "32399ef8-9649-4bbb-a3b7-763650153c05",
-                    "path": "<Keyboard>/c",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard & Mouse",
-                    "action": "Shield",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "6b35e34f-11b3-448f-b445-3115f8c2bc6e",
-                    "path": "<Keyboard>/d",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
@@ -226,17 +224,6 @@
                     "processors": "",
                     "groups": "Keyboard & Mouse",
                     "action": "Throw",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c19059e2-bbd0-4ec8-95e0-29acff213a71",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard & Mouse",
-                    "action": "Magic",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -259,6 +246,39 @@
                     "processors": "",
                     "groups": "Keyboard & Mouse",
                     "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "528a729d-52aa-4c5a-80e9-b3ba2d94eff3",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Heal",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f7df3345-90e8-48ad-82aa-f812fcc94c32",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Slam",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9f481a74-66d1-458c-9c8f-fef8decf97a3",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard & Mouse",
+                    "action": "Float",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

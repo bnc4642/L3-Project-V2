@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "mapPractice.tmx",
+    "activeFile": "TilesetPacks/Bricks.tsx",
     "expandedProjectPaths": [
         ".",
         "TilesetPacks"
@@ -12,18 +12,22 @@
     "fileStates": {
         "TilesetPacks/Bricks.tsx": {
             "scaleInDock": 4,
-            "scaleInEditor": 3
+            "scaleInEditor": 5.5
         },
         "TilesetPacks/Forest.tsx": {
-            "scaleInDock": 4,
-            "scaleInEditor": 3
+            "scaleInDock": 3,
+            "scaleInEditor": 5.5
+        },
+        "TilesetPacks/GrassRocks.tsx": {
+            "scaleInDock": 3,
+            "scaleInEditor": 5.5
         },
         "mapPractice.tmx": {
-            "scale": 1,
+            "scale": 3,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 556,
-                "y": 528
+                "x": 338.3333333333333,
+                "y": 636.6666666666666
             }
         },
         "rule1.tmx": {
@@ -53,14 +57,16 @@
         "mapPractice.tmx",
         "TilesetPacks/Forest.tsx",
         "rule1.tmx",
-        "TilesetPacks/Bricks.tsx"
+        "TilesetPacks/Bricks.tsx",
+        "TilesetPacks/GrassRocks.tsx"
     ],
     "project": "Practice.tiled-project",
     "recentFiles": [
-        "TilesetPacks/Bricks.tsx",
-        "rule1.tmx",
-        "TilesetPacks/Forest.tsx",
         "mapPractice.tmx",
+        "TilesetPacks/Forest.tsx",
+        "rule1.tmx",
+        "TilesetPacks/GrassRocks.tsx",
+        "TilesetPacks/Bricks.tsx",
         "tileRule1.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",

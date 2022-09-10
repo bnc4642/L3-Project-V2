@@ -140,13 +140,15 @@ public class Interface : MonoBehaviour
 
     public void SelectSave(int id)
     {
+        Debug.Log("Selecting");
         Id = id;
         if (File.Exists(Application.persistentDataPath + "/gamesave" + id + ".save"))
         {
-            foreach (Transform btn in ExCanvas.GetComponentsInChildren<Transform>())
-            {
-                btn.gameObject.SetActive(false);
-            }
+            ExCanvas.transform.Find("Button " + 0).gameObject.SetActive(false);
+            ExCanvas.transform.Find("Button " + 1).gameObject.SetActive(false);
+            ExCanvas.transform.Find("Button " + 2).gameObject.SetActive(false);
+            ExCanvas.transform.Find("Button " + id).gameObject.SetActive(true);
+            ExCanvas.transform.Find("Button " + id).GetComponent<Button>().enabled = false;
 
             GetComponent<Animator>().enabled = true;
             GetComponent<Animator>().SetTrigger("Open" + Id);
@@ -181,16 +183,15 @@ public class Interface : MonoBehaviour
 
     public void ConfirmSave(int id)
     {
-        if (Canvas.transform.Find("Name " + id).GetComponent<Text>().text != "") // Check not null
+        if (Canvas.GetComponentsInChildren<TMPro.TextMeshProUGUI>()[id].text != "") // Check not null
         {
             WriteToJsonFile(Application.persistentDataPath + "/gamesave" + id + ".save", new Save());
-            ExitSaveTyping(id, Canvas.transform.Find("Name " + id).GetComponent<Text>().text);
+            ExitSaveTyping(id, Canvas.GetComponentsInChildren<TMPro.TMP_Text>()[id].text);
         }
     }
 
     public void DenySave(int id)
     {
-        Debug.Log("B");
         GameEvents.current.SetTxtBoxValue(id, "New Game");
         ExitSaveTyping(id, "New Game");
     }
@@ -203,8 +204,7 @@ public class Interface : MonoBehaviour
                 btn.gameObject.GetComponent<Button>().enabled = true;
             }
         }
-
-        ExCanvas.transform.Find("Button " + id).GetChild(0).GetComponent<Text>().text = name;
+        ExCanvas.transform.Find("Button " + id).GetComponentInChildren<TMPro.TextMeshProUGUI>().text = name;
         Canvas.transform.Find("Name " + id).gameObject.SetActive(true); // Swap text boxes from editable to non-editable
         Canvas.GetComponentsInChildren<TMPro.TMP_InputField>()[id].enabled = false;
         GameEvents.current.TxtBoxDeselect(id);
@@ -285,11 +285,10 @@ public class Interface : MonoBehaviour
 
     public void Return()
     {
-        Debug.Log("Return");
         ExCanvas.SetActive(true);
-        ExCanvas.transform.Find("Button " + 0).gameObject.SetActive(true);
-        ExCanvas.transform.Find("Button " + 1).gameObject.SetActive(true);
-        ExCanvas.transform.Find("Button " + 2).gameObject.SetActive(true);
+        for (int i = 0; i < 3; i++)
+            ExCanvas.transform.Find("Button " + i).gameObject.SetActive(true);
+        ExCanvas.transform.Find("Button " + Id).GetComponent<Button>().enabled = true;
 
         GetComponent<SpriteRenderer>().enabled = false;
         BookCanvas.transform.GetChild(8).gameObject.SetActive(false);
@@ -298,8 +297,7 @@ public class Interface : MonoBehaviour
     }
     public void DeleteSave()
     {
-        // Show [Are you sure?]
-        // Then use the previous buttons as yes / no
-        // And then get a function to delete the saves.
+        if (File.Exists(Application.persistentDataPath + "/gamesave" + Id + ".save"))
+            File.Delete(Application.persistentDataPath + "/gamesave" + Id + ".save");
     }
 }

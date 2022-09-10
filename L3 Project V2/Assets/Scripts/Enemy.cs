@@ -23,9 +23,11 @@ public class Enemy : MonoBehaviour
     private float timeDisabled = 0.1f;
     public float invinciFrames = 0.2f;
     public LayerMask player;
+    public Player plyr;
     public LayerMask playerWeapon;
 
     public bool startled = false;
+    public bool hitting = false;
     public float patrollingRange = 25;
     public float timeForAttack = 0.4f;
     public float attackingBreak = 1.5f;
@@ -64,6 +66,8 @@ public class Enemy : MonoBehaviour
             anim.CrossFade(state, 0, 0);
             currentState = state;
         }
+        if (hitting)
+            plyr.EnterHitState(this.gameObject, dmg);
     }
 
     public virtual int ToAttack()
@@ -100,8 +104,13 @@ public class Enemy : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //if (((1 << collision.gameObject.layer) & player) != 0)
-            //collision.gameObject.GetComponent<Player>().EnterHitState(this.GetComponent<Collision2D>(), dmg);
+        if (((1 << collision.gameObject.layer) & player) != 0)
+            hitting = true;
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (((1 << collision.gameObject.layer) & player) != 0)
+            hitting = false;
     }
 
     public virtual IEnumerator Hit(int dmg, int orrientation)
@@ -144,7 +153,7 @@ public class Enemy : MonoBehaviour
                 break;
             case 2:
                 Debug.Log("Up");
-                GetComponentInParent<Rigidbody2D>().velocity = new Vector2(0, -damagePush / 3);
+                GetComponentInParent<Rigidbody2D>().velocity = new Vector2(0, damagePush / 3);
                 GetComponentsInChildren<ParticleSystem>()[3].gameObject.transform.rotation = Quaternion.Euler(0, 0, 90);
                 break;
             case 3:

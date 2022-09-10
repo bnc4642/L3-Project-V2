@@ -55,6 +55,9 @@ public class Player : MonoBehaviour
     public bool facingRight = true;
     public bool grounded = false;
     public bool walled = false;
+    public bool floating = false;
+
+    private bool waiting = false;
     public void OnMove(InputValue value)
     {
         direction = value.Get<Vector2>();
@@ -67,28 +70,9 @@ public class Player : MonoBehaviour
             jumped = false;
     }
 
-    public void OnEnter(InputValue value)
-    {
-        Debug.Log("C");
-    }
-
     public void OnStab(InputValue value)
     {
-        actionReference.action.performed += context =>
-        {
-            if (context.interaction is TapInteraction)
-            {
-                try
-                {
-                    StartCoroutine(EnterAttackState(3));
-                }
-                catch { Debug.Log("Error"); }
-            }
-            else if (context.interaction is HoldInteraction)
-            {
-                StartCoroutine(EnterAttackState(2));
-            }
-        };
+        StartCoroutine(EnterAttackState(3));
     }
 
     public void OnDash(InputValue value)
@@ -96,7 +80,7 @@ public class Player : MonoBehaviour
         EnterDashState();
     }
 
-    public void OnProjectile()
+    public void OnThrow()
     {
         EnterProjectileState();
     }
@@ -109,11 +93,21 @@ public class Player : MonoBehaviour
 
     public void OnFloat(InputValue value)
     {
-        EnterFloatState();
+        if (value.Get<float>() > 0.5f)
+        {
+            floating = true;
+            rb.gravityScale = 0;
+        }
+        else
+        {
+            floating = false;
+            rb.gravityScale = 10;
+        }
     }
-
+    
     private void FixedUpdate()
     {
+        Debug.Log(rb.velocity.y);
         grounded = IsGrounded();
         interactable = Physics2D.OverlapCircle(transform.position, 1, LayerMask.NameToLayer("Interactable"));
 
@@ -130,6 +124,11 @@ public class Player : MonoBehaviour
                 UpdateHitState();
                 break;
         }
+
+        if (floating)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, 0);
+        }
     }
 
     private void EnterDashState()
@@ -142,12 +141,14 @@ public class Player : MonoBehaviour
         groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = true;
         rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0);
         tr.emitting = true;
-        dashingTime = Time.time + .6f;
+        dashingTime = Time.time + 0.6f;
     }
 
-    public void EnterHitState(Collision2D collision, int dmg)
+    public void EnterHitState(GameObject collider, int dmg)
     {
-        if (State != PlayerState.Hit || damagedTime > Time.time) return;
+        if (damagedTime > Time.time) return;
+
+
 
         GetComponent<SpriteRenderer>().material.shader = Shader.Find("GUI/Text Shader");
         GetComponent<SpriteRenderer>().color = Color.white;
@@ -156,7 +157,7 @@ public class Player : MonoBehaviour
 
         damagedTime = Time.time + 0.8f;
         transitioner.transition.SetTrigger("Hurt");
-        if (collision.gameObject.transform.position.x < transform.position.x)
+        if (collider.transform.position.x < transform.position.x)
             rb.velocity = new Vector2(DamagePush, DamagePush / 3);
         else
             rb.velocity = new Vector2(-DamagePush, DamagePush / 3);
@@ -218,6 +219,12 @@ public class Player : MonoBehaviour
 
     private void UpdateAttackState()
     {
+        if (damagedTime - 0.65 < Time.time)
+        {
+            GetComponent<SpriteRenderer>().material.shader = Shader.Find("Sprites/Default");
+            GetComponent<SpriteRenderer>().color = Color.white;
+        }
+
         if (attackingTime - 0.4 > Time.time)
             Flip();
 
@@ -249,8 +256,7 @@ public class Player : MonoBehaviour
             hasHitEnemies = true;
         }
 
-        if (!grounded)
-            Jump();
+        Jump();
 
         if (attackingTime < Time.time)
         {
@@ -327,8 +333,9 @@ public class Player : MonoBehaviour
 
         if (walled && !grounded)
             WallJump();
-        else
+        else if (!floating)
             Jump();
+
     }
 
     private void Jump()
@@ -354,6 +361,9 @@ public class Player : MonoBehaviour
             falling = true;
             jumping = false;
         }
+
+        if (floating)
+            rb.velocity = new Vector2(rb.velocity.x, 0);
     }
 
     private void WallJump()
@@ -386,11 +396,6 @@ public class Player : MonoBehaviour
         State = PlayerState.Attack;
     }
 
-    private void EnterFloatState()
-    {
-        State = PlayerState.Movement;
-    }
-
     public bool IsGrounded() { return Physics2D.OverlapBox(groundCheck.position, new Vector2(width, 0.1f), 0, groundLayer); }
     public bool IsWalled() 
     {
@@ -414,7 +419,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private  void Interact()
+    private void Interact()
     {
 
     }
@@ -445,5 +450,10 @@ public class Player : MonoBehaviour
         Gizmos.DrawWireSphere((Vector2)transform.position + wallPos1, wallRadius);
         Gizmos.DrawWireSphere(attackPoint, attackRadii[attackStyle]);
         Gizmos.DrawWireCube(groundCheck.position, new Vector3(width, 0.1f, 1));
+    }
+
+    private void Postpone()
+    {
+
     }
 }
