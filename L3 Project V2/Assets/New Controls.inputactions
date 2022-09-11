@@ -79,12 +79,12 @@
                 },
                 {
                     "name": "Heal",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "5600767a-09d2-4334-b29f-b372e41bcd1d",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Slam",

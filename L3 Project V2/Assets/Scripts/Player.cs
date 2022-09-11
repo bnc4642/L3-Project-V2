@@ -51,6 +51,10 @@ public class Player : MonoBehaviour
     private float lSpeedMult = 1;
     private float rSpeedMult = 1;
 
+    private float healingTime = 0;
+    private bool healing = false;
+    private bool healCancelled = false;
+    private bool stoppedHealing = true;
     bool canDash = false;
     bool jumping = false;
     bool falling = false;
@@ -112,6 +116,23 @@ public class Player : MonoBehaviour
         StartCoroutine(EnterAttackState(2));
     }
 
+    public void OnHeal(InputValue value)
+    {
+        healing = value.Get<float>() > 0.5f && State == PlayerState.Movement && grounded;
+
+        if (stoppedHealing && healing) // Is true after pressing button down
+        {
+            healingTime = Time.time + 2;
+            healCancelled = false;
+            Debug.Log("H Started");
+        }
+
+        if (!healing)
+            stoppedHealing = true;
+        else
+            stoppedHealing = false;
+    }
+
     private void FixedUpdate()
     {
         if (damagedTime - 0.65 < Time.time) // if hurt and attacking
@@ -144,7 +165,7 @@ public class Player : MonoBehaviour
 
     private void EnterDashState()
     {
-        if (!canDash || dashingTime > Time.time) return;
+        if (!canDash || dashingTime > Time.time || healing) return;
 
         canDash = false;
         rb.gravityScale = 0;
@@ -159,7 +180,8 @@ public class Player : MonoBehaviour
     {
         if (damagedTime > Time.time) return;
 
-
+        healCancelled = true;
+        Debug.Log("Cancelled");
 
         GetComponent<SpriteRenderer>().material.shader = Shader.Find("GUI/Text Shader");
         GetComponent<SpriteRenderer>().color = Color.white;
@@ -198,7 +220,7 @@ public class Player : MonoBehaviour
         if (dashingTime -0.5f > Time.time)
             yield return new WaitForSeconds(dashingTime - Time.time);
 
-        if (State != PlayerState.Attack && (attackingTime < Time.time || (attackStyle == 2 && attackingTime -0.18f < Time.time)))
+        if (State != PlayerState.Attack && !healing && (attackingTime < Time.time || (attackStyle == 2 && attackingTime -0.18f < Time.time)))
         {
             State = PlayerState.Attack;
             attackStyle = n;
@@ -366,6 +388,18 @@ public class Player : MonoBehaviour
            //rb.velocity = new Vector2(0, 0);
         }
 
+        if (healing && healingTime < Time.time) //heal
+        {
+            if (!healCancelled)
+            {
+                health += 2;
+                healing = false;
+                stoppedHealing = true;
+                Debug.Log("Healed");
+                healCancelled = true;
+            }
+        }
+
         if (bounceEffect.x > 0.05 || bounceEffect.x < -0.05)
             bounceEffect.x *= 0.5f;
         if (bounceEffect.y > 0.05f)
@@ -376,7 +410,7 @@ public class Player : MonoBehaviour
             rSpeedMult += 0.05f;
 
         //walk
-        if (dashingTime - 0.5f < Time.time && damagedTime - 0.5 < Time.time) // && !wallHolding
+        if (dashingTime - 0.5f < Time.time && damagedTime - 0.5 < Time.time && !healing)
         {
             if (direction.x < 0)
                 rb.velocity = new Vector2(direction.x * lSpeedMult * speed, rb.velocity.y) + bounceEffect;
@@ -394,7 +428,7 @@ public class Player : MonoBehaviour
     private void Jump()
     {
         //jump
-        if (!jumped && jumping && grounded)
+        if (!jumped && jumping && grounded && !healing)
         {
             jumped = true;
             rb.velocity = new Vector2(rb.velocity.x, 40);
