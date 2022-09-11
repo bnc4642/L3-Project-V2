@@ -13,11 +13,6 @@ MonoBehaviour:
   m_Name: 03CharacterProjectiles_animation
   m_EditorClassIdentifier: 
   cels:
-  - sprite: {fileID: 268805640, guid: 74ec050716f68cf4a9b7ba4504e419cc, type: 3}
-    drivers:
-      keys:
-      - projectiles
-      values: 01000000
   - sprite: {fileID: 364360575, guid: 74ec050716f68cf4a9b7ba4504e419cc, type: 3}
     drivers:
       keys:
