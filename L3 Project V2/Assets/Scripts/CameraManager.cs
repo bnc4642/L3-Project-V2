@@ -16,15 +16,18 @@ public class CameraManager : MonoBehaviour
     public float shakeAmount = 0.7f;
     public float damping = 1;
     private Vector3 initPos;
+    Vector3 velocity = new Vector3(5, 5, 5);
+
+    private void Start()
+    {
+    }
 
     void Update()
     {
         Vector3 targetPosition = transform.position + new Vector3(0, 0, -10);
         targetPosition.x = Mathf.Clamp(targetPosition.x, xMin, xMax);
         targetPosition.y = Mathf.Clamp(targetPosition.y, yMin, yMax);
-        //cam.position = Vector3.SmoothDamp(cam.position, targetPosition, ref Velocity, 0.25f);
-        float t = RoundToMultiple(cameraSpeed * Time.deltaTime, multiple);
-        cam.position = Vector3.Lerp(cam.position, targetPosition, t);                  ///// FIX THISsssssssssssssssssssssssssssssss
+        cam.position = Vector3.SmoothDamp(cam.position, targetPosition, ref velocity, 0.25f);
 
         if (shakeTime > 0)
         {

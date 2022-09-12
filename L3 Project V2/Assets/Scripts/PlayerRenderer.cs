@@ -8,7 +8,7 @@ public class PlayerRenderer : MonoBehaviour
     private static class Drivers
     {
         public const string IsGrounded = "isGrounded";
-        public const string IsMoving = "isMoving";
+        public const string GroundMovement = "groundMovement";
         public const string JumpDirection = "jumpDirection";
         public const string State = "state";
         public const string IsRunJumping = "isRunJumping";
@@ -18,10 +18,15 @@ public class PlayerRenderer : MonoBehaviour
 
     private Player controller;
     private Reanimator reanimator;
+    private ReanimatorListener healListener;
     private void Awake()
     {
         controller = GetComponent<Player>();
         reanimator = GetComponent<Reanimator>();
+        reanimator.AddListener (
+        "healFinished",
+        () => controller.healingTime = 0
+        );
     }
 
     private void Update()
@@ -29,7 +34,8 @@ public class PlayerRenderer : MonoBehaviour
         //reanimator.Flip = controller.facingRight;
         reanimator.Set(Drivers.State, (int)controller.State);
         reanimator.Set(Drivers.IsGrounded, controller.grounded);
-        reanimator.Set(Drivers.IsMoving, controller.direction.x != 0);
+        reanimator.Set(Drivers.GroundMovement, controller.direction.x != 0);
+        if (controller.healing && !controller.healCancelled && controller.healingTime > Time.time) reanimator.Set(Drivers.GroundMovement, 2);
         reanimator.Set(Drivers.JumpDirection, controller.rb.velocity.y > 0);
         reanimator.Set(Drivers.IsRunJumping, controller.rb.velocity.x != 0);
         reanimator.Set(Drivers.AttackStyle, controller.attackStyle);

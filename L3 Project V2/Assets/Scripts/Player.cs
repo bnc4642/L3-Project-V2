@@ -5,10 +5,15 @@ using System;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 using Aarthificial.Reanimation;
+using UnityEngine.VFX;
 
 public class Player : MonoBehaviour
 {
+    public GameObject healthBar;
+    public Vector3 posOffset;
+    public Animator deathAnim;
     public List<ParticleSystem> Trails = new List<ParticleSystem>();
+    public GameObject deathFX;
     private float slamEffectTimer = 0;
     public GameObject impactPrefab;
 
@@ -27,7 +32,6 @@ public class Player : MonoBehaviour
     public LevelLoader transitioner;
     public PlayerState State = PlayerState.Movement;
 
-
     public GameObject[] attackVFX = new GameObject[2];
     public Vector2[,] attackPos = new Vector2[2, 3] { { new Vector2(0.04f, -1.41f), new Vector2(2.02f, 0.03f), new Vector2(-0.12f, 2.36f) }, { new Vector2(0.04f, -1.41f), new Vector2(1.39f, 0.03f), new Vector2(0.16f, 1.15f) } };
     float[] attackRadii = new float[2] { 2.55f , 2.55f };
@@ -37,7 +41,7 @@ public class Player : MonoBehaviour
     public float width = 1.15f;
     readonly float DamagePush = 20;
     float speed = 18;
-    public int health = 10;
+    public int health = 5;
     private int damage = 3;
     float attackingTime = 0;
     float damagedTime = 0;
@@ -51,10 +55,11 @@ public class Player : MonoBehaviour
     private float lSpeedMult = 1;
     private float rSpeedMult = 1;
 
-    private float healingTime = 0;
-    private bool healing = false;
-    private bool healCancelled = false;
-    private bool stoppedHealing = true;
+    public float mourningPeriod;
+    public  float healingTime = 0;
+    public bool healing = false;
+    public bool healCancelled = false;
+    public bool stoppedHealing = true;
     bool canDash = false;
     bool jumping = false;
     bool falling = false;
@@ -64,6 +69,7 @@ public class Player : MonoBehaviour
     public bool grounded = false;
     public bool walled = false;
     public bool floating = false;
+
     public void OnMove(InputValue value)
     {
         direction = value.Get<Vector2>();
@@ -122,9 +128,9 @@ public class Player : MonoBehaviour
 
         if (stoppedHealing && healing) // Is true after pressing button down
         {
-            healingTime = Time.time + 2;
+            healingTime = Time.time + 1;
             healCancelled = false;
-            Debug.Log("H Started");
+            rb.velocity = Vector2.zero;
         }
 
         if (!healing)
@@ -156,6 +162,8 @@ public class Player : MonoBehaviour
             case PlayerState.Hit:
                 UpdateHitState();
                 break;
+            case PlayerState.Death:
+                break;
         }
 
         if (floating || (walled && !grounded && !jumping))
@@ -181,7 +189,6 @@ public class Player : MonoBehaviour
         if (damagedTime > Time.time) return;
 
         healCancelled = true;
-        Debug.Log("Cancelled");
 
         GetComponent<SpriteRenderer>().material.shader = Shader.Find("GUI/Text Shader");
         GetComponent<SpriteRenderer>().color = Color.white;
@@ -196,9 +203,17 @@ public class Player : MonoBehaviour
             rb.velocity = new Vector2(-DamagePush, DamagePush / 3);
 
         GetComponentInChildren<CameraManager>().TriggerShake(1.5f, 10f);
-        health -= dmg;
+        for (int i = 0; i < dmg; i++)
+        {
+            Debug.Log(health);
+            if (health > 0)
+            {
+                health -= 1;
+                healthBar.GetComponentsInChildren<SpriteRenderer>()[health].enabled = false;
+            }
+        }
         if (health <= 0)
-            Die();
+            StartCoroutine(Die());
     }
 
     private void UpdateHitState()
@@ -220,7 +235,7 @@ public class Player : MonoBehaviour
         if (dashingTime -0.5f > Time.time)
             yield return new WaitForSeconds(dashingTime - Time.time);
 
-        if (State != PlayerState.Attack && !healing && (attackingTime < Time.time || (attackStyle == 2 && attackingTime -0.18f < Time.time)))
+        if (!healing && ((attackingTime < Time.time && State != PlayerState.Attack) || attackStyle == 2))
         {
             State = PlayerState.Attack;
             attackStyle = n;
@@ -390,13 +405,13 @@ public class Player : MonoBehaviour
 
         if (healing && healingTime < Time.time) //heal
         {
-            if (!healCancelled)
+            if (!healCancelled && health < 5)
             {
-                health += 2;
                 healing = false;
                 stoppedHealing = true;
-                Debug.Log("Healed");
                 healCancelled = true;
+                healthBar.GetComponentsInChildren<SpriteRenderer>()[health].enabled = true;
+                health += 1;
             }
         }
 
@@ -506,9 +521,19 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void Die()
+    public IEnumerator Die()
     {
-        Debug.Log("Die");
+        State = PlayerState.Death;
+        rb.gravityScale = 0;
+        deathFX.GetComponent<VisualEffect>().Play();
+        deathFX.GetComponent<ParticleSystem>().Play();
+        rb.velocity = Vector2.zero;
+        GetComponent<SpriteRenderer>().enabled = false;
+        deathAnim.Play("DeathAnim");
+        yield return new WaitForSeconds(0.9f);
+        GetComponent<SpriteRenderer>().enabled = true;
+        State = PlayerState.Movement;
+        rb.gravityScale = 10;
     }
 
     void OnDrawGizmosSelected()
