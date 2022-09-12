@@ -23252,6 +23252,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 425634296}
     - target: {fileID: 1258719320265126707, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: energyOrb
+      value: 
+      objectReference: {fileID: 694412920}
+    - target: {fileID: 1258719320265126707, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
       propertyPath: healthBar
       value: 
       objectReference: {fileID: 1029231770}
@@ -23283,6 +23287,42 @@ PrefabInstance:
       propertyPath: Trails.Array.size
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 1258719320265126707, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: orbs.Array.data[0]
+      value: 
+      objectReference: {fileID: 1653977437, guid: 5b67d12e5ec65714a8e35c4177952886, type: 3}
+    - target: {fileID: 1258719320265126707, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: orbs.Array.data[1]
+      value: 
+      objectReference: {fileID: -1365241438, guid: 5b67d12e5ec65714a8e35c4177952886, type: 3}
+    - target: {fileID: 1258719320265126707, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: orbs.Array.data[2]
+      value: 
+      objectReference: {fileID: 1201330241, guid: 5b67d12e5ec65714a8e35c4177952886, type: 3}
+    - target: {fileID: 1258719320265126707, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: orbs.Array.data[3]
+      value: 
+      objectReference: {fileID: 929703170, guid: 5b67d12e5ec65714a8e35c4177952886, type: 3}
+    - target: {fileID: 1258719320265126707, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: orbs.Array.data[4]
+      value: 
+      objectReference: {fileID: -1839595100, guid: 5b67d12e5ec65714a8e35c4177952886, type: 3}
+    - target: {fileID: 1258719320265126707, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: orbs.Array.data[5]
+      value: 
+      objectReference: {fileID: 346526323, guid: 5b67d12e5ec65714a8e35c4177952886, type: 3}
+    - target: {fileID: 1258719320265126707, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: orbs.Array.data[6]
+      value: 
+      objectReference: {fileID: 575979393, guid: 5b67d12e5ec65714a8e35c4177952886, type: 3}
+    - target: {fileID: 1258719320265126707, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: orbs.Array.data[7]
+      value: 
+      objectReference: {fileID: -1862377125, guid: 5b67d12e5ec65714a8e35c4177952886, type: 3}
+    - target: {fileID: 1258719320265126707, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
+      propertyPath: orbs.Array.data[8]
+      value: 
+      objectReference: {fileID: -333803902, guid: 5b67d12e5ec65714a8e35c4177952886, type: 3}
     - target: {fileID: 1258719320265126707, guid: ef3fba0c2ec1b5541bcac504053ff434, type: 3}
       propertyPath: Trails.Array.data[0]
       value: 

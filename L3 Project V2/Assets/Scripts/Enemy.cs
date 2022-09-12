@@ -117,6 +117,7 @@ public class Enemy : MonoBehaviour
     {
         if (Time.time > timeHit + invinciFrames)
         {
+            StartCoroutine(aiPath.target.GetComponentInChildren<Player>().ChangeEnergy(1));
             aiPath.target.GetComponentInChildren<CameraManager>().TriggerShake(0.5f, 5f);
             health -= dmg;
             if (health <= 0)

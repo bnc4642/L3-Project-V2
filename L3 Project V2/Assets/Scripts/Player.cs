@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     public GameObject deathFX;
     private float slamEffectTimer = 0;
     public GameObject impactPrefab;
+    public SpriteRenderer energyOrb;
+    public Sprite[] orbs = new Sprite[9];
 
     public float wallRadius;
     public Vector2 wallPos1;
@@ -55,8 +57,9 @@ public class Player : MonoBehaviour
     private float lSpeedMult = 1;
     private float rSpeedMult = 1;
 
+    private int energyLevel = 0;
     public float mourningPeriod;
-    public  float healingTime = 0;
+    public float healingTime = 0;
     public bool healing = false;
     public bool healCancelled = false;
     public bool stoppedHealing = true;
@@ -126,7 +129,7 @@ public class Player : MonoBehaviour
     {
         healing = value.Get<float>() > 0.5f && State == PlayerState.Movement && grounded;
 
-        if (stoppedHealing && healing) // Is true after pressing button down
+        if (stoppedHealing && healing && energyLevel > 2) // Is true after pressing button down
         {
             healingTime = Time.time + 1;
             healCancelled = false;
@@ -235,13 +238,14 @@ public class Player : MonoBehaviour
         if (dashingTime -0.5f > Time.time)
             yield return new WaitForSeconds(dashingTime - Time.time);
 
-        if (!healing && ((attackingTime < Time.time && State != PlayerState.Attack) || attackStyle == 2))
+        if (!healing && (attackingTime < Time.time && State != PlayerState.Attack) && ((n == 3) || (n == 2 && energyLevel > 2)))
         {
             State = PlayerState.Attack;
             attackStyle = n;
 
             if (attackStyle == 2)
             {
+                StartCoroutine(ChangeEnergy(-3));
                 attackingDirection = 0;
                 attackVFX[0].SetActive(true);
                 foreach (ParticleSystem PS in Trails)
@@ -412,6 +416,7 @@ public class Player : MonoBehaviour
                 healCancelled = true;
                 healthBar.GetComponentsInChildren<SpriteRenderer>()[health].enabled = true;
                 health += 1;
+                StartCoroutine(ChangeEnergy(-3));
             }
         }
 
@@ -536,6 +541,22 @@ public class Player : MonoBehaviour
         rb.gravityScale = 10;
     }
 
+    public IEnumerator ChangeEnergy(int changeN)
+    {
+        if ((energyLevel + changeN <= 8) && (energyLevel + changeN >= 0))
+        {
+            Debug.Log(energyLevel);
+            for (int i = 0; i < Math.Abs(changeN); i++)
+            {
+                Debug.Log(energyLevel);
+                yield return new WaitForSeconds(0.12f);
+                energyLevel += changeN / Math.Abs(changeN);
+                energyOrb.sprite = orbs[energyLevel];
+            }
+            Debug.Log(energyLevel);
+        }
+    }
+
     void OnDrawGizmosSelected()
     {
         if (attackPoint == null)
@@ -543,7 +564,7 @@ public class Player : MonoBehaviour
 
         Gizmos.DrawWireSphere((Vector2)transform.position + wallPos2, wallRadius);
         Gizmos.DrawWireSphere((Vector2)transform.position + wallPos1, wallRadius);
-        Gizmos.DrawWireSphere(attackPoint, attackRadii[attackStyle]);
+        //Gizmos.DrawWireSphere(attackPoint, attackRadii[attackStyle - 2]);
         Gizmos.DrawWireCube(groundCheck.position, new Vector3(width, 0.1f, 1));
     }
 }
