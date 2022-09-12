@@ -204,6 +204,8 @@ public class Interface : MonoBehaviour
                 btn.gameObject.GetComponent<Button>().enabled = true;
             }
         }
+        Debug.Log("Button " + id);
+
         ExCanvas.transform.Find("Button " + id).GetComponentInChildren<TMPro.TextMeshProUGUI>().text = name;
         Canvas.transform.Find("Name " + id).gameObject.SetActive(true); // Swap text boxes from editable to non-editable
         Canvas.GetComponentsInChildren<TMPro.TMP_InputField>()[id].enabled = false;

@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
-    private bool interactable = false;
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
-            interactable = true;
+            if (collision.GetComponent<Player>().interactable == null)
+            collision.GetComponent<Player>().interactable = this;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
-            interactable = false;
+            collision.GetComponent<Player>().interactable = null;
     }
 
     public virtual void Interact() 

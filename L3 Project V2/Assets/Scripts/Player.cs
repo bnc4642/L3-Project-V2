@@ -66,7 +66,7 @@ public class Player : MonoBehaviour
     bool canDash = false;
     bool jumping = false;
     bool falling = false;
-    bool interactable = false;
+    public Interactable interactable;
     private bool jumped = false;
     public bool facingRight = true;
     public bool grounded = false;
@@ -95,14 +95,9 @@ public class Player : MonoBehaviour
         EnterDashState();
     }
 
-    public void OnThrow()
-    {
-        EnterProjectileState();
-    }
-
     public void OnInteract(InputValue value)
     {
-        if (interactable)
+        if (interactable != null)
             Interact();
     }
 
@@ -151,7 +146,8 @@ public class Player : MonoBehaviour
         }
 
         grounded = IsGrounded();
-        interactable = Physics2D.OverlapCircle(transform.position, 1, LayerMask.NameToLayer("Interactable"));
+        Debug.Log(interactable == null);
+        //interactable = Physics2D.OverlapCircle(transform.position, 1, LayerMask.NameToLayer("Interactable"));
 
         switch (State)
         {
@@ -208,7 +204,6 @@ public class Player : MonoBehaviour
         GetComponentInChildren<CameraManager>().TriggerShake(1.5f, 10f);
         for (int i = 0; i < dmg; i++)
         {
-            Debug.Log(health);
             if (health > 0)
             {
                 health -= 1;
@@ -482,10 +477,6 @@ public class Player : MonoBehaviour
         if (floating)
             rb.velocity = new Vector2(rb.velocity.x, 0);
     }
-    private void EnterProjectileState()
-    {
-        State = PlayerState.Attack;
-    }
 
     private void Interact()
     {
@@ -545,15 +536,12 @@ public class Player : MonoBehaviour
     {
         if ((energyLevel + changeN <= 8) && (energyLevel + changeN >= 0))
         {
-            Debug.Log(energyLevel);
             for (int i = 0; i < Math.Abs(changeN); i++)
             {
-                Debug.Log(energyLevel);
                 yield return new WaitForSeconds(0.12f);
                 energyLevel += changeN / Math.Abs(changeN);
                 energyOrb.sprite = orbs[energyLevel];
             }
-            Debug.Log(energyLevel);
         }
     }
 
