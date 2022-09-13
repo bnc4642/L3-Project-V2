@@ -2,14 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class Save
+class Save
 {
-    // public List<int> mapUnlocked = new List<int>(); 
-    // public List<int> completedCutscenes = new List<int>(); 
-    public List<int> bossesUndefeated = new List<int>();
-    public string name = "";
+    public string Name = "";
 
-    // public int inkpotNo = 0;
-    public int health = 0;
+    // public int InkpotNo = 0;
+    public int Health = 0;
+
+    // public List<int> MapUnlocked = new List<int>(); 
+    // public List<int> CompletedCutscenes = new List<int>(); 
+    //public List<int> BossesUndefeated = new List<int>();
+
+    public int EncounterProgress = 0;
+
+    public Save()
+    {
+
+    }
 }
