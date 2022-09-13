@@ -38,13 +38,11 @@ public class Interface : MonoBehaviour
             Saves[i] = ReadFromJsonFile<Save>(Application.persistentDataPath + "/gamesave" + i + ".save"); // get saves
             if (Saves[i] == null || Saves[i].Name == "")
             {
-                Debug.Log("Not Safe");
                 Saves[i] = null;
                 ExCanvas.transform.GetChild(i).GetComponentInChildren<TMPro.TMP_Text>().text = "New Game";
             }
             else
             {
-                Debug.Log("Safe");
                 ExCanvas.transform.GetChild(i).GetComponentInChildren<TMPro.TMP_Text>().text = Saves[i].Name;
             }
         }
@@ -234,7 +232,6 @@ public class Interface : MonoBehaviour
         // if any noticable events occured, then save upon closing the book (PD < 0)
         Save save = new Save();
 
-        Debug.Log(Saves[Id] == null);
         if (Saves[Id] == null)
         {
             save = new Save();
@@ -269,10 +266,6 @@ public class Interface : MonoBehaviour
             writer = new StreamWriter(filePath, append);
             writer.Write(contentsToWriteToFile);
         }
-        catch
-        {
-            Debug.Log("Failed");
-        }
         finally
         {
             if (writer != null)
@@ -287,7 +280,6 @@ public class Interface : MonoBehaviour
         {
             reader = new StreamReader(filePath);
             var fileContents = reader.ReadToEnd();
-            Debug.Log(fileContents);
             return JsonConvert.DeserializeObject<T>(fileContents);
         }
         catch
@@ -316,6 +308,7 @@ public class Interface : MonoBehaviour
         for (int i = 0; i < 3; i++)
             ExCanvas.transform.Find("Button " + i).gameObject.SetActive(true);
         ExCanvas.transform.Find("Button " + Id).GetComponent<Button>().enabled = true;
+        StartCoroutine(AllowUpdates());
 
         GetComponent<SpriteRenderer>().enabled = false;
         BookCanvas.transform.GetChild(8).gameObject.SetActive(false);
@@ -326,5 +319,15 @@ public class Interface : MonoBehaviour
     {
         if (File.Exists(Application.persistentDataPath + "/gamesave" + Id + ".save"))
             File.Delete(Application.persistentDataPath + "/gamesave" + Id + ".save");
+        ExCanvas.transform.GetChild(Id).GetComponentInChildren<TMPro.TMP_Text>().text = "New Game";
+        GameEvents.current.SetTxtBoxValue(Id, "New Game");
+        Return();
+    }
+
+    private IEnumerator AllowUpdates()
+    {
+        yield return new WaitForSeconds(0.05f);
+
+        Debug.Log("This"); // doesn't workkkkkk
     }
 }

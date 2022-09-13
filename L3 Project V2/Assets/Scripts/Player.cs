@@ -14,7 +14,6 @@ public class Player : MonoBehaviour
     public Animator deathAnim;
     public List<ParticleSystem> Trails = new List<ParticleSystem>();
     public GameObject deathFX;
-    private float slamEffectTimer = 0;
     public GameObject impactPrefab;
     public SpriteRenderer energyOrb;
     public Sprite[] orbs = new Sprite[9];

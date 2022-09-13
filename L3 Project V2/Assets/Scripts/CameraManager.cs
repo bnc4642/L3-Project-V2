@@ -44,11 +44,4 @@ public class CameraManager : MonoBehaviour
     }
 
     public float cameraSpeed;
-
-    private float multiple = 0.25f;
-
-    private float RoundToMultiple(float value, float multipleOf)
-    {
-        return (int)((value / multipleOf) + 0.5f) * multipleOf;
-    }
 }
