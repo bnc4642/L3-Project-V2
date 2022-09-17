@@ -22,6 +22,7 @@ public class Interface : MonoBehaviour
 
     private int pageNum = -1;
     private bool flipping;
+    private bool tabBtnPressed = false;
 
     public GameObject[,] pages = new GameObject[2, 9];
 
@@ -59,7 +60,7 @@ public class Interface : MonoBehaviour
 
     private IEnumerator FlipPage(string Dir)
     {
-        if (flipping)
+        if (flipping && !tabBtnPressed)
             yield return null; // if in the middle of flipping
 
         else if (Dir.Equals("l")) // if turning to the left
@@ -151,8 +152,29 @@ public class Interface : MonoBehaviour
         }
         if (pageNum >= 0)
             GetComponent<SpriteRenderer>().sprite = heights[pageNum];
+    }
 
-        //WriteToJsonFile(Application.persistentDataPath + "/gamesave" + saveNum + ".save", FormSave());
+    public void BookTag(int pageNumIntended)
+    {
+        int n = pageNum - pageNumIntended;
+        if (n < 0)
+        {
+            tabBtnPressed = true;
+            for (int i = 0; i > n; i--)
+            {
+                StartCoroutine(FlipPage("r"));
+            }
+            tabBtnPressed = false;
+        }
+        else if (n > 0)
+        {
+            tabBtnPressed = true;
+            for (int i = 0; i < n - 1; i++)
+            {
+                StartCoroutine(FlipPage("l"));
+            }
+            tabBtnPressed = false;
+        }
     }
 
     public void SelectSave(int id)

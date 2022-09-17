@@ -1483,7 +1483,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 603359645}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1452889527}
+        m_TargetAssemblyTypeName: Interface, Assembly-CSharp
+        m_MethodName: BookTag
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &603359645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1680,7 +1692,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 613285780}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1452889527}
+        m_TargetAssemblyTypeName: Interface, Assembly-CSharp
+        m_MethodName: BookTag
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &613285780
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2195,7 +2219,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 778055017}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1452889527}
+        m_TargetAssemblyTypeName: Interface, Assembly-CSharp
+        m_MethodName: BookTag
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &778055017
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3931,7 +3967,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1445297184}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1452889527}
+        m_TargetAssemblyTypeName: Interface, Assembly-CSharp
+        m_MethodName: BookTag
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1445297184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4543,7 +4591,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1505077900}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1452889527}
+        m_TargetAssemblyTypeName: Interface, Assembly-CSharp
+        m_MethodName: BookTag
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1505077900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5442,7 +5502,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1681582336}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1452889527}
+        m_TargetAssemblyTypeName: Interface, Assembly-CSharp
+        m_MethodName: BookTag
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1681582336
 MonoBehaviour:
   m_ObjectHideFlags: 0
