@@ -77,12 +77,12 @@ public class Interface : MonoBehaviour
                     BookCanvas.transform.GetChild(6).gameObject.SetActive(false);
                     BookCanvas.transform.GetChild(7).gameObject.SetActive(true);
                 }
-                else if (pageNum == 5) // move the green tag
+                else if (pageNum == 2) // move the green tag
                 {
                     BookCanvas.transform.GetChild(2).gameObject.SetActive(false);
                     BookCanvas.transform.GetChild(3).gameObject.SetActive(true);
                 }
-                else if (pageNum == 8) // move the green tag
+                else if (pageNum == 3) // move the green tag
                 {
                     BookCanvas.transform.GetChild(4).gameObject.SetActive(false);
                     BookCanvas.transform.GetChild(5).gameObject.SetActive(true);
@@ -136,12 +136,12 @@ public class Interface : MonoBehaviour
                     BookCanvas.transform.GetChild(6).gameObject.SetActive(true);
                     BookCanvas.transform.GetChild(7).gameObject.SetActive(false);
                 }
-                else if (pageNum == 4) // move the green tag
+                else if (pageNum == 1) // move the green tag
                 {
                     BookCanvas.transform.GetChild(2).gameObject.SetActive(true);
                     BookCanvas.transform.GetChild(3).gameObject.SetActive(false);
                 }
-                else if (pageNum == 7) // move the green tag
+                else if (pageNum == 2) // move the green tag
                 {
                     BookCanvas.transform.GetChild(4).gameObject.SetActive(true);
                     BookCanvas.transform.GetChild(5).gameObject.SetActive(false);
