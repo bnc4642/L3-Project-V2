@@ -449,12 +449,21 @@ public class Player : MonoBehaviour
                 rb.velocity = new Vector2(direction.x * lSpeedMult * speed, rb.velocity.y) + bounceEffect;
             else
                 rb.velocity = new Vector2(direction.x * rSpeedMult * speed, rb.velocity.y) + bounceEffect;
+            if (grounded && direction.x != 0)
+                GetComponent<ParticleSystem>().emissionRate = 15;
+            else
+                GetComponent<ParticleSystem>().emissionRate = 0;
         }
-        else if (dashingTime - 0.5f > Time.time)
+        else
+            GetComponent<ParticleSystem>().emissionRate = 0;
+        if (dashingTime - 0.5f > Time.time)
             rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0);
 
         walled = IsWalled();
-
+        if (walled)
+            transform.GetChild(9).GetComponent<ParticleSystem>().emissionRate = 10;
+        else
+            transform.GetChild(9).GetComponent<ParticleSystem>().emissionRate = 0;
         if (!floating)
             Jump();
 
