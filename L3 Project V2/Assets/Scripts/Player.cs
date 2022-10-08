@@ -145,7 +145,6 @@ public class Player : MonoBehaviour
         }
 
         grounded = IsGrounded();
-        Debug.Log(interactable == null);
         //interactable = Physics2D.OverlapCircle(transform.position, 1, LayerMask.NameToLayer("Interactable"));
 
         switch (State)
@@ -171,7 +170,7 @@ public class Player : MonoBehaviour
 
     private void EnterDashState()
     {
-        if (!canDash || dashingTime > Time.time || healing) return;
+        if (!canDash || dashingTime > Time.time || healing || health <= 0) return;
 
         canDash = false;
         rb.gravityScale = 0;
@@ -180,6 +179,7 @@ public class Player : MonoBehaviour
         rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0);
         tr.emitting = true;
         dashingTime = Time.time + 0.6f;
+        Debug.Log("StartingNow");
     }
 
     public void EnterHitState(GameObject collider, int dmg)
@@ -210,7 +210,17 @@ public class Player : MonoBehaviour
             }
         }
         if (health <= 0)
+        {
+            if (dashingTime - 0.5f > Time.time)
+            {
+                tr.emitting = false;
+                rb.gravityScale = 10;
+                gameObject.GetComponent<BoxCollider2D>().enabled = true;
+                groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+                rb.velocity = new Vector2(0, 0);
+            }
             StartCoroutine(Die());
+        }
     }
 
     private void UpdateHitState()
@@ -219,6 +229,14 @@ public class Player : MonoBehaviour
         {
             GetComponent<SpriteRenderer>().material.shader = Shader.Find("Sprites/Default");
             GetComponent<SpriteRenderer>().color = Color.white;
+        }
+        if (dashingTime - 0.5f < Time.time)
+        {
+            tr.emitting = false;
+            rb.gravityScale = 10;
+            gameObject.GetComponent<BoxCollider2D>().enabled = true;
+            groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+            rb.velocity = new Vector2(0, 0);
         }
         if (damagedTime - 0.5 < Time.time)
         {
@@ -229,11 +247,12 @@ public class Player : MonoBehaviour
     private IEnumerator EnterAttackState(int n)
     {
         walled = false;
-        if (dashingTime -0.5f > Time.time)
-            yield return new WaitForSeconds(dashingTime - Time.time);
 
         if (!healing && (attackingTime < Time.time && State != PlayerState.Attack) && ((n == 3) || (n == 2 && energyLevel > 2)))
         {
+            if (dashingTime - 0.5f > Time.time)
+                yield return new WaitForSeconds(dashingTime - 0.5f - Time.time);
+
             State = PlayerState.Attack;
             attackStyle = n;
 
@@ -431,6 +450,8 @@ public class Player : MonoBehaviour
             else
                 rb.velocity = new Vector2(direction.x * rSpeedMult * speed, rb.velocity.y) + bounceEffect;
         }
+        else if (dashingTime - 0.5f > Time.time)
+            rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0);
 
         walled = IsWalled();
 

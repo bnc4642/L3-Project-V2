@@ -3,13 +3,20 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "TilesetPacks/Bricks.tsx",
+    "activeFile": "mapPractice.tmx",
     "expandedProjectPaths": [
-        ".",
-        "TilesetPacks"
+        "TilesetPacks",
+        "."
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "TilesetPacks/BetterGrassTerain.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 5.5
+        },
         "TilesetPacks/Bricks.tsx": {
             "scaleInDock": 4,
             "scaleInEditor": 5.5
@@ -26,16 +33,16 @@
             "scale": 3,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 338.3333333333333,
-                "y": 636.6666666666666
+                "x": 256.3333333333333,
+                "y": 50.66666666666666
             }
         },
         "rule1.tmx": {
             "scale": 4,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 71,
-                "y": 63.875
+                "x": 116.25,
+                "y": 82.25
             }
         },
         "tileRule1.tmx": {
@@ -47,7 +54,7 @@
             }
         }
     },
-    "last.imagePath": "C:/Users/Ben/Downloads",
+    "last.imagePath": "D:/GitHub-L3/L3-Project-V2/L3 Project V2/Assets/Tiled",
     "map.height": 8,
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
@@ -58,15 +65,17 @@
         "TilesetPacks/Forest.tsx",
         "rule1.tmx",
         "TilesetPacks/Bricks.tsx",
-        "TilesetPacks/GrassRocks.tsx"
+        "TilesetPacks/GrassRocks.tsx",
+        "TilesetPacks/BetterGrassTerain.tsx"
     ],
     "project": "Practice.tiled-project",
     "recentFiles": [
-        "mapPractice.tmx",
-        "TilesetPacks/Forest.tsx",
-        "rule1.tmx",
+        "TilesetPacks/BetterGrassTerain.tsx",
         "TilesetPacks/GrassRocks.tsx",
         "TilesetPacks/Bricks.tsx",
+        "rule1.tmx",
+        "TilesetPacks/Forest.tsx",
+        "mapPractice.tmx",
         "tileRule1.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",

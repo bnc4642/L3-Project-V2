@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: rootWall
   m_EditorClassIdentifier: 
   nodes:
-  - {fileID: 11400000, guid: 8c4a3b744b9ceb54ab3ec3a7c1356c15, type: 2}
-  - {fileID: 11400000, guid: 0c94f917c05ba4e4d89f7d6d59d337f4, type: 2}
+  - {fileID: 11400000, guid: 4afd62f6a0aeebc46b879eda02264a34, type: 2}
+  - {fileID: 11400000, guid: 96e6cf570be0c6449aae83807d3ffc5d, type: 2}
   controlDriver:
     name: isJumping
     autoIncrement: 0

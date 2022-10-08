@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f1da0b6abdb7d45aa4315eccab639b, type: 3}
+  m_Name: Slide_animation
+  m_EditorClassIdentifier: 
+  cels:
+  - sprite: {fileID: 1391763237, guid: 7f269000370c0994d96c4cc56204b709, type: 3}
+    drivers:
+      keys: []
+      values: 
+  - sprite: {fileID: -448107469, guid: 7f269000370c0994d96c4cc56204b709, type: 3}
+    drivers:
+      keys: []
+      values: 
+  - sprite: {fileID: -871903890, guid: 7f269000370c0994d96c4cc56204b709, type: 3}
+    drivers:
+      keys: []
+      values: 
+  - sprite: {fileID: 839373243, guid: 7f269000370c0994d96c4cc56204b709, type: 3}
+    drivers:
+      keys: []
+      values: 
+  - sprite: {fileID: -401240670, guid: 7f269000370c0994d96c4cc56204b709, type: 3}
+    drivers:
+      keys: []
+      values: 
+  - sprite: {fileID: 938131086, guid: 7f269000370c0994d96c4cc56204b709, type: 3}
+    drivers:
+      keys: []
+      values: 
+  - sprite: {fileID: 2035500883, guid: 7f269000370c0994d96c4cc56204b709, type: 3}
+    drivers:
+      keys: []
+      values: 
+  controlDriver:
+    name: 
+    autoIncrement: 1
+    percentageBased: 0
+    guid: afc1e2fe-0fb5-412b-a3fd-11702ccd8faf
+  drivers:
+    keys: []
+    values: 

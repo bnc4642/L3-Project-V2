@@ -12,8 +12,10 @@ public class PlayerRenderer : MonoBehaviour
         public const string JumpDirection = "jumpDirection";
         public const string State = "state";
         public const string IsRunJumping = "isRunJumping";
+        public const string IsJumping = "isJumping";
         public const string AttackStyle = "attackStyle";
         public const string BasicHitState = "basicHitState";
+        public const string Jump = "jump";
     }
 
     private Player controller;
@@ -38,6 +40,7 @@ public class PlayerRenderer : MonoBehaviour
         if (controller.healing && !controller.healCancelled && controller.healingTime > Time.time) reanimator.Set(Drivers.GroundMovement, 2);
         reanimator.Set(Drivers.JumpDirection, controller.rb.velocity.y > 0);
         reanimator.Set(Drivers.IsRunJumping, controller.rb.velocity.x != 0);
+        reanimator.Set(Drivers.IsJumping, controller.walled);
         reanimator.Set(Drivers.AttackStyle, controller.attackStyle);
         reanimator.Set(Drivers.BasicHitState, controller.attackingDirection);
     }
