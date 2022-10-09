@@ -179,7 +179,6 @@ public class Player : MonoBehaviour
         rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0);
         tr.emitting = true;
         dashingTime = Time.time + 0.6f;
-        Debug.Log("StartingNow");
     }
 
     public void EnterHitState(GameObject collider, int dmg)
@@ -385,9 +384,9 @@ public class Player : MonoBehaviour
         // managing movement from attack
         bounceEffect.x *= 0.5f;
         bounceEffect.y *= 0.95f;
-        if (attackStyle == 3)
+        if (attackStyle == 3 && (dashingTime - 0.5f) < Time.time)
             rb.velocity = new Vector2(direction.x * speed * 0.3f, rb.velocity.y) + bounceEffect;
-        else
+        else if (attackStyle == 2)
             rb.velocity = new Vector2(0, -40);
     }
 
@@ -395,17 +394,14 @@ public class Player : MonoBehaviour
     {
         switch (orri)
         {
-            case 0:
-                Debug.Log("Down");
+            case 0: // Atking down
                 rb.velocity = new Vector2(rb.velocity.x, 40);
                 jumping = true;
                 break;
-            case 1:
-                Debug.Log("Right");
+            case 1: // Atking right
                 bounceEffect = new Vector2(-attackBounce, 0);
                 break;
-            case 3:
-                Debug.Log("Left");
+            case 3: // Atking left
                 bounceEffect = new Vector2(attackBounce, 0);
                 break;
             default:
@@ -457,7 +453,7 @@ public class Player : MonoBehaviour
             rSpeedMult += 0.05f;
 
         //walk
-        if (dashingTime - 0.5f < Time.time && damagedTime - 0.5 < Time.time && !healing)
+        if (damagedTime - 0.5 < Time.time && !healing)
         {
             if (direction.x < 0)
                 rb.velocity = new Vector2(direction.x * lSpeedMult * speed, rb.velocity.y) + bounceEffect;
@@ -473,14 +469,13 @@ public class Player : MonoBehaviour
         if (dashingTime - 0.5f > Time.time)
             rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0);
 
-        walled = IsWalled();
+            walled = IsWalled();
         if (walled)
             transform.GetChild(9).GetComponent<ParticleSystem>().emissionRate = 10;
         else
             transform.GetChild(9).GetComponent<ParticleSystem>().emissionRate = 0;
         if (!floating)
             Jump();
-
     }
 
     private void Jump()
