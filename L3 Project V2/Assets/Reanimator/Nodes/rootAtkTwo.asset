@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c1b935bc3bfd4944ab93c4a574dfd0da, type: 3}
-  m_Name: rootGroundStab
+  m_Name: rootAtkTwo
   m_EditorClassIdentifier: 
   nodes:
-  - {fileID: 11400000, guid: 66c31649b34d6c84cb6ec6e0973c41fe, type: 2}
-  - {fileID: 11400000, guid: d28b24c421bb3574bbf14e9ba08b931f, type: 2}
-  - {fileID: 11400000, guid: 66c31649b34d6c84cb6ec6e0973c41fe, type: 2}
+  - {fileID: 11400000, guid: 53e58e093c56bb74ca8b8ce93bf6c4d8, type: 2}
+  - {fileID: 11400000, guid: 8016a3369232a634abc273e2d18fdeea, type: 2}
+  - {fileID: 11400000, guid: 68085b3ef26d722438147e3e9684f04f, type: 2}
   controlDriver:
     name: basicHitState
     autoIncrement: 0
     percentageBased: 0
-    guid: 32ce7871-f25c-470f-baee-3e8ee01e3027
+    guid: 95fe26e4-58c4-4a44-a25d-d7b4e91100b7
   drivers:
     keys: []
     values: 

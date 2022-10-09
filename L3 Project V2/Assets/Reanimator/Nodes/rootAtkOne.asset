@@ -10,19 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c1b935bc3bfd4944ab93c4a574dfd0da, type: 3}
-  m_Name: rootGroundAttack
+  m_Name: rootAtkOne
   m_EditorClassIdentifier: 
   nodes:
-  - {fileID: 11400000, guid: 2a6ded8b7a51dc1478b84b2d575f2617, type: 2}
-  - {fileID: 11400000, guid: 817195c9387f1f24987e36c57d4f5f0c, type: 2}
-  - {fileID: 11400000, guid: 29b58f2837077614781d53dfc9c958c9, type: 2}
-  - {fileID: 11400000, guid: 2a6ded8b7a51dc1478b84b2d575f2617, type: 2}
-  - {fileID: 11400000, guid: 073ad9a92d17aa94b9d1eda99919ccce, type: 2}
+  - {fileID: 11400000, guid: 53e58e093c56bb74ca8b8ce93bf6c4d8, type: 2}
+  - {fileID: 11400000, guid: e3a8518c366f6a74389672d7fde66c8e, type: 2}
+  - {fileID: 11400000, guid: d76a1d1d686f0f9429e58dad61dc6b56, type: 2}
   controlDriver:
-    name: attackStyle
+    name: basicHitState
     autoIncrement: 0
     percentageBased: 0
-    guid: ff6bf368-46a9-4d26-a2e9-c55c9ef28775
+    guid: 95fe26e4-58c4-4a44-a25d-d7b4e91100b7
   drivers:
     keys: []
     values: 

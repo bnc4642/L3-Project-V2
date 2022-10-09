@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: AtkForward1_animation
   m_EditorClassIdentifier: 
   cels:
-  - sprite: {fileID: -794398429, guid: d5931e7c852cccc47a500d5f42250b25, type: 3}
-    drivers:
-      keys: []
-      values: 
   - sprite: {fileID: -1094236635, guid: d5931e7c852cccc47a500d5f42250b25, type: 3}
     drivers:
       keys: []
@@ -33,24 +29,12 @@ MonoBehaviour:
     drivers:
       keys: []
       values: 
-  - sprite: {fileID: 1254542109, guid: d5931e7c852cccc47a500d5f42250b25, type: 3}
-    drivers:
-      keys: []
-      values: 
-  - sprite: {fileID: 1130726427, guid: d5931e7c852cccc47a500d5f42250b25, type: 3}
-    drivers:
-      keys: []
-      values: 
-  - sprite: {fileID: -1417796413, guid: d5931e7c852cccc47a500d5f42250b25, type: 3}
-    drivers:
-      keys: []
-      values: 
   - sprite: {fileID: 1601068512, guid: d5931e7c852cccc47a500d5f42250b25, type: 3}
     drivers:
       keys: []
       values: 
   controlDriver:
-    name: 
+    name: atk
     autoIncrement: 1
     percentageBased: 0
     guid: f099f880-5216-476b-8489-66fac2ca5365

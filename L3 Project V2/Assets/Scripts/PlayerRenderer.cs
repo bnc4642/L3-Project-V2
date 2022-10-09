@@ -14,6 +14,7 @@ public class PlayerRenderer : MonoBehaviour
         public const string IsRunJumping = "isRunJumping";
         public const string IsJumping = "isJumping";
         public const string AttackStyle = "attackStyle";
+        public const string AttackNum = "attackNum";
         public const string BasicHitState = "basicHitState";
         public const string Jump = "jump";
     }
@@ -42,6 +43,7 @@ public class PlayerRenderer : MonoBehaviour
         reanimator.Set(Drivers.IsRunJumping, controller.rb.velocity.x != 0);
         reanimator.Set(Drivers.IsJumping, controller.walled);
         reanimator.Set(Drivers.AttackStyle, controller.attackStyle);
+        reanimator.Set(Drivers.AttackNum, controller.doubleAtk);
         reanimator.Set(Drivers.BasicHitState, controller.attackingDirection);
     }
 

@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: AtkDown_animation
   m_EditorClassIdentifier: 
   cels:
-  - sprite: {fileID: -841792024, guid: f6ed19687f618144db13897b6d78feec, type: 3}
-    drivers:
-      keys: []
-      values: 
   - sprite: {fileID: -709425058, guid: f6ed19687f618144db13897b6d78feec, type: 3}
     drivers:
       keys: []
@@ -34,7 +30,7 @@ MonoBehaviour:
       keys: []
       values: 
   controlDriver:
-    name: 
+    name: atkDown
     autoIncrement: 1
     percentageBased: 0
     guid: 7ee96baa-c7d6-4103-81df-94e73f873bf5

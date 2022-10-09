@@ -10,17 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c1b935bc3bfd4944ab93c4a574dfd0da, type: 3}
-  m_Name: rootAirStab
+  m_Name: rootAttackCount
   m_EditorClassIdentifier: 
   nodes:
-  - {fileID: 11400000, guid: 687152bcdd0b43249bedbe54c9e90113, type: 2}
-  - {fileID: 11400000, guid: 48fd086420f1d654f9b222834425e020, type: 2}
-  - {fileID: 11400000, guid: 2d2ff257ac6991c46aef48cd4b4e7a98, type: 2}
+  - {fileID: 11400000, guid: 7277314bb0172b9488e6af81ae993143, type: 2}
+  - {fileID: 11400000, guid: c424fd5fd8f22aa43aba14efb5e5aaee, type: 2}
   controlDriver:
-    name: basicHitState
+    name: attackNum
     autoIncrement: 0
     percentageBased: 0
-    guid: ceb61fbf-3a50-4384-8266-0d5e4093e525
+    guid: c17fe99d-69c7-4c33-a64e-62089abc46d0
   drivers:
     keys: []
     values: 

@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: AtkUp1_animation
   m_EditorClassIdentifier: 
   cels:
-  - sprite: {fileID: 1703414071, guid: d1957611f34612e41b70b0e49ffca47f, type: 3}
-    drivers:
-      keys: []
-      values: 
   - sprite: {fileID: 28223478, guid: d1957611f34612e41b70b0e49ffca47f, type: 3}
     drivers:
       keys: []
@@ -33,24 +29,12 @@ MonoBehaviour:
     drivers:
       keys: []
       values: 
-  - sprite: {fileID: 520542614, guid: d1957611f34612e41b70b0e49ffca47f, type: 3}
-    drivers:
-      keys: []
-      values: 
-  - sprite: {fileID: -945919092, guid: d1957611f34612e41b70b0e49ffca47f, type: 3}
-    drivers:
-      keys: []
-      values: 
-  - sprite: {fileID: -1034218185, guid: d1957611f34612e41b70b0e49ffca47f, type: 3}
-    drivers:
-      keys: []
-      values: 
   - sprite: {fileID: -1362793575, guid: d1957611f34612e41b70b0e49ffca47f, type: 3}
     drivers:
       keys: []
       values: 
   controlDriver:
-    name: 
+    name: atkUp
     autoIncrement: 1
     percentageBased: 0
     guid: f5048c13-1ecb-4697-9ed9-0193bbf266c9

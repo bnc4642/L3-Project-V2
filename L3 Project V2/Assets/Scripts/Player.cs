@@ -34,8 +34,7 @@ public class Player : MonoBehaviour
     public PlayerState State = PlayerState.Movement;
 
     public GameObject[] attackVFX = new GameObject[2];
-    public Vector2[,] attackPos = new Vector2[2, 3] { { new Vector2(0.04f, -1.41f), new Vector2(2.02f, 0.03f), new Vector2(-0.12f, 2.36f) }, { new Vector2(0.04f, -1.41f), new Vector2(1.39f, 0.03f), new Vector2(0.16f, 1.15f) } };
-    float[] attackRadii = new float[2] { 2.55f , 2.55f };
+    public Vector2[] attackPos = new Vector2[3] { new Vector2(1.21f, -0.98f), new Vector2(10f, -0.1f), new Vector2(0.37f, 0.57f) };
     public float attackBounce;
     public float hitBounce;
     private Vector2 bounceEffect;
@@ -50,6 +49,7 @@ public class Player : MonoBehaviour
     public int attackingDirection = 0;
     private float dashingPower = 100;
     private float dashingTime = 1.4f;
+    public bool doubleAtk = false;
     public Vector2 direction;
     public Vector3 attackPoint;
     public float radius;
@@ -102,7 +102,7 @@ public class Player : MonoBehaviour
 
     public void OnFloat(InputValue value)
     {
-        if (value.Get<float>() > 0.5f && (attackStyle != 2 || attackingTime < Time.time))
+        if (value.Get<float>() > 0.5f && attackingTime < Time.time)
         {
             floating = true;
             rb.gravityScale = 0;
@@ -248,7 +248,7 @@ public class Player : MonoBehaviour
     {
         walled = false;
 
-        if (!healing && (attackingTime < Time.time && State != PlayerState.Attack) && ((n == 3) || (n == 2 && energyLevel > 2)))
+        if (!healing && (attackingTime - 0.1f)  < Time.time && State != PlayerState.Attack)
         {
             if (dashingTime - 0.5f > Time.time)
                 yield return new WaitForSeconds(dashingTime - 0.5f - Time.time);
@@ -257,65 +257,75 @@ public class Player : MonoBehaviour
             attackStyle = n;
 
             if (attackStyle == 2)
-            {
-                StartCoroutine(ChangeEnergy(-3));
-                attackingDirection = 0;
-                attackVFX[0].SetActive(true);
-                foreach (ParticleSystem PS in Trails)
-                    PS.emissionRate = 50;
-                GetComponent<SpriteRenderer>().enabled = false;
-                bounceEffect = Vector2.zero;
-                gameObject.GetComponent<BoxCollider2D>().enabled = false;
-                groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = true;
-                if (floating)
-                {
-                    floating = false;
-                    rb.gravityScale = 10;
-                }
-            }
+                EnterSlam();
 
             else if (attackStyle == 3)
-            {
-                if (direction.y > 0)
-                    attackingDirection = 2;
-                else if (direction.y < 0 && !grounded)
-                    attackingDirection = 0;
-                else
-                    attackingDirection = 1;
-
-                attackVFX[1].SetActive(true);
-                if (!facingRight)
-                {
-                    attackVFX[1].transform.rotation = Quaternion.Euler(0, 0, (attackingDirection - 2) * -90 - 35);
-                    attackVFX[1].transform.position = new Vector2(transform.position.x - attackPos[1, attackingDirection].x, transform.position.y + attackPos[1, attackingDirection].y);
-                }
-                else if (facingRight)
-                {
-                    attackVFX[1].transform.rotation = Quaternion.Euler(0, 0, (attackingDirection - 2) * 90 + 35);
-                    attackVFX[1].transform.position = (Vector2)transform.position + attackPos[1, attackingDirection];
-                }
-
-                attackingTime = 0.25f + Time.time;
-            }
+                EnterSlash();
         }
         yield return null;
     }
 
+    private void EnterSlam()
+    {
+        if (energyLevel > 2)
+        {
+            StartCoroutine(ChangeEnergy(-3));
+            attackingDirection = 0;
+            attackVFX[0].SetActive(true);
+            foreach (ParticleSystem PS in Trails)
+                PS.emissionRate = 50;
+            GetComponent<SpriteRenderer>().enabled = false;
+            bounceEffect = Vector2.zero;
+            gameObject.GetComponent<BoxCollider2D>().enabled = false;
+            groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = true;
+            if (floating)
+            {
+                floating = false;
+                rb.gravityScale = 10;
+            }
+        }
+    }
+    private void EnterSlash()
+    {
+        if ((attackingTime - 0.1f) < Time.time && (attackingTime + 0.1f) < Time.time)
+            doubleAtk = true;
+
+        if (direction.y > 0)
+            attackingDirection = 2;
+        else if (direction.y < 0 && !grounded)
+            attackingDirection = 0;
+        else
+            attackingDirection = 1;
+
+        attackVFX[1].SetActive(true);
+        if (!facingRight) // VFX
+        {
+            attackVFX[1].transform.rotation = Quaternion.Euler(0, 0, (attackingDirection - 2) * -90 - 35);
+            attackVFX[1].transform.position = new Vector2(transform.position.x - attackPos[attackingDirection].x, transform.position.y + attackPos[attackingDirection].y);
+        }
+        else if (facingRight)
+        {
+            attackVFX[1].transform.rotation = Quaternion.Euler(0, 0, (attackingDirection - 2) * 90 + 35);
+            attackVFX[1].transform.position = (Vector2)transform.position + attackPos[attackingDirection];
+        }
+
+        attackingTime = 0.25f + Time.time;
+    }
+
     private void UpdateAttackState()
     {
-        if (attackingTime - 0.4 > Time.time && attackStyle == 3) //last second control
+        if (attackingTime - 0.2 > Time.time && attackStyle == 3) //last second control
             Flip();
 
-        attackPoint = (Vector2)transform.position + attackPos[attackStyle - 2, attackingDirection]; // need to get rid of all of these and just simplify them
-                                                                                                    // v these ones too
+        attackPoint = (Vector2)transform.position + attackPos[attackingDirection];
         if (!facingRight)
-            attackPoint = new Vector2(transform.position.x - attackPos[attackStyle - 2, attackingDirection].x, transform.position.y + attackPos[attackStyle - 2, attackingDirection].y);
+            attackPoint = new Vector2(transform.position.x - attackPos[attackingDirection].x, transform.position.y + attackPos[attackingDirection].y);
 
         // hitting enemies
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint, attackRadii[attackStyle-2], Enemy);
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint, 1.55f, Enemy);
 
         if (hitEnemies.Length != 0)
-            GetComponentInChildren<CameraManager>().TriggerShake(1f, 15f);
+            GetComponentInChildren<CameraManager>().TriggerShake(1f, 15f); // camera shake
 
         foreach (Collider2D enemy in hitEnemies)
         {
@@ -328,6 +338,10 @@ public class Player : MonoBehaviour
             {
                 StartCoroutine(enemy.GetComponent<Enemy>().Hit(damage, attackingDirection));
                 AttackBounce(attackingDirection);
+            }
+            if (attackingDirection == 1)
+            {
+                canDash = true;
             }
         }
         // finished hitting enemies
@@ -347,7 +361,7 @@ public class Player : MonoBehaviour
             Flip();
             EnterMovementState();
 
-            if (attackStyle == 2)
+            if (attackStyle == 2) //slamming
             {
                 jumped = false;
                 bounceEffect = Vector2.zero;
@@ -360,7 +374,7 @@ public class Player : MonoBehaviour
                 gameObject.GetComponent<BoxCollider2D>().enabled = true;
                 groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = false;
 
-                damagedTime = Time.time + 1f;
+                damagedTime = Time.time + 1f; // invcibility frames
 
                 foreach (ParticleSystem PS in Trails)
                     PS.emissionRate = 0;
@@ -581,7 +595,7 @@ public class Player : MonoBehaviour
 
         Gizmos.DrawWireSphere((Vector2)transform.position + wallPos2, wallRadius);
         Gizmos.DrawWireSphere((Vector2)transform.position + wallPos1, wallRadius);
-        //Gizmos.DrawWireSphere(attackPoint, attackRadii[attackStyle - 2]);
+        Gizmos.DrawWireSphere((Vector2)transform.position + attackPos[attackingDirection], 1.55f);
         Gizmos.DrawWireCube(groundCheck.position, new Vector3(width, 0.1f, 1));
     }
 }

@@ -829,7 +829,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &836186105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2853,6 +2853,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c3192c27337858448d40f9c92780839, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!212 &667998980053046103 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6143328176829789551, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+  m_PrefabInstance: {fileID: 6630505803234469413}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1141648372584983974
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3042,6 +3047,30 @@ PrefabInstance:
       propertyPath: transition
       value: 
       objectReference: {fileID: 1382212950}
+    - target: {fileID: 6143328176829789546, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: attackPoint.x
+      value: 0.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 6143328176829789546, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: attackPoint.y
+      value: 0.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 6143328176829789550, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 3.6666667
+      objectReference: {fileID: 0}
+    - target: {fileID: 6143328176829789550, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 3.6666667
+      objectReference: {fileID: 0}
+    - target: {fileID: 6143328176829789551, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -1936943203, guid: d1957611f34612e41b70b0e49ffca47f, type: 3}
+    - target: {fileID: 6289048796838017848, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: renderer
+      value: 
+      objectReference: {fileID: 667998980053046103}
     - target: {fileID: 6289048796838017851, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
       propertyPath: m_Camera
       value: 
