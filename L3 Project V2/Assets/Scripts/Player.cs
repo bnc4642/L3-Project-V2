@@ -111,8 +111,6 @@ public class Player : MonoBehaviour
         {
             if (!interacting)
             {
-                Debug.Log("StartInteraction");
-
                 GetComponent<ParticleSystem>().emissionRate = 0;
                 transform.GetChild(9).GetComponent<ParticleSystem>().emissionRate = 0;
                 healCancelled = true;
@@ -129,7 +127,9 @@ public class Player : MonoBehaviour
                 Interact();
             }
             else
+            {
                 skipBtnPressed = true;
+            }
         }
     }
 
@@ -554,10 +554,13 @@ public class Player : MonoBehaviour
 
     private void Interact()
     {
-        Debug.Log("Pressed");
-
-        string chat = interactable.Dialogue[dialogueCounter].Split(" / ")[1];
-        int num = Int32.Parse(interactable.Dialogue[dialogueCounter].Split(" / ")[0]);
+        string chat = "";
+        int num = 0;
+        if (dialogueCounter < interactable.Dialogue.Count)
+        {
+            chat = interactable.Dialogue[dialogueCounter].Split(" / ")[1];
+            num = Int32.Parse(interactable.Dialogue[dialogueCounter].Split(" / ")[0]);
+        }
 
         if (!interacted)
         {
@@ -565,27 +568,25 @@ public class Player : MonoBehaviour
             StartCoroutine(dialogue.MoveDialogue('D'));
             interacted = true;
         }
-        if (switchingDialogue) //change needs to be very quick.
-            return;
-        
+
         if (skipBtnPressed)
         {
             if (!switchingDialogue) //if text hasn't finished displaying
             {
-                StartCoroutine(dialogue.SwitchDialogue(spriteList[num], nameList[num], this));
+                dialogue.text.text = chat;
                 switchingDialogue = true;
             }
             else
             {
-                if (dialogueCounter < interactable.Dialogue.Count) //text left to display
+                if (dialogueCounter + 1 < interactable.Dialogue.Count) //text left to display
                 {
-                    Debug.Log("3");
+                    StartCoroutine(dialogue.SwitchDialogue(spriteList[num], nameList[num], this));
                     dialogueCounter++;
-                    //switch dialogue, change pictures + names
+                    dialogue.text.text = "";
+                    //change pictures + names
                 }
                 else //interaction finished
                 {
-                    Debug.Log("Finished");
                     StartCoroutine(dialogue.MoveDialogue('U'));
                     dialogue.text.text = "";
                     interacting = false;
@@ -598,13 +599,13 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if (dialogue.text.text.Length < chat.Length && textTime < Time.time) // if characters remain, and wait has been completed
+        if (dialogue.text.text.Length < chat.Length && textTime < Time.time && dialogue.gameObject.GetComponent<Animator>().speed == 0) // if characters remain, all animations have completed, and wait has been completed
         {
-            Debug.Log("1");
             dialogue.text.text += chat.ToCharArray()[dialogue.text.text.Length];
             textTime = Time.time + 0.04f;
         }
-        Debug.Log("");
+        else if (dialogue.text.text.Length == chat.Length)
+            switchingDialogue = true;
     }
 
     public void StopSwitchingDialogue()

@@ -28,6 +28,7 @@ public class Dialogue : MonoBehaviour
         yield return new WaitForSeconds(0.6f);
         if (side == 'L') side = 'R';
         else side = 'L';
+
         p.StopSwitchingDialogue();
         GetComponent<Animator>().speed = 0;
     }

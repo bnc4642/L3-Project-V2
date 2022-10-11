@@ -827,8 +827,10 @@ GameObject:
   m_Component:
   - component: {fileID: 655366393}
   - component: {fileID: 655366392}
+  - component: {fileID: 655366394}
+  - component: {fileID: 655366395}
   m_Layer: 0
-  m_Name: CharacterSheet_3
+  m_Name: DrunkGuy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -901,6 +903,38 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &655366394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 655366391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d264d0ed7fdd0745bd4851b3456dd72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Dialogue:
+  - 3 / What do you want? Here to offer me another cup?
+  - 0 / We've done this before, Bill. Go home.
+  - 3 / Gah! You ruin everything..
+--- !u!58 &655366395
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 655366391}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 3.6139
 --- !u!1 &836186104
 GameObject:
   m_ObjectHideFlags: 0
@@ -3095,6 +3129,30 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1388956895966742399, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1388956895966742399, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_margin.w
+      value: -19.139648
+      objectReference: {fileID: 0}
+    - target: {fileID: 1388956895966742399, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_lineSpacing
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 1388956895966742399, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_overflowMode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1388956895966742399, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 1388956895966742399, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_enableWordWrapping
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1459659381744721994, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
       propertyPath: m_RootOrder
       value: 11
@@ -3148,8 +3206,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1382212950}
     - target: {fileID: 4619800917960058130, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 175
+      objectReference: {fileID: 0}
+    - target: {fileID: 4619800917960058130, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1344.8
+      value: 175
       objectReference: {fileID: 0}
     - target: {fileID: 6143328176829789546, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
       propertyPath: dialogue
@@ -3165,11 +3227,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6143328176829789550, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
-      value: 3.6666667
+      value: 3.3333333
       objectReference: {fileID: 0}
     - target: {fileID: 6143328176829789550, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.y
-      value: 3.6666667
+      value: 3.3333333
       objectReference: {fileID: 0}
     - target: {fileID: 6143328176829789551, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
       propertyPath: m_Sprite
@@ -3187,9 +3249,33 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -246.6
       objectReference: {fileID: 0}
+    - target: {fileID: 6834518388602421305, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7037352202958180945, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7037352203187784917, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7037352203342496548, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 69.18
+      objectReference: {fileID: 0}
+    - target: {fileID: 7037352203541398066, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7037352203558033231, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7037352204230730321, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8198049447810599868, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}

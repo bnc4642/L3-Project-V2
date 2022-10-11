@@ -35,8 +35,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -383, y: 379}
-  m_SizeDelta: {x: 47.0162, y: 6.5004}
+  m_AnchoredPosition: {x: 175, y: 175}
+  m_SizeDelta: {x: 165, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3036279153870456146
 CanvasRenderer:
@@ -66,9 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'New gameeeeeeeeeee
-
-'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e71a745db191e574e8a509f3c4964536, type: 2}
   m_sharedMaterial: {fileID: -4155800175000174883, guid: e71a745db191e574e8a509f3c4964536, type: 2}
@@ -103,17 +101,17 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 7.6
-  m_lineSpacing: 0
+  m_lineSpacing: 32
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
+  m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 3
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
@@ -131,7 +129,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -12.861572, y: 0, z: 0, w: 0}
+  m_margin: {x: -0.30581665, y: 0, z: 0, w: -0.6547928}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -394,36 +392,68 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1715739779545841958, guid: 03f44384f7521b44e8e36c653ab2f4fa, type: 3}
       propertyPath: nameList.Array.size
-      value: 3
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1715739779545841958, guid: 03f44384f7521b44e8e36c653ab2f4fa, type: 3}
       propertyPath: spriteList.Array.size
-      value: 3
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1715739779545841958, guid: 03f44384f7521b44e8e36c653ab2f4fa, type: 3}
       propertyPath: nameList.Array.data[0]
-      value: Jenny
+      value: You
       objectReference: {fileID: 0}
     - target: {fileID: 1715739779545841958, guid: 03f44384f7521b44e8e36c653ab2f4fa, type: 3}
       propertyPath: nameList.Array.data[1]
-      value: Eve
+      value: Paul
       objectReference: {fileID: 0}
     - target: {fileID: 1715739779545841958, guid: 03f44384f7521b44e8e36c653ab2f4fa, type: 3}
       propertyPath: nameList.Array.data[2]
       value: Sam
       objectReference: {fileID: 0}
     - target: {fileID: 1715739779545841958, guid: 03f44384f7521b44e8e36c653ab2f4fa, type: 3}
+      propertyPath: nameList.Array.data[3]
+      value: Bill
+      objectReference: {fileID: 0}
+    - target: {fileID: 1715739779545841958, guid: 03f44384f7521b44e8e36c653ab2f4fa, type: 3}
+      propertyPath: nameList.Array.data[4]
+      value: Jenny
+      objectReference: {fileID: 0}
+    - target: {fileID: 1715739779545841958, guid: 03f44384f7521b44e8e36c653ab2f4fa, type: 3}
+      propertyPath: nameList.Array.data[5]
+      value: Tom
+      objectReference: {fileID: 0}
+    - target: {fileID: 1715739779545841958, guid: 03f44384f7521b44e8e36c653ab2f4fa, type: 3}
+      propertyPath: nameList.Array.data[6]
+      value: Luke
+      objectReference: {fileID: 0}
+    - target: {fileID: 1715739779545841958, guid: 03f44384f7521b44e8e36c653ab2f4fa, type: 3}
       propertyPath: spriteList.Array.data[0]
       value: 
-      objectReference: {fileID: -2018942152, guid: 60b37de5b4ba78f4f8db7f600929d141, type: 3}
+      objectReference: {fileID: -649239621, guid: ecb4a062145419a428aa05add18445c3, type: 3}
     - target: {fileID: 1715739779545841958, guid: 03f44384f7521b44e8e36c653ab2f4fa, type: 3}
       propertyPath: spriteList.Array.data[1]
       value: 
-      objectReference: {fileID: 1048074455, guid: 60b37de5b4ba78f4f8db7f600929d141, type: 3}
+      objectReference: {fileID: -333304391, guid: ecb4a062145419a428aa05add18445c3, type: 3}
     - target: {fileID: 1715739779545841958, guid: 03f44384f7521b44e8e36c653ab2f4fa, type: 3}
       propertyPath: spriteList.Array.data[2]
       value: 
-      objectReference: {fileID: -891632928, guid: 60b37de5b4ba78f4f8db7f600929d141, type: 3}
+      objectReference: {fileID: -1855748659, guid: ecb4a062145419a428aa05add18445c3, type: 3}
+    - target: {fileID: 1715739779545841958, guid: 03f44384f7521b44e8e36c653ab2f4fa, type: 3}
+      propertyPath: spriteList.Array.data[3]
+      value: 
+      objectReference: {fileID: -1661983872, guid: ecb4a062145419a428aa05add18445c3, type: 3}
+    - target: {fileID: 1715739779545841958, guid: 03f44384f7521b44e8e36c653ab2f4fa, type: 3}
+      propertyPath: spriteList.Array.data[4]
+      value: 
+      objectReference: {fileID: -1788321507, guid: ecb4a062145419a428aa05add18445c3, type: 3}
+    - target: {fileID: 1715739779545841958, guid: 03f44384f7521b44e8e36c653ab2f4fa, type: 3}
+      propertyPath: spriteList.Array.data[5]
+      value: 
+      objectReference: {fileID: 913865778, guid: ecb4a062145419a428aa05add18445c3, type: 3}
+    - target: {fileID: 1715739779545841958, guid: 03f44384f7521b44e8e36c653ab2f4fa, type: 3}
+      propertyPath: spriteList.Array.data[6]
+      value: 
+      objectReference: {fileID: 1622919994, guid: ecb4a062145419a428aa05add18445c3, type: 3}
     - target: {fileID: 1715739780644857294, guid: 03f44384f7521b44e8e36c653ab2f4fa, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.45
