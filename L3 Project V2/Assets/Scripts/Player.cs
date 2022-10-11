@@ -65,15 +65,26 @@ public class Player : MonoBehaviour
     bool canDash = false;
     bool jumping = false;
     bool falling = false;
-    public Interactable interactable;
     private bool jumped = false;
     public bool facingRight = true;
     public bool grounded = false;
     public bool walled = false;
     public bool floating = false;
 
+    public Interactable interactable;
+    private bool interacting = false;
+    public Dialogue dialogue;
+    private bool skipBtnPressed = false;
+    private bool switchingDialogue = false;
+    private float textTime = 0;
+    private bool interacted = false;
+    private int dialogueCounter = 0;
+    public List<Sprite> spriteList = new List<Sprite>();
+    public List<string> nameList = new List<string>();
+
     public void OnMove(InputValue value)
     {
+        if (interacting) return;
         direction = value.Get<Vector2>();
     }
 
@@ -97,12 +108,34 @@ public class Player : MonoBehaviour
     public void OnInteract(InputValue value)
     {
         if (interactable != null)
-            Interact();
+        {
+            if (!interacting)
+            {
+                Debug.Log("StartInteraction");
+
+                GetComponent<ParticleSystem>().emissionRate = 0;
+                transform.GetChild(9).GetComponent<ParticleSystem>().emissionRate = 0;
+                healCancelled = true;
+                if (dashingTime - 0.5f > Time.time)
+                {
+                    tr.emitting = false;
+                    rb.gravityScale = 10;
+                    gameObject.GetComponent<BoxCollider2D>().enabled = true;
+                    groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+                }
+                rb.velocity = Vector3.zero;
+                interacting = true;
+
+                Interact();
+            }
+            else
+                skipBtnPressed = true;
+        }
     }
 
     public void OnFloat(InputValue value)
     {
-        if (value.Get<float>() > 0.5f && attackingTime < Time.time)
+        if (value.Get<float>() > 0.5f && attackingTime < Time.time && !interacting)
         {
             floating = true;
             rb.gravityScale = 0;
@@ -138,6 +171,11 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (interacting)
+        {
+            Interact();
+            return;
+        }
         if (damagedTime - 0.65 < Time.time) // if hurt and attacking
         {
             GetComponent<SpriteRenderer>().material.shader = Shader.Find("Sprites/Default");
@@ -145,7 +183,6 @@ public class Player : MonoBehaviour
         }
 
         grounded = IsGrounded();
-        //interactable = Physics2D.OverlapCircle(transform.position, 1, LayerMask.NameToLayer("Interactable"));
 
         switch (State)
         {
@@ -170,7 +207,7 @@ public class Player : MonoBehaviour
 
     private void EnterDashState()
     {
-        if (!canDash || dashingTime > Time.time || healing || health <= 0) return;
+        if (interacting || !canDash || dashingTime > Time.time || healing || health <= 0) return;
 
         canDash = false;
         rb.gravityScale = 0;
@@ -247,7 +284,7 @@ public class Player : MonoBehaviour
     {
         walled = false;
 
-        if (!healing && (attackingTime - 0.1f)  < Time.time && State != PlayerState.Attack)
+        if (!interacting &&!healing && (attackingTime - 0.1f)  < Time.time && State != PlayerState.Attack)
         {
             if (dashingTime - 0.5f > Time.time)
                 yield return new WaitForSeconds(dashingTime - 0.5f - Time.time);
@@ -427,7 +464,6 @@ public class Player : MonoBehaviour
             rb.gravityScale = 10;
             gameObject.GetComponent<BoxCollider2D>().enabled = true;
             groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = false;
-           //rb.velocity = new Vector2(0, 0);
         }
 
         if (healing && healingTime < Time.time) //heal
@@ -518,7 +554,62 @@ public class Player : MonoBehaviour
 
     private void Interact()
     {
+        Debug.Log("Pressed");
 
+        string chat = interactable.Dialogue[dialogueCounter].Split(" / ")[1];
+        int num = Int32.Parse(interactable.Dialogue[dialogueCounter].Split(" / ")[0]);
+
+        if (!interacted)
+        {
+            //move down the dialogue box, set up picture + name, make it the right orrientation
+            StartCoroutine(dialogue.MoveDialogue('D'));
+            interacted = true;
+        }
+        if (switchingDialogue) //change needs to be very quick.
+            return;
+        
+        if (skipBtnPressed)
+        {
+            if (!switchingDialogue) //if text hasn't finished displaying
+            {
+                StartCoroutine(dialogue.SwitchDialogue(spriteList[num], nameList[num], this));
+                switchingDialogue = true;
+            }
+            else
+            {
+                if (dialogueCounter < interactable.Dialogue.Count) //text left to display
+                {
+                    Debug.Log("3");
+                    dialogueCounter++;
+                    //switch dialogue, change pictures + names
+                }
+                else //interaction finished
+                {
+                    Debug.Log("Finished");
+                    StartCoroutine(dialogue.MoveDialogue('U'));
+                    dialogue.text.text = "";
+                    interacting = false;
+                    interacted = false;
+                    dialogueCounter = 0;
+                }
+                switchingDialogue = false;
+            }
+            skipBtnPressed = false;
+            return;
+        }
+
+        if (dialogue.text.text.Length < chat.Length && textTime < Time.time) // if characters remain, and wait has been completed
+        {
+            Debug.Log("1");
+            dialogue.text.text += chat.ToCharArray()[dialogue.text.text.Length];
+            textTime = Time.time + 0.04f;
+        }
+        Debug.Log("");
+    }
+
+    public void StopSwitchingDialogue()
+    {
+        switchingDialogue = false;
     }
 
     public bool IsGrounded() { return Physics2D.OverlapBox(groundCheck.position, new Vector2(width, 0.1f), 0, groundLayer); }
