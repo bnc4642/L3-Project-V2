@@ -34,6 +34,7 @@ public class Enemy : MonoBehaviour
     public float attackingRange = 5;
     public float damagePush = 10;
     public int dmg = 3;
+    private bool paused = false;
 
     public virtual void Init()
     {
@@ -48,6 +49,8 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (paused)
+            return;
         int state = 0; 
         if (Time.time < lockedTill)
             return;
@@ -185,4 +188,18 @@ public class Enemy : MonoBehaviour
         Destroy(transform.parent.gameObject);
     }
 
+    public void Pause() // During interaction
+    {
+        GetComponentInParent<AIPath>().enabled = false;
+        GetComponentInParent<Rigidbody2D>().velocity = Vector3.zero;
+        paused = true;
+        anim.CrossFade(Animator.StringToHash("Idle"), 0, 0);
+    }
+
+    public IEnumerator UnPause() // After interaction
+    {
+        yield return new WaitForSeconds(0.8f);
+        GetComponentInParent<AIPath>().enabled = true;
+        paused = false;
+    }
 }

@@ -560,6 +560,7 @@ public class Player : MonoBehaviour
         {
             chat = interactable.Dialogue[dialogueCounter].Split(" / ")[1];
             num = Int32.Parse(interactable.Dialogue[dialogueCounter].Split(" / ")[0]);
+            Debug.Log(num);
         }
 
         if (!interacted)
@@ -567,6 +568,11 @@ public class Player : MonoBehaviour
             //move down the dialogue box, set up picture + name, make it the right orrientation
             StartCoroutine(dialogue.MoveDialogue('D'));
             interacted = true;
+            dialogue.FirstNameAndPicture(spriteList[num], nameList[num]);
+            foreach (Enemy E in GameObject.FindObjectsOfType<Enemy>())
+            {
+                E.Pause();
+            }
         }
 
         if (skipBtnPressed)
@@ -576,14 +582,13 @@ public class Player : MonoBehaviour
                 dialogue.text.text = chat;
                 switchingDialogue = true;
             }
-            else
+            else //if a transition is required
             {
-                if (dialogueCounter + 1 < interactable.Dialogue.Count) //text left to display
+                if (dialogueCounter + 1 < interactable.Dialogue.Count) //dialogue remains for display
                 {
-                    StartCoroutine(dialogue.SwitchDialogue(spriteList[num], nameList[num], this));
                     dialogueCounter++;
+                    StartCoroutine(dialogue.SwitchDialogue(spriteList[Int32.Parse(interactable.Dialogue[dialogueCounter].Split(" / ")[0])], nameList[Int32.Parse(interactable.Dialogue[dialogueCounter].Split(" / ")[0])], this));
                     dialogue.text.text = "";
-                    //change pictures + names
                 }
                 else //interaction finished
                 {
@@ -592,6 +597,10 @@ public class Player : MonoBehaviour
                     interacting = false;
                     interacted = false;
                     dialogueCounter = 0;
+                    foreach (Enemy E in GameObject.FindObjectsOfType<Enemy>())
+                    {
+                        StartCoroutine(E.UnPause());
+                    }
                 }
                 switchingDialogue = false;
             }

@@ -6,6 +6,8 @@ public class Dialogue : MonoBehaviour
 {
     public TMPro.TMP_Text text;
     private char side = 'L';
+    public SpriteRenderer portrait;
+    public TMPro.TMP_Text name;
 
     void Start()
     {
@@ -15,17 +17,20 @@ public class Dialogue : MonoBehaviour
 
     public IEnumerator MoveDialogue(char direction) //direction is +/- 1 depending on moving forward or backward
     {
-        GetComponent<Animator>().Play("Dialogue" + direction, -1, 0);
+        GetComponent<Animator>().Play("Dialogue" + direction + side, -1, 0);
         GetComponent<Animator>().speed = 1;
         yield return new WaitForSeconds(0.85f);
         GetComponent<Animator>().speed = 0;
     }
 
-    public IEnumerator SwitchDialogue(Sprite pic, string name, Player p) // change these after animation is complete
+    public IEnumerator SwitchDialogue(Sprite pic, string Name, Player p) // change these after animation is complete
     {
         GetComponent<Animator>().Play("DialogueOpen"+side, -1, 0);
         GetComponent<Animator>().speed = 1;
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(0.3f);
+        portrait.sprite = pic;
+        name.text = Name;
+        yield return new WaitForSeconds(0.3f);
         if (side == 'L') side = 'R';
         else side = 'L';
 
@@ -36,5 +41,11 @@ public class Dialogue : MonoBehaviour
     public void ResetSide()
     {
         side = 'L';
+    }
+
+    public void FirstNameAndPicture(Sprite pic, string Name)
+    {
+        portrait.sprite = pic;
+        name.text = Name;
     }
 }
