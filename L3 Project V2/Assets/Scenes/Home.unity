@@ -2138,6 +2138,10 @@ PrefabInstance:
       value: SceneChanger
       objectReference: {fileID: 0}
     - target: {fileID: 4786990982237607583, guid: 8ad3b0b8b92ff57488dc2487c9b47b5e, type: 3}
+      propertyPath: direction
+      value: 82
+      objectReference: {fileID: 0}
+    - target: {fileID: 4786990982237607583, guid: 8ad3b0b8b92ff57488dc2487c9b47b5e, type: 3}
       propertyPath: nextScene
       value: 4
       objectReference: {fileID: 0}

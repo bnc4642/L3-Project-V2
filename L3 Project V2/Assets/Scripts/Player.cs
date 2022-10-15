@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
     public int attackStyle = 0;
     public int attackingDirection = 0;
     private float dashingPower = 100;
-    private float dashingTime = 1.4f;
+    private float dashingTime = 0f;
     public bool doubleAtk = false;
     public Vector2 direction;
     public Vector3 attackPoint;
@@ -82,9 +82,12 @@ public class Player : MonoBehaviour
     public List<Sprite> spriteList = new List<Sprite>();
     public List<string> nameList = new List<string>();
 
+    private bool transitioning = false;
+
     public void OnMove(InputValue value)
     {
-        if (interacting) return;
+        Debug.Log(GameObject.FindObjectsOfType<CameraManager>()[0].name);
+        if (interacting || transitioning) return;
         direction = value.Get<Vector2>();
     }
 
@@ -114,6 +117,8 @@ public class Player : MonoBehaviour
                 GetComponent<ParticleSystem>().emissionRate = 0;
                 transform.GetChild(9).GetComponent<ParticleSystem>().emissionRate = 0;
                 healCancelled = true;
+                GetComponent<SpriteRenderer>().material.shader = Shader.Find("Sprites/Default");
+                GetComponent<SpriteRenderer>().color = Color.white;
                 if (dashingTime - 0.5f > Time.time)
                 {
                     tr.emitting = false;
@@ -171,6 +176,10 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        grounded = IsGrounded();
+
+        if (transitioning)
+            return;
         if (interacting)
         {
             Interact();
@@ -181,8 +190,6 @@ public class Player : MonoBehaviour
             GetComponent<SpriteRenderer>().material.shader = Shader.Find("Sprites/Default");
             GetComponent<SpriteRenderer>().color = Color.white;
         }
-
-        grounded = IsGrounded();
 
         switch (State)
         {
@@ -305,6 +312,7 @@ public class Player : MonoBehaviour
     {
         if (energyLevel > 2)
         {
+            Debug.Log(energyLevel);
             StartCoroutine(ChangeEnergy(-3));
             attackingDirection = 0;
             attackVFX[0].SetActive(true);
@@ -520,12 +528,12 @@ public class Player : MonoBehaviour
         if (!jumped && jumping && grounded && !healing)
         {
             jumped = true;
-            rb.velocity = new Vector2(rb.velocity.x, 40);
+            rb.velocity = new Vector2(rb.velocity.x, 45);
         }
         else if (walled && !grounded && !jumped && jumping)
         {
             jumped = true;
-            rb.velocity = new Vector2(rb.velocity.x, 30);
+            rb.velocity = new Vector2(rb.velocity.x, 35);
             bounceEffect.x = direction.x * -140;
             if (direction.x > 0)
                 rSpeedMult = 0.5f;
@@ -554,13 +562,11 @@ public class Player : MonoBehaviour
 
     private void Interact()
     {
+        string[] chats = interactable.Dialogue[interactable.dialogueNums].Split(" | ");
         string chat = "";
-        int num = 0;
-        if (dialogueCounter < interactable.Dialogue.Count)
+        if (dialogueCounter < chats.Length)
         {
-            chat = interactable.Dialogue[dialogueCounter].Split(" / ")[1];
-            num = Int32.Parse(interactable.Dialogue[dialogueCounter].Split(" / ")[0]);
-            Debug.Log(num);
+            chat = chats[dialogueCounter].Split(" / ")[1];
         }
 
         if (!interacted)
@@ -568,7 +574,8 @@ public class Player : MonoBehaviour
             //move down the dialogue box, set up picture + name, make it the right orrientation
             StartCoroutine(dialogue.MoveDialogue('D'));
             interacted = true;
-            dialogue.FirstNameAndPicture(spriteList[num], nameList[num]);
+            int x = Int32.Parse(chats[dialogueCounter].Split(" / ")[0]);
+            dialogue.FirstNameAndPicture(spriteList[x], nameList[x]);
             foreach (Enemy E in GameObject.FindObjectsOfType<Enemy>())
             {
                 E.Pause();
@@ -579,15 +586,16 @@ public class Player : MonoBehaviour
         {
             if (!switchingDialogue) //if text hasn't finished displaying
             {
-                dialogue.text.text = chat;
+                dialogue.text.text = chat; // prepare for switching and fully display text
                 switchingDialogue = true;
             }
             else //if a transition is required
             {
-                if (dialogueCounter + 1 < interactable.Dialogue.Count) //dialogue remains for display
+                if (dialogueCounter < chats.Length - 1) //dialogue remains for display
                 {
                     dialogueCounter++;
-                    StartCoroutine(dialogue.SwitchDialogue(spriteList[Int32.Parse(interactable.Dialogue[dialogueCounter].Split(" / ")[0])], nameList[Int32.Parse(interactable.Dialogue[dialogueCounter].Split(" / ")[0])], this));
+                    int x = Int32.Parse(chats[dialogueCounter].Split(" / ")[0]);
+                    StartCoroutine(dialogue.SwitchDialogue(spriteList[x], nameList[x], this)); // SwitchDialogue(sprite, text, player);
                     dialogue.text.text = "";
                 }
                 else //interaction finished
@@ -600,6 +608,13 @@ public class Player : MonoBehaviour
                     foreach (Enemy E in GameObject.FindObjectsOfType<Enemy>())
                     {
                         StartCoroutine(E.UnPause());
+                    }
+                    if (interactable.Dialogue.Count-1 > interactable.dialogueNums)
+                        interactable.dialogueNums++;
+                    foreach (char item in interactable.ImpactfulNums.ToCharArray())
+                    {
+                        if (interactable.dialogueNums == item)
+                            interactable.DialogImpact();
                     }
                 }
                 switchingDialogue = false;
@@ -646,8 +661,19 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (((1 << collision.gameObject.layer) & Transition) != 0)
+        if (((1 << collision.gameObject.layer) & Transition) != 0) // if it's a transition collision
         {
+            transitioning = true;
+            if (collision.gameObject.GetComponent<Transitioner>().direction == 'L') // make 'em walk
+            {
+                direction = new Vector2(-1, 0);
+                rb.velocity = new Vector2(direction.x * lSpeedMult * speed, rb.velocity.y) + bounceEffect;
+            }
+            else
+            {
+                direction = new Vector2(1, 0);
+                rb.velocity = new Vector2(direction.x * rSpeedMult * speed, rb.velocity.y) + bounceEffect;
+            }
             // prepare any possible cutscenes
             // save player data and input it into next scene
             // output player into the correct location, and make them walk

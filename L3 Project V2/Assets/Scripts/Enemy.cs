@@ -145,23 +145,19 @@ public class Enemy : MonoBehaviour
         GetComponentsInChildren<ParticleSystem>()[3].Play();
         switch (orri)
         {
-            case 0:
-                Debug.Log("Down");
+            case 0: // down
                 GetComponentInParent<Rigidbody2D>().velocity = new Vector2(0, -damagePush / 3);
                 GetComponentsInChildren<ParticleSystem>()[3].gameObject.transform.rotation = Quaternion.Euler(0, 0, 270);
                 break;
-            case 1:
-                Debug.Log("Right");
+            case 1: // right
                 GetComponentInParent<Rigidbody2D>().velocity = new Vector2(damagePush, damagePush / 3);
                 GetComponentsInChildren<ParticleSystem>()[3].gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
                 break;
-            case 2:
-                Debug.Log("Up");
+            case 2: // up
                 GetComponentInParent<Rigidbody2D>().velocity = new Vector2(0, damagePush / 3);
                 GetComponentsInChildren<ParticleSystem>()[3].gameObject.transform.rotation = Quaternion.Euler(0, 0, 90);
                 break;
-            case 3:
-                Debug.Log("Left");
+            case 3: // left
                 GetComponentInParent<Rigidbody2D>().velocity = new Vector2(-damagePush, damagePush / 3);
                 GetComponentsInChildren<ParticleSystem>()[3].gameObject.transform.rotation = Quaternion.Euler(0, 0, 180);
                 break;

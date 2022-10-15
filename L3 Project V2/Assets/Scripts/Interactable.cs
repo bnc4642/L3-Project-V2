@@ -5,6 +5,8 @@ using UnityEngine;
 public class Interactable : MonoBehaviour
 {
     public List<string> Dialogue = new List<string>();
+    public int dialogueNums = 0;
+    public string ImpactfulNums = "";
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
@@ -16,5 +18,11 @@ public class Interactable : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
             collision.GetComponent<Player>().interactable = null;
+    }
+
+    public virtual void DialogImpact()
+    {
+        // move some stuff, and add conditions to scenes when they load;
+        // switch case style
     }
 }

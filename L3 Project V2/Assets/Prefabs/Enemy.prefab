@@ -9878,7 +9878,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 632ae7eb1d4ce49d38a1e38ee7efe7c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guid: 1fe6253679caa0e0-0ab0460a1d425b0d
+  guid: 9564d062db3fa9b6-75c36ec8099ce5bf
 --- !u!1 &3816226684780231719
 GameObject:
   m_ObjectHideFlags: 0
@@ -9959,7 +9959,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -53981558, guid: fd47a08e1eadb494ab85894d7eb7c0ee, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -10003,20 +10003,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a764a941b72b3e4428ed256d1496e399, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aiPath: {fileID: 3816226683940150444}
   anim: {fileID: 3816226684780231713}
   health: 10
+  invinciFrames: 0.2
   player:
     serializedVersion: 2
     m_Bits: 128
+  plyr: {fileID: 0}
   playerWeapon:
     serializedVersion: 2
     m_Bits: 1024
-  attackingTime: 0
-  aiPath: {fileID: 3816226683940150444}
-  attackTime: 0.4
-  dmg: 3
-  timeDisabled: 0
+  startled: 0
+  hitting: 0
+  patrollingRange: 25
+  timeForAttack: 0.4
+  attackingBreak: 1.5
+  attackingRange: 5
   damagePush: 15
+  dmg: 3
 --- !u!58 &3816226684780231714
 CircleCollider2D:
   m_ObjectHideFlags: 0

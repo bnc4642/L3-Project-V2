@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class Transitioner : MonoBehaviour
 {
+    public char direction = 'L';
     public int nextScene;
 }

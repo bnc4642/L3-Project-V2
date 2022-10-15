@@ -180,7 +180,7 @@ public class Interface : MonoBehaviour
     public void SelectSave(int id)
     {
         Id = id;
-        if (File.Exists(Application.persistentDataPath + "/gamesave" + id + ".save"))
+        if (File.Exists(Application.persistentDataPath + "/gamesave" + id + ".save")) // save exists
         {
             ExCanvas.transform.Find("Button " + 0).gameObject.SetActive(false);
             ExCanvas.transform.Find("Button " + 1).gameObject.SetActive(false);
@@ -204,7 +204,7 @@ public class Interface : MonoBehaviour
 
             LoadSave(id);
         }
-        else
+        else // new file
         {
             Canvas.transform.Find("Name " + id).gameObject.SetActive(true);
             foreach (Transform btn in ExCanvas.GetComponentsInChildren<Transform>())
@@ -228,11 +228,12 @@ public class Interface : MonoBehaviour
         }
     }
 
-    public void DenySave(int id)
+    public void DenySave(int id) // if save creation process is exited
     {
         GameEvents.current.SetTxtBoxValue(id, "New Game");
         ExitSaveTyping(id, "New Game");
     }
+
     public void ExitSaveTyping(int id, string name)
     {
         foreach (Transform btn in ExCanvas.GetComponentsInChildren<Transform>())

@@ -8,6 +8,7 @@ public class CameraManager : MonoBehaviour
     public float xMax;
     public float yMin;
     public float yMax;
+    public float x;
 
     public Transform cam;
 
@@ -21,6 +22,8 @@ public class CameraManager : MonoBehaviour
 
     void Update()
     {
+        x++;
+        if (x == 3) return;
         Vector3 targetPosition = transform.position + new Vector3(0, 0, 0);
         targetPosition.x = Mathf.Clamp(targetPosition.x, xMin, xMax);
         targetPosition.y = Mathf.Clamp(targetPosition.y, yMin, yMax);
