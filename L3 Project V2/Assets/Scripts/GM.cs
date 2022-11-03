@@ -28,7 +28,6 @@ public class GM : MonoBehaviour
 
     public void SpawnPlayer(List<Enemy> Enemies)
     {
-        bool foundID = false;
         Vector3 position = new Vector3();
 
         //check for id through all transition locations
@@ -64,7 +63,7 @@ public class GM : MonoBehaviour
                     }
                 }
                 break;
-            case > 0:
+            case >= 0:
                 foreach (Vector3 pos in LeftTrans)
                 {
                     if (transitionID == pos.z)

@@ -29,13 +29,14 @@ public class Player : MonoBehaviour
     private Animator deathAnim;
     private LevelLoader transitioner;
     private SpriteRenderer energyOrb;
+    public Dialogue dialogue; //contains dialogue object
 
     //the locations for checks
     private readonly float[,] attackPos = new float[3,2] { { 0.21f, -0.98f }, { 1f, -0.1f }, { 0.37f, 0.57f } };
     private const float width = 1.1f; //used once
-    private const float wallRadius = 0.1f;
+    private const float wallRadius = 0.15f;
     private readonly Vector2 wallPos1 = new Vector2(-0.67f, -0.25f);
-    private readonly Vector2 wallPos2 = new Vector2(-0.48f, -0.25f);
+    private readonly Vector2 wallPos2 = new Vector2(0.48f, -0.25f);
 
     //constant variables
     private const float attackBounce = 40; //used twice, constant
@@ -49,7 +50,6 @@ public class Player : MonoBehaviour
     private int energyLevel = 0;
     private int damage = 3; //needs to be changed so that other atks do different dmg
     private int dialogueCounter = 0; //contains the amount of dialogue lines in an interaction
-    private Dialogue dialogue; //contains dialogue object
     public Interactable Interactable; //contains interaction point data
 
     //speed variables
@@ -69,6 +69,7 @@ public class Player : MonoBehaviour
     private float dashingTime = 0f;
     private float textTime = 0;
     public float HealingTime = 0;
+    private float floatTimer = 0;
 
     //bools
     public bool Grounded = false;
@@ -88,12 +89,16 @@ public class Player : MonoBehaviour
     private bool skipBtnPressed = false;
     private bool switchingDialogue = false;
     private bool interacted = false;
+    private bool firstTransition = true;
+    private bool startDashWalled = false;
+    private bool dashing = false;
 
 
     public void SetLocalVariables()
     {
         Debug.Log("This");
         healthBar = GameObject.Find("HealthBar").GetComponentsInChildren<SpriteRenderer>();
+        dialogue = GameObject.Find("HealthBar").GetComponent<Dialogue>();
         deathAnim = GameObject.Find("NewCam2").GetComponent<Animator>();
         transitioner = GameObject.Find("LevelLoader").GetComponent<LevelLoader>();
         energyOrb = GameObject.Find("OrbSheet_0").GetComponent<SpriteRenderer>();
@@ -101,7 +106,6 @@ public class Player : MonoBehaviour
 
     public void OnMove(InputValue value)
     {
-        Debug.Log(GameObject.FindObjectsOfType<CameraManager>()[0].name);
         if (interacting || transitioning) return;
         Direction = value.Get<Vector2>();
     }
@@ -120,7 +124,7 @@ public class Player : MonoBehaviour
 
     public void OnDash(InputValue value)
     {
-        EnterDashState();
+        StartCoroutine(EnterDashState());
     }
 
     public void OnInteract(InputValue value)
@@ -128,39 +132,52 @@ public class Player : MonoBehaviour
         if (Interactable != null)
         {
             if (!interacting)
-            {
-                GetComponent<ParticleSystem>().emissionRate = 0;
-                transform.GetChild(9).GetComponent<ParticleSystem>().emissionRate = 0;
-                HealCancelled = true;
-                GetComponent<SpriteRenderer>().material.shader = Shader.Find("Sprites/Default");
-                GetComponent<SpriteRenderer>().color = Color.white;
-                if (dashingTime - 0.5f > Time.time)
-                {
-                    SetDash(false, 10, Vector2.zero);
-                }
-                rb.velocity = Vector3.zero;
-                interacting = true;
-
-                Interact();
-            }
+                StartCoroutine(InteractionPostponer());
             else
-            {
                 skipBtnPressed = true;
-            }
         }
+    }
+
+    private IEnumerator InteractionPostponer()
+    {
+        if (State == PlayerState.Attack)
+        {
+            if (AttackStyle == 2)
+                Grounded = true;
+            else
+                yield return new WaitForSeconds(attackingTime - Time.time);
+
+            UpdateAttackState();
+        }
+        GetComponent<ParticleSystem>().emissionRate = 0;
+        transform.GetChild(9).GetComponent<ParticleSystem>().emissionRate = 0;
+        HealCancelled = true;
+        GetComponent<SpriteRenderer>().material.shader = Shader.Find("Sprites/Default");
+        GetComponent<SpriteRenderer>().color = Color.white;
+        if (dashingTime - 0.5f > Time.time)
+        {
+            SetDash(false, 10, Vector2.zero);
+        }
+        rb.velocity = Vector3.zero;
+        Direction = Vector2.zero;
+        interacting = true;
+
+        Interact();
     }
 
     public void OnFloat(InputValue value)
     {
-        if (value.Get<float>() > 0.5f && attackingTime < Time.time && !interacting)
+        if (value.Get<float>() > 0.5f && !(Healing && HealingTime < Time.time) && !interacting && dashingTime - 0.5f < Time.time && (State != PlayerState.Attack || AttackStyle == 3) && energyLevel > 0)
         {
             floating = true;
             rb.gravityScale = 0;
+            floatTimer = Time.time + 0.4f;
         }
         else
         {
             floating = false;
             rb.gravityScale = 10;
+            floatTimer = 0;
         }
     }
 
@@ -171,13 +188,11 @@ public class Player : MonoBehaviour
 
     public void OnHeal(InputValue value)
     {
-        Healing = value.Get<float>() > 0.5f &&  State == PlayerState.Movement && Grounded;
+        Healing = value.Get<float>() > 0.5f &&  State == PlayerState.Movement && Grounded && !interacting;
 
         if (stoppedHealing && Healing && energyLevel > 2) // Is true after pressing button down
         {
-            HealingTime = Time.time + 1;
-            HealCancelled = false;
-            rb.velocity = Vector2.zero;
+            StartCoroutine(HealPostponer());
         }
 
         if (!Healing)
@@ -186,11 +201,23 @@ public class Player : MonoBehaviour
             stoppedHealing = false;
     }
 
+    private IEnumerator HealPostponer()
+    {
+        if (dashingTime - 0.5f > Time.time)
+            yield return new WaitForSeconds(dashingTime - 0.5f - Time.time);
+        if (attackingTime > Time.time)
+            yield return new WaitForSeconds(attackingTime - Time.time);
+        if (!Healing || energyLevel < 3) yield break;
+        HealingTime = Time.time + 1;
+        HealCancelled = false;
+        rb.velocity = Vector2.zero;
+    }
+
     private void FixedUpdate()
     {
         Grounded = IsGrounded();
 
-        if (transitioning)
+        if (transitioning || (Healing && HealingTime > Time.time))
             return;
         if (interacting)
         {
@@ -206,7 +233,8 @@ public class Player : MonoBehaviour
         switch (State)
         {
             case PlayerState.Movement:
-                Flip();
+                if (!dashing)
+                    Flip();
                 UpdateMovementState();
                 break;
             case PlayerState.Attack:
@@ -221,15 +249,30 @@ public class Player : MonoBehaviour
 
         if (floating || (Walled && !Grounded && !jumping))
             rb.velocity = new Vector2(rb.velocity.x, 0);
+        if (floating && floatTimer < Time.time)
+        {
+            StartCoroutine(ChangeEnergy(-1));
+            floatTimer = Time.time + 0.4f;
             
+        }
     }
 
-    private void EnterDashState()
+    private IEnumerator EnterDashState()
     {
-        if (interacting || !canDash || dashingTime > Time.time || Healing || health <= 0) return;
+        if (State == PlayerState.Attack && AttackStyle == 3 && attackingTime - 0.15f < Time.time)
+            yield return new WaitForSeconds(attackingTime - Time.time);
+
+        if (interacting || !canDash || dashingTime > Time.time || (Healing && HealingTime < Time.time) || health <= 0 || (State == PlayerState.Attack && AttackStyle == 2)) yield break;
 
         canDash = false;
-        SetDash(true, 0, new Vector2(transform.localScale.x * dashingPower, 0));
+        if (Walled)
+        {
+            transform.localScale = new Vector3(-transform.localScale.x, 1, 1);
+            SetDash(true, 0, new Vector2(transform.localScale.x * dashingPower, 0));
+            startDashWalled = true;
+        }
+        else
+            SetDash(true, 0, new Vector2(transform.localScale.x * dashingPower, 0));
         dashingTime = Time.time + 0.6f;
     }
 
@@ -291,12 +334,15 @@ public class Player : MonoBehaviour
     {
         Walled = false;
 
-        if (!interacting && !Healing && (attackingTime - 0.1f)  < Time.time && State != PlayerState.Attack && ((energyLevel > 2 && n == 2) || n == 3))
+        if (n == 2 && attackingTime < Time.time)
+            yield return new WaitForSeconds(attackingTime - Time.time);
+
+        if (!interacting && !(Healing && HealingTime > Time.time) && (attackingTime + 0.1f)  < Time.time && State != PlayerState.Attack && ((energyLevel > 2 && n == 2) || n == 3))
         {
             if (dashingTime - 0.5f > Time.time)
                 yield return new WaitForSeconds(dashingTime - 0.5f - Time.time);
 
-             State = PlayerState.Attack;
+            State = PlayerState.Attack;
             AttackStyle = n;
 
             if (AttackStyle == 2)
@@ -350,7 +396,7 @@ public class Player : MonoBehaviour
             attackFX[1].transform.position = (Vector2)transform.position + new Vector2(attackPos[AttackingDirection, 0], attackPos[AttackingDirection, 1]);
         }
 
-        attackingTime = 0.25f + Time.time;
+        attackingTime = 0.2f + Time.time;
     }
 
     private void UpdateAttackState()
@@ -387,7 +433,7 @@ public class Player : MonoBehaviour
         }
         // finished hitting enemies
         
-        Jump();
+        StartCoroutine(Jump());
 
         if ((attackingTime < Time.time && AttackStyle != 2) || (Grounded && AttackingDirection == 0)) // exit 
         {
@@ -425,7 +471,12 @@ public class Player : MonoBehaviour
         bounceEffect.x *= 0.5f;
         bounceEffect.y *= 0.95f;
         if (AttackStyle == 3 && (dashingTime - 0.5f) < Time.time)
-            rb.velocity = new Vector2(Direction.x * speed * 0.3f, rb.velocity.y) + bounceEffect;
+        {
+            if (AttackingDirection != 0 && AttackingDirection != 2)
+                rb.velocity = new Vector2(Direction.x * speed * 0.3f, rb.velocity.y) + bounceEffect;
+            else
+                rb.velocity = new Vector2(Direction.x * speed, rb.velocity.y) + bounceEffect;
+        }
         else if (AttackStyle == 2)
             rb.velocity = new Vector2(0, -40);
     }
@@ -461,10 +512,8 @@ public class Player : MonoBehaviour
         if (Grounded)
             canDash = true;
 
-        if (dashingTime - 0.5f < Time.time)
-        {
+        if (dashingTime - 0.5f < Time.time && dashing)
             SetDash(false, 10, rb.velocity);
-        }
 
         if (Healing && HealingTime < Time.time) //heal
         {
@@ -489,7 +538,7 @@ public class Player : MonoBehaviour
             rSpeedMult += 0.05f;
 
         //walk
-        if (damagedTime - 0.5 < Time.time && !Healing)
+        if (damagedTime - 0.5 < Time.time && !(Healing && HealingTime > Time.time))
         {
             if (Direction.x < 0)
                 rb.velocity = new Vector2(Direction.x * lSpeedMult * speed, rb.velocity.y) + bounceEffect;
@@ -505,20 +554,25 @@ public class Player : MonoBehaviour
         if (dashingTime - 0.5f > Time.time)
             rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0);
 
-        Walled = IsWalled();
+        Walled = IsWalled() && !(Healing && HealingTime > Time.time) && !floating && State != PlayerState.Attack && !interacting;
+        if (Walled && dashingTime - 0.5f > Time.time && !startDashWalled)
+            SetDash(false, 10, Vector2.zero);
         if (Walled)
             transform.GetChild(9).GetComponent<ParticleSystem>().emissionRate = 10;
         else
             transform.GetChild(9).GetComponent<ParticleSystem>().emissionRate = 0;
         if (!floating)
-            Jump();
+            StartCoroutine(Jump());
     }
 
-    private void Jump()
+    private IEnumerator Jump()
     {
         //jump
-        if (!jumped && jumping && Grounded && !Healing)
+        if (!jumped && jumping && Grounded && !(Healing && HealingTime < Time.time))
         {
+            if (dashingTime - 0.5f > Time.time)
+                yield return new WaitForSeconds(dashingTime - 0.5f - Time.time);
+            
             jumped = true;
             rb.velocity = new Vector2(rb.velocity.x, 45);
         }
@@ -632,11 +686,18 @@ public class Player : MonoBehaviour
 
     private void SetDash(bool trueFalse, int gravity, Vector2 dashSpeed)
     {
+        Debug.Log(trueFalse);
+        dashing = trueFalse;
         tr.emitting = trueFalse;
         rb.gravityScale = gravity;
         gameObject.GetComponent<BoxCollider2D>().enabled = !trueFalse;
         groundCheck.GetComponent<BoxCollider2D>().enabled = trueFalse;
         rb.velocity = dashSpeed;
+        if (startDashWalled && !trueFalse)
+        {
+            transform.localScale = new Vector3(-transform.localScale.x, 1, 1);
+            startDashWalled = false;
+        }
     }
 
     public bool IsGrounded() { return Physics2D.OverlapBox(groundCheck.position, new Vector2(width, 0.1f), 0, groundLayer); }
@@ -663,7 +724,7 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (((1 << collision.gameObject.layer) & transition) != 0 && transitioner != null) // if it's a transition collision
+        if (((1 << collision.gameObject.layer) & transition) != 0 && transitioner != null && !firstTransition) // if it's a transition collision
         {
             transitioning = true;
             Direction = collision.gameObject.GetComponent<Transitioner>().direction;
@@ -678,8 +739,14 @@ public class Player : MonoBehaviour
             StartCoroutine(transitioner.LoadLevel(collision.gameObject.GetComponent<Transitioner>().nextScene));
         }
     }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (((1 << collision.gameObject.layer) & transition) != 0 && transitioner != null) // if it's a transition collision
+            if (firstTransition)
+                firstTransition = false;
+    }
 
-    public IEnumerator Die()
+        public IEnumerator Die()
     {
         State = PlayerState.Death;
         rb.gravityScale = 0;
@@ -698,12 +765,16 @@ public class Player : MonoBehaviour
     {
         if ((energyLevel + changeN <= 8) && (energyLevel + changeN >= 0))
         {
+            int counterN = energyLevel;
+            energyLevel += changeN;
             for (int i = 0; i < Math.Abs(changeN); i++)
             {
                 yield return new WaitForSeconds(0.12f);
-                energyLevel += changeN / Math.Abs(changeN);
-                energyOrb.sprite = orbs[energyLevel];
+                counterN += changeN / Math.Abs(changeN);
+                energyOrb.sprite = orbs[counterN];
             }
         }
+        else if (floating)
+            floating = false;
     }
 }

@@ -964,8 +964,24 @@ PrefabInstance:
       value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
+      propertyPath: LeftTransistors.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
       propertyPath: RightTransistors.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
+      propertyPath: LeftTransistors.Array.data[0].x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
+      propertyPath: RightTransistors.Array.data[0].x
+      value: 20.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
+      propertyPath: RightTransistors.Array.data[0].y
+      value: -0.6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects:

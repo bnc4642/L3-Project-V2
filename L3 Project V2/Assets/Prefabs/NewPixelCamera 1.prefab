@@ -119,7 +119,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -454.5555, y: 114.59}
+  m_AnchoredPosition: {x: -433.9, y: 114.59}
   m_SizeDelta: {x: 85.7413, y: 17.351}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3660179239512921018
@@ -251,7 +251,7 @@ Transform:
   - {fileID: 6741541919007389051}
   - {fileID: 7089371179120322718}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3679847103348434773
 GameObject:
@@ -319,7 +319,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: '
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e71a745db191e574e8a509f3c4964536, type: 2}
   m_sharedMaterial: {fileID: -4155800175000174883, guid: e71a745db191e574e8a509f3c4964536, type: 2}
@@ -1269,6 +1271,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88be780e7d6fde44e82753141338e5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Text: {fileID: 0}
-  Portrait: {fileID: 0}
-  DialogueName: {fileID: 0}
+  Text: {fileID: 1192789786494790853}
+  Portrait: {fileID: 6093986698105479627}
+  DialogueName: {fileID: 1277172547977417125}

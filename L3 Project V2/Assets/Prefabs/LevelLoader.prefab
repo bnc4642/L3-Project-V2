@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec05901965c912e4d84f058c02b1d25d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Transition: {fileID: 0}
+  Transition: {fileID: 2585337539578498167}
 --- !u!114 &8619144187648911847
 MonoBehaviour:
   m_ObjectHideFlags: 0

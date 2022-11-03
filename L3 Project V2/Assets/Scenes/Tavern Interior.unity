@@ -234,6 +234,17 @@ Transform:
   m_Father: {fileID: 926621645}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &254612326 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3816226684780231715, guid: 745f3f2b2e35f374a949dacf7bdf63be, type: 3}
+  m_PrefabInstance: {fileID: 1141648372584983974}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a764a941b72b3e4428ed256d1496e399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &323580689
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,7 +389,7 @@ MonoBehaviour:
   - 2 / This is Henry speaki-
   - 2 / ...........
   - 2 / ...testing? testing?\nGood. Welcome to Paradise
-  dialogueNums: 0
+  DialogueNums: 0
   ImpactfulNums: 
 --- !u!1 &329873706
 GameObject:
@@ -920,7 +931,7 @@ MonoBehaviour:
   Dialogue:
   - 3 / What do you want? Here to offer me another cup? | 0 / We've done this before,
     Bill. Go home. | 3 / Gah! You ruin everything..
-  dialogueNums: 0
+  DialogueNums: 0
   ImpactfulNums: 
 --- !u!58 &655366395
 CircleCollider2D:
@@ -2418,6 +2429,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
+      propertyPath: Enemies.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
+      propertyPath: Enemies.Array.data[0]
+      value: 
+      objectReference: {fileID: 254612326}
+    - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
       propertyPath: xMinToYMax.Array.size
       value: 4
       objectReference: {fileID: 0}
@@ -2449,8 +2468,7 @@ PrefabInstance:
       propertyPath: LeftTransistors.Array.data[0].y
       value: -1
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1410904144909478472, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
+    m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
 --- !u!1 &1697741373
@@ -3074,7 +3092,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Dialogue: []
-  dialogueNums: 0
+  DialogueNums: 0
   ImpactfulNums: 
 --- !u!4 &667998980053046093 stripped
 Transform:
