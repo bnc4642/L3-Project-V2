@@ -11,49 +11,46 @@ using UnityEngine.InputSystem.Interactions;
 
 public class Interface : MonoBehaviour
 {
-    private Save[] Saves = new Save[3];
+    //variables
+    private Save[] saves = new Save[3];
 
-    private int Id = 0;
-
-    public GameObject Canvas;
-    public GameObject ExCanvas;
-    public GameObject BookCanvas;
-    private int saveNum = 0;
+    private int id = 0;
 
     private int pageNum = -1;
     private bool flipping;
     private bool tabBtnPressed = false;
 
-    public GameObject[,] pages = new GameObject[2, 9];
+    public GameObject Canvas;
+    public GameObject ExCanvas;
+    public GameObject BookCanvas;
 
-    public Sprite[] heights;
-    public GameObject pf;
+    public GameObject[,] Pages = new GameObject[2, 9];
+    public GameObject PageFlipper;
 
-    private List<Boss> bosses = new List<Boss>();
-    public Player player;
+    public Sprite[] BookSprites;
+    private List<Boss> bosses = new List<Boss>(); //for the save file
+
 
     private void Start()
     {
         for (int i = 0; i < 3; i++)
         {
-            Saves[i] = ReadFromJsonFile<Save>(Application.persistentDataPath + "/gamesave" + i + ".save"); // get saves
-            if (Saves[i] == null || Saves[i].Name == "")
+            saves[i] = ReadFromJsonFile<Save>(Application.persistentDataPath + "/gamesave" + i + ".save"); // get saves
+            if (saves[i] == null || saves[i].Name == "") //if save doesn't exist
             {
-                Saves[i] = null;
-                ExCanvas.transform.GetChild(i).GetComponentInChildren<TMPro.TMP_Text>().text = "New Game";
+                saves[i] = null; //empty save slot
+                ExCanvas.transform.GetChild(i).GetComponentInChildren<TMPro.TMP_Text>().text = "New Game"; //set name to "New Game"
             }
             else
-            {
-                ExCanvas.transform.GetChild(i).GetComponentInChildren<TMPro.TMP_Text>().text = Saves[i].Name;
-            }
+                ExCanvas.transform.GetChild(i).GetComponentInChildren<TMPro.TMP_Text>().text = saves[i].Name; //set name to name of save
         }
     }
-    public void OnEnter(InputValue value)
+    public void OnEnter(InputValue value) //called upon pressing enter while in an input box
     {
-        ConfirmSave(Id); // should this be the only method of confirming? Probably not
+        ConfirmSave(id); // should this be the only method of confirming? Probably not
     }
 
-    public void PreFlipPage(string dir)
+    public void PreFlipPage(string dir) //called from the input box
     {
         StartCoroutine(FlipPage(dir)); // this is so that the IEnumerator can be called
     }
@@ -63,191 +60,161 @@ public class Interface : MonoBehaviour
         if (flipping && !tabBtnPressed)
             yield return null; // if in the middle of flipping
 
-        else if (Dir.Equals("l")) // if turning to the left
+        if ((pageNum > 0 && Dir.Equals("l")) || (pageNum < 8 && Dir.Equals("r"))) // if navigating through the book
         {
-            if (pageNum > 0) // if navigating through the book
+            int LeftInput = 0;
+            if (Dir.Equals("l")) { LeftInput = 1; }
+            bool removing = Dir.Equals("l");
+
+            flipping = true;
+            PageFlipper.GetComponent<SpriteRenderer>().enabled = true; // show the animation of the page being flipped
+            PageFlipper.GetComponent<Animator>().Play("Flip_l", -1, 0);
+            yield return new WaitForSeconds(0.23f);
+            PageFlipper.GetComponent<SpriteRenderer>().enabled = false; // hide the animation after page has been flipped
+            flipping = false;
+            if (pageNum == 0 + LeftInput) // move the red tag
             {
-                flipping = true;
-                pf.GetComponent<SpriteRenderer>().enabled = true; // show the animation of the page being flipped
-                pf.GetComponent<Animator>().Play("Flip_l", -1, 0);
-                yield return new WaitForSeconds(0.23f);
-                pf.GetComponent<SpriteRenderer>().enabled = false; // hide the animation after page has been flipped
-                flipping = false;
-                if (pageNum == 1) // move the red tag
-                {
-                    BookCanvas.transform.GetChild(6).gameObject.SetActive(false);
-                    BookCanvas.transform.GetChild(7).gameObject.SetActive(true);
-                }
-                else if (pageNum == 2) // move the green tag
-                {
-                    BookCanvas.transform.GetChild(2).gameObject.SetActive(false);
-                    BookCanvas.transform.GetChild(3).gameObject.SetActive(true);
-                }
-                else if (pageNum == 3) // move the green tag
-                {
-                    BookCanvas.transform.GetChild(4).gameObject.SetActive(false);
-                    BookCanvas.transform.GetChild(5).gameObject.SetActive(true);
-                }
-                pageNum--;
+                BookCanvas.transform.GetChild(6).gameObject.SetActive(removing);
+                BookCanvas.transform.GetChild(7).gameObject.SetActive(!removing);
             }
-            else // if closing the book
+            else if (pageNum == 1 + LeftInput) // move the green tag
             {
-                pageNum--;
-                GetComponent<Animator>().enabled = true; // animate the closing
-                GetComponent<Animator>().SetTrigger("Close"+Id);
-                BookCanvas.transform.GetChild(0).gameObject.SetActive(false); // hide the navigation buttons
-                for (int i = 1; i < 8; i+=2)
-                    BookCanvas.transform.GetChild(i).gameObject.SetActive(false);
-                yield return new WaitForSeconds(0.33f);
-                BookCanvas.transform.GetChild(8).gameObject.SetActive(true); // show the navigation button in the correct place, and show the return and delete buttons
-                BookCanvas.transform.GetChild(12).gameObject.SetActive(true);
-                BookCanvas.transform.GetChild(13).gameObject.SetActive(true);
-                ExCanvas.transform.GetChild(Id).gameObject.SetActive(true); // show the book button
+                BookCanvas.transform.GetChild(2).gameObject.SetActive(removing);
+                BookCanvas.transform.GetChild(3).gameObject.SetActive(!removing);
             }
+            else if (pageNum == 2 + LeftInput) // move the green tag
+            {
+                BookCanvas.transform.GetChild(4).gameObject.SetActive(removing);
+                BookCanvas.transform.GetChild(5).gameObject.SetActive(!removing);
+            }
+
+            if (removing)
+                pageNum--;
+            else
+                pageNum++;
         }
-        else
+
+        else if (Dir.Equals("l") && pageNum == 0) // if turning to the left
         {
-            if (pageNum < 0)
-            {
-                GetComponent<Animator>().SetTrigger("Open"+Id);
-                GetComponent<Animator>().speed = 1;
-                BookCanvas.transform.GetChild(8).gameObject.SetActive(false);
-                BookCanvas.transform.GetChild(12).gameObject.SetActive(false);
-                BookCanvas.transform.GetChild(13).gameObject.SetActive(false);
-                ExCanvas.transform.GetChild(Id).gameObject.SetActive(false);
-                pageNum++;
-                yield return new WaitForSeconds(0.33f);
-                GetComponent<Animator>().enabled = false;
-                BookCanvas.transform.GetChild(3).gameObject.SetActive(true);
-                BookCanvas.transform.GetChild(5).gameObject.SetActive(true);
-                BookCanvas.transform.GetChild(7).gameObject.SetActive(true);
-                BookCanvas.transform.GetChild(0).gameObject.SetActive(true);
-                BookCanvas.transform.GetChild(1).gameObject.SetActive(true);
-            }
-            else if (pageNum < 8)
-            {
-                flipping = true;
-                pf.GetComponent<SpriteRenderer>().enabled = true;
-                pf.GetComponent<Animator>().Play("Flip_r", -1, 0);
-                yield return new WaitForSeconds(0.23f);
-                pf.GetComponent<SpriteRenderer>().enabled = false;
-                flipping = false;
-                if (pageNum == 0) // move the red tag
-                {
-                    BookCanvas.transform.GetChild(6).gameObject.SetActive(true);
-                    BookCanvas.transform.GetChild(7).gameObject.SetActive(false);
-                }
-                else if (pageNum == 1) // move the green tag
-                {
-                    BookCanvas.transform.GetChild(2).gameObject.SetActive(true);
-                    BookCanvas.transform.GetChild(3).gameObject.SetActive(false);
-                }
-                else if (pageNum == 2) // move the green tag
-                {
-                    BookCanvas.transform.GetChild(4).gameObject.SetActive(true);
-                    BookCanvas.transform.GetChild(5).gameObject.SetActive(false);
-                }
-                pageNum++;
-            }
+            pageNum--;
+            GetComponent<Animator>().enabled = true; // animate the closing
+            GetComponent<Animator>().SetTrigger("Close"+id);
+            yield return new WaitForSeconds(0.33f);
+            BookCanvas.transform.GetChild(8).gameObject.SetActive(true); // show the navigation button in the correct place, and show the return and delete buttons
+            BookCanvas.transform.GetChild(12).gameObject.SetActive(true);
+            BookCanvas.transform.GetChild(13).gameObject.SetActive(true);
+            ExCanvas.transform.GetChild(id).gameObject.SetActive(true); // show the book button
+
+            BookCanvas.transform.GetChild(0).gameObject.SetActive(false); // hide the navigation buttons
+            for (int i = 1; i < 8; i += 2)
+                BookCanvas.transform.GetChild(i).gameObject.SetActive(false);
         }
-        if (pageNum >= 0)
-            GetComponent<SpriteRenderer>().sprite = heights[pageNum];
+        else if (Dir.Equals("r") && pageNum == 0)
+        {
+            GetComponent<Animator>().SetTrigger("Open"+id);
+            GetComponent<Animator>().speed = 1;
+            BookCanvas.transform.GetChild(8).gameObject.SetActive(false); //remove options like delete save
+            BookCanvas.transform.GetChild(12).gameObject.SetActive(false);
+            BookCanvas.transform.GetChild(13).gameObject.SetActive(false);
+            ExCanvas.transform.GetChild(id).gameObject.SetActive(false);
+            pageNum++;
+            yield return new WaitForSeconds(0.33f);
+            GetComponent<Animator>().enabled = false;
+
+            BookCanvas.transform.GetChild(0).gameObject.SetActive(true); //display the navigation buttons
+            for (int i = 1; i < 8; i += 2)
+                BookCanvas.transform.GetChild(i).gameObject.SetActive(true);
+            
+        }
+        if (pageNum >= 0 && pageNum<=8)
+            GetComponent<SpriteRenderer>().sprite = BookSprites[pageNum];
     }
 
-    public void BookTag(int pageNumIntended)
+    public void BookTag(int pageNumIntended) //controls for book tabs
     {
         int n = pageNum - pageNumIntended;
-        if (n < 0)
+        if (n < 0) //going right
         {
             tabBtnPressed = true;
             for (int i = 0; i > n; i--)
-            {
                 StartCoroutine(FlipPage("r"));
-            }
-            tabBtnPressed = false;
         }
-        else if (n > 0)
+        else if (n > 0) //going left
         {
             tabBtnPressed = true;
             for (int i = 0; i < n - 1; i++)
-            {
                 StartCoroutine(FlipPage("l"));
-            }
-            tabBtnPressed = false;
         }
+
+        tabBtnPressed = false; //reset btn
     }
 
-    public void SelectSave(int id)
+    public void SelectSave(int ID) //upon selection
     {
-        Id = id;
-        if (File.Exists(Application.persistentDataPath + "/gamesave" + id + ".save")) // save exists
+        id = ID;
+        if (File.Exists(Application.persistentDataPath + "/gamesave" + ID + ".save")) // save exists
         {
-            ExCanvas.transform.Find("Button " + 0).gameObject.SetActive(false);
-            ExCanvas.transform.Find("Button " + 1).gameObject.SetActive(false);
-            ExCanvas.transform.Find("Button " + 2).gameObject.SetActive(false);
-            ExCanvas.transform.Find("Button " + id).gameObject.SetActive(true);
-            ExCanvas.transform.Find("Button " + id).GetComponent<Button>().enabled = false;
+            for (int i = 0; i < 3; i++)
+                ExCanvas.transform.Find("Button " + i).gameObject.SetActive(false); //remove all buttons
+            ExCanvas.transform.Find("Button " + ID).gameObject.SetActive(true);//except the selected one
+            ExCanvas.transform.Find("Button " + ID).GetComponent<Button>().enabled = false; //but disable button abilities
 
+            //begin but pause animations
             GetComponent<Animator>().enabled = true;
-            GetComponent<Animator>().SetTrigger("Open" + Id);
+            GetComponent<Animator>().SetTrigger("Open" + id);
             GetComponent<Animator>().speed = 0;
 
-            transform.position = new Vector2((id-1) * 13, -3.2f);
+            //set this object's position
+            transform.position = new Vector2((ID-1) * 13, -3.2f);
 
+            //set out buttons properly and display this object to prepare for the animations
             GetComponent<SpriteRenderer>().enabled = true;
             BookCanvas.transform.GetChild(12).gameObject.SetActive(true);
             BookCanvas.transform.GetChild(13).gameObject.SetActive(true);
             Vector2 btnPos = BookCanvas.transform.GetChild(8).GetComponent<RectTransform>().localPosition;
-            btnPos.x = 15.3f + (id - 1) * 32.12f;
+            btnPos.x = 15.3f + (ID - 1) * 32.12f;
             BookCanvas.transform.GetChild(8).GetComponent<RectTransform>().localPosition = btnPos;
             BookCanvas.transform.GetChild(8).gameObject.SetActive(true);
 
-            LoadSave(id);
+            LoadSave(ID);
         }
         else // new file
         {
-            Canvas.transform.Find("Name " + id).gameObject.SetActive(true);
+            Canvas.transform.Find("Name " + ID).gameObject.SetActive(true); //enable input box
             foreach (Transform btn in ExCanvas.GetComponentsInChildren<Transform>())
-            {
                 if (btn.gameObject.GetComponent<Button>() != null)
-                {
-                    btn.gameObject.GetComponent<Button>().enabled = false;
-                }
-            }
-            ExCanvas.transform.Find("Button " + id).GetChild(0).gameObject.SetActive(false);
-            GameEvents.current.TxtBoxSelect(id);
+                    btn.gameObject.GetComponent<Button>().enabled = false; //disable buttons
+            ExCanvas.transform.Find("Button " + ID).GetChild(0).gameObject.SetActive(false); //hide text of book
+            GameEvents.current.TxtBoxSelect(ID);
         }
     }
 
-    public void ConfirmSave(int id)
+    public void ConfirmSave(int ID) //exiting input box
     {
-        if (Canvas.transform.GetChild(id).GetChild(0).GetComponentsInChildren<TMPro.TextMeshProUGUI>()[1].text != "") // Check not null
+        if (Canvas.transform.GetChild(ID).GetChild(0).GetComponentsInChildren<TMPro.TextMeshProUGUI>()[1].text != "") // Check not null
         {
-            WriteToJsonFile(Application.persistentDataPath + "/gamesave" + id + ".save", FormSave(5, 0));
-            ExitSaveTyping(id, Canvas.transform.GetChild(id).GetComponentsInChildren<TMPro.TMP_Text>()[1].text);
+            //create empty save file
+            WriteToJsonFile(Application.persistentDataPath + "/gamesave" + ID + ".save", FormSave(5, 0));
+            ExitSaveTyping(ID, Canvas.transform.GetChild(ID).GetComponentsInChildren<TMPro.TMP_Text>()[1].text);
         }
     }
 
-    public void DenySave(int id) // if save creation process is exited
+    public void DenySave(int ID) // if save creation process is exited
     {
-        GameEvents.current.SetTxtBoxValue(id, "New Game");
-        ExitSaveTyping(id, "New Game");
+        GameEvents.current.SetTxtBoxValue(ID, "New Game");
+        ExitSaveTyping(ID, "New Game");
     }
 
-    public void ExitSaveTyping(int id, string name)
+    public void ExitSaveTyping(int ID, string name)
     {
         foreach (Transform btn in ExCanvas.GetComponentsInChildren<Transform>())
-        {
             if (btn.gameObject.GetComponent<Button>() != null)
-            {
-                btn.gameObject.GetComponent<Button>().enabled = true;
-            }
-        }
+                btn.gameObject.GetComponent<Button>().enabled = true; //enable buttons again
 
-        Canvas.transform.GetChild(id).gameObject.SetActive(false); // Swap text boxes from editable to non-editable
-        GameEvents.current.TxtBoxDeselect(id);
-        ExCanvas.transform.GetChild(id).GetChild(0).gameObject.SetActive(true);
-        ExCanvas.transform.GetChild(id).GetComponentInChildren<TMPro.TextMeshProUGUI>().text = name;
+        Canvas.transform.GetChild(ID).gameObject.SetActive(false); // Swap text boxes from editable to non-editable
+        GameEvents.current.TxtBoxDeselect(ID);
+        ExCanvas.transform.GetChild(ID).GetChild(0).gameObject.SetActive(true);
+        ExCanvas.transform.GetChild(ID).GetComponentInChildren<TMPro.TextMeshProUGUI>().text = name; //display and set text on button
     }
 
     private Save FormSave(int health, int encounterProgress) // should be called upon pressing esc, saving the world, and upon random points. The values are updated upon changes like interactions.
@@ -255,13 +222,15 @@ public class Interface : MonoBehaviour
         // if any noticable events occured, then save upon closing the book (PD < 0)
         Save save = new Save();
 
-        if (Saves[Id] == null)
+        if (saves[id] == null) //if save doesn't exist, create one and set name
         {
             save = new Save();
-            save.Name = Canvas.transform.GetChild(Id).GetComponentsInChildren<TMPro.TMP_Text>()[1].text;
+            save.Name = Canvas.transform.GetChild(id).GetComponentsInChildren<TMPro.TMP_Text>()[1].text;
         }
         else
-            save = Saves[Id];
+            save = saves[id];
+
+        //set important variables within save to be saved
 
         foreach (Boss boss in bosses)
         {
@@ -274,50 +243,51 @@ public class Interface : MonoBehaviour
         return save;
     }
 
-    private void LoadSave(int id) // should be called upon entering the game. It forms the world.
+    private void LoadSave(int ID) // should be called upon entering the game. It forms the world.
     {
-        //player.health = Saves[id].Health;
+        //player.health = saves[ID].Health;
         // close the book, and create an instance of the inventory(values)
     }
 
-    public static void WriteToJsonFile<T>(string filePath, T objectToWrite, bool append = false) where T : new()
+    public static void WriteToJsonFile<T>(string filePath, T objectToWrite, bool append = false) where T : new() //physically save the save files onto device
     {
         TextWriter writer = null;
         try
         {
-            var contentsToWriteToFile = JsonConvert.SerializeObject(objectToWrite);
+            var contentsToWriteToFile = JsonConvert.SerializeObject(objectToWrite); //convert the file
             writer = new StreamWriter(filePath, append);
-            writer.Write(contentsToWriteToFile);
+            writer.Write(contentsToWriteToFile); //save the converted file
         }
         finally
         {
             if (writer != null)
-                writer.Close();
+                writer.Close(); //close the writer
         }
     }
 
-    public static T ReadFromJsonFile<T>(string filePath) where T : new()
+    public static T ReadFromJsonFile<T>(string filePath) where T : new() //read the physically saved files
     {
         TextReader reader = null;
-        try
+        try //need try in case files don't exist
         {
             reader = new StreamReader(filePath);
             var fileContents = reader.ReadToEnd();
-            return JsonConvert.DeserializeObject<T>(fileContents);
+            return JsonConvert.DeserializeObject<T>(fileContents); //return converted file
         }
         catch
         {
-            return new T();
+            return new T(); //create a new empy save file 
         }
         finally
         {
             if (reader != null)
-                reader.Close();
+                reader.Close(); //close reader
         }
     }
 
     public void ChangeScene()
     {
+        //disable canvases
         Canvas.gameObject.SetActive(false);
         ExCanvas.gameObject.SetActive(false);
 
@@ -328,29 +298,21 @@ public class Interface : MonoBehaviour
     public void Return()
     {
         ExCanvas.SetActive(true);
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++) //enable buttons
             ExCanvas.transform.Find("Button " + i).gameObject.SetActive(true);
-        ExCanvas.transform.Find("Button " + Id).GetComponent<Button>().enabled = true;
-        StartCoroutine(AllowUpdates());
+        ExCanvas.transform.Find("Button " + id).GetComponent<Button>().enabled = true;
 
         GetComponent<SpriteRenderer>().enabled = false;
-        BookCanvas.transform.GetChild(8).gameObject.SetActive(false);
+        BookCanvas.transform.GetChild(8).gameObject.SetActive(false); //hide navigation buttons
         BookCanvas.transform.GetChild(12).gameObject.SetActive(false);
         BookCanvas.transform.GetChild(13).gameObject.SetActive(false);
     }
     public void DeleteSave()
     {
-        if (File.Exists(Application.persistentDataPath + "/gamesave" + Id + ".save"))
-            File.Delete(Application.persistentDataPath + "/gamesave" + Id + ".save");
-        ExCanvas.transform.GetChild(Id).GetComponentInChildren<TMPro.TMP_Text>().text = "New Game";
-        GameEvents.current.SetTxtBoxValue(Id, "New Game");
+        if (File.Exists(Application.persistentDataPath + "/gamesave" + id + ".save")) //delete save
+            File.Delete(Application.persistentDataPath + "/gamesave" + id + ".save");
+        ExCanvas.transform.GetChild(id).GetComponentInChildren<TMPro.TMP_Text>().text = "New Game"; //reset name
+        GameEvents.current.SetTxtBoxValue(id, "New Game");
         Return();
-    }
-
-    private IEnumerator AllowUpdates()
-    {
-        yield return new WaitForSeconds(0.05f);
-
-        Debug.Log("This"); // doesn't workkkkkk
     }
 }

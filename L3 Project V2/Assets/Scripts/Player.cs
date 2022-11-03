@@ -9,86 +9,101 @@ using UnityEngine.VFX;
 
 public class Player : MonoBehaviour
 {
-    public GameObject healthBar;
-    public Vector3 posOffset;
-    public Animator deathAnim;
-    public List<ParticleSystem> Trails = new List<ParticleSystem>();
-    public GameObject deathFX;
-    public GameObject impactPrefab;
-    public SpriteRenderer energyOrb;
-    public Sprite[] orbs = new Sprite[9];
-
-    public float wallRadius;
-    public Vector2 wallPos1;
-    public Vector2 wallPos2;
-
+    //personal references
+    [SerializeField] private GameObject deathFX;
+    [SerializeField] private GameObject slamImpactFX;
+    [SerializeField] private GameObject[] attackFX = new GameObject[2];
+    [SerializeField] private Sprite[] orbs = new Sprite[9]; //for animating orb
+    [SerializeField] private List<ParticleSystem> Trails = new List<ParticleSystem>();
+    [SerializeField] private Transform groundCheck; // used for checking whether connected to ground
+    [SerializeField] private TrailRenderer tr; //used for dash trail
+    [SerializeField] private LayerMask groundLayer; //the layermasks are used to check collisions
+    [SerializeField] private LayerMask enemy;
+    [SerializeField] private LayerMask transition;
+    [SerializeField] private List<Sprite> spriteList = new List<Sprite>(); //used in dialogue
+    [SerializeField] private List<string> nameList = new List<string>(); //parallel with spriteList
     public Rigidbody2D rb;
-    public Transform groundCheck;
-    [SerializeField] private TrailRenderer tr;
-    [SerializeField] private GameObject longarrow;
-    [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private LayerMask Enemy;
-    [SerializeField] private LayerMask Transition;
-    [SerializeField] private InputActionReference actionReference;
-    public LevelLoader transitioner;
-    public PlayerState State = PlayerState.Movement;
 
-    public GameObject[] attackVFX = new GameObject[2];
-    public Vector2[] attackPos = new Vector2[3] { new Vector2(1.21f, -0.98f), new Vector2(10f, -0.1f), new Vector2(0.37f, 0.57f) };
-    public float attackBounce;
-    public float hitBounce;
-    private Vector2 bounceEffect;
-    public float width = 1.15f;
-    readonly float DamagePush = 20;
-    float speed = 18;
-    public int health = 5;
-    private int damage = 3;
-    float attackingTime = 0;
-    float damagedTime = 0;
-    public int attackStyle = 0;
-    public int attackingDirection = 0;
-    private float dashingPower = 100;
-    private float dashingTime = 0f;
-    public bool doubleAtk = false;
-    public Vector2 direction;
-    public Vector3 attackPoint;
-    public float radius;
-    private float lSpeedMult = 1;
-    private float rSpeedMult = 1;
+    //local scene references
+    private SpriteRenderer[] healthBar;
+    private Animator deathAnim;
+    private LevelLoader transitioner;
+    private SpriteRenderer energyOrb;
 
+    //the locations for checks
+    private readonly float[,] attackPos = new float[3,2] { { 0.21f, -0.98f }, { 1f, -0.1f }, { 0.37f, 0.57f } };
+    private const float width = 1.1f; //used once
+    private const float wallRadius = 0.1f;
+    private readonly Vector2 wallPos1 = new Vector2(-0.67f, -0.25f);
+    private readonly Vector2 wallPos2 = new Vector2(-0.48f, -0.25f);
+
+    //constant variables
+    private const float attackBounce = 40; //used twice, constant
+    private const float damagePush = 20; //used too much
+    private const float dashingPower = 100;
+    private const float speed = 18; //used 3-5 times
+
+    //changing variables
+    public PlayerState State = PlayerState.Movement; //contains the animation state
+    private int health = 5;
     private int energyLevel = 0;
-    public float mourningPeriod;
-    public float healingTime = 0;
-    public bool healing = false;
-    public bool healCancelled = false;
-    public bool stoppedHealing = true;
-    bool canDash = false;
-    bool jumping = false;
-    bool falling = false;
-    private bool jumped = false;
-    public bool facingRight = true;
-    public bool grounded = false;
-    public bool walled = false;
-    public bool floating = false;
+    private int damage = 3; //needs to be changed so that other atks do different dmg
+    private int dialogueCounter = 0; //contains the amount of dialogue lines in an interaction
+    private Dialogue dialogue; //contains dialogue object
+    public Interactable Interactable; //contains interaction point data
 
-    public Interactable interactable;
+    //speed variables
+    public Vector2 Direction;
+    private float lSpeedMult = 1; //these two alter the speed when attacking and stuff
+    private float rSpeedMult = 1;
+    private Vector2 bounceEffect;
+
+    //atk variables
+    public int AttackStyle = 0; //used a lot for checks
+    public int AttackingDirection = 0;
+    private Vector3 attackPoint;
+
+    //timings
+    private float attackingTime = 0;
+    private float damagedTime = 0;
+    private float dashingTime = 0f;
+    private float textTime = 0;
+    public float HealingTime = 0;
+
+    //bools
+    public bool Grounded = false;
+    public bool Walled = false;
+    public bool DoubleAtk = false; //kinda unsure about this..
+    public bool Healing = false; //used a lot for checks
+    public bool HealCancelled = false;
+    private bool facingRight = true;
+    private bool floating = false;
+    private bool stoppedHealing = true;
+    private bool transitioning = false;
+    private bool canDash = false; //used for only one dash in air
+    private bool jumping = false;
+    private bool falling = false;
+    private bool jumped = false;
     private bool interacting = false;
-    public Dialogue dialogue;
     private bool skipBtnPressed = false;
     private bool switchingDialogue = false;
-    private float textTime = 0;
     private bool interacted = false;
-    private int dialogueCounter = 0;
-    public List<Sprite> spriteList = new List<Sprite>();
-    public List<string> nameList = new List<string>();
 
-    private bool transitioning = false;
+
+    public void SetLocalVariables()
+    {
+        Debug.Log("This");
+        healthBar = GameObject.Find("HealthBar").GetComponentsInChildren<SpriteRenderer>();
+        deathAnim = GameObject.Find("NewCam2").GetComponent<Animator>();
+        transitioner = GameObject.Find("LevelLoader").GetComponent<LevelLoader>();
+        energyOrb = GameObject.Find("OrbSheet_0").GetComponent<SpriteRenderer>();
+    }
 
     public void OnMove(InputValue value)
     {
         Debug.Log(GameObject.FindObjectsOfType<CameraManager>()[0].name);
         if (interacting || transitioning) return;
-        direction = value.Get<Vector2>();
+        Direction = value.Get<Vector2>();
     }
 
     public void OnJump(InputValue value)
@@ -110,21 +125,18 @@ public class Player : MonoBehaviour
 
     public void OnInteract(InputValue value)
     {
-        if (interactable != null)
+        if (Interactable != null)
         {
             if (!interacting)
             {
                 GetComponent<ParticleSystem>().emissionRate = 0;
                 transform.GetChild(9).GetComponent<ParticleSystem>().emissionRate = 0;
-                healCancelled = true;
+                HealCancelled = true;
                 GetComponent<SpriteRenderer>().material.shader = Shader.Find("Sprites/Default");
                 GetComponent<SpriteRenderer>().color = Color.white;
                 if (dashingTime - 0.5f > Time.time)
                 {
-                    tr.emitting = false;
-                    rb.gravityScale = 10;
-                    gameObject.GetComponent<BoxCollider2D>().enabled = true;
-                    groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+                    SetDash(false, 10, Vector2.zero);
                 }
                 rb.velocity = Vector3.zero;
                 interacting = true;
@@ -159,16 +171,16 @@ public class Player : MonoBehaviour
 
     public void OnHeal(InputValue value)
     {
-        healing = value.Get<float>() > 0.5f && State == PlayerState.Movement && grounded;
+        Healing = value.Get<float>() > 0.5f &&  State == PlayerState.Movement && Grounded;
 
-        if (stoppedHealing && healing && energyLevel > 2) // Is true after pressing button down
+        if (stoppedHealing && Healing && energyLevel > 2) // Is true after pressing button down
         {
-            healingTime = Time.time + 1;
-            healCancelled = false;
+            HealingTime = Time.time + 1;
+            HealCancelled = false;
             rb.velocity = Vector2.zero;
         }
 
-        if (!healing)
+        if (!Healing)
             stoppedHealing = true;
         else
             stoppedHealing = false;
@@ -176,7 +188,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        grounded = IsGrounded();
+        Grounded = IsGrounded();
 
         if (transitioning)
             return;
@@ -207,21 +219,17 @@ public class Player : MonoBehaviour
                 break;
         }
 
-        if (floating || (walled && !grounded && !jumping))
+        if (floating || (Walled && !Grounded && !jumping))
             rb.velocity = new Vector2(rb.velocity.x, 0);
             
     }
 
     private void EnterDashState()
     {
-        if (interacting || !canDash || dashingTime > Time.time || healing || health <= 0) return;
+        if (interacting || !canDash || dashingTime > Time.time || Healing || health <= 0) return;
 
         canDash = false;
-        rb.gravityScale = 0;
-        gameObject.GetComponent<BoxCollider2D>().enabled = false;
-        groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = true;
-        rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0);
-        tr.emitting = true;
+        SetDash(true, 0, new Vector2(transform.localScale.x * dashingPower, 0));
         dashingTime = Time.time + 0.6f;
     }
 
@@ -229,19 +237,19 @@ public class Player : MonoBehaviour
     {
         if (damagedTime > Time.time) return;
 
-        healCancelled = true;
+        HealCancelled = true;
 
         GetComponent<SpriteRenderer>().material.shader = Shader.Find("GUI/Text Shader");
         GetComponent<SpriteRenderer>().color = Color.white;
 
-        State = PlayerState.Hit;
+         State = PlayerState.Hit;
 
         damagedTime = Time.time + 0.8f;
-        transitioner.transition.SetTrigger("Hurt");
+        transitioner.Transition.SetTrigger("Hurt");
         if (collider.transform.position.x < transform.position.x)
-            rb.velocity = new Vector2(DamagePush, DamagePush / 3);
+            rb.velocity = new Vector2(damagePush, damagePush / 3);
         else
-            rb.velocity = new Vector2(-DamagePush, DamagePush / 3);
+            rb.velocity = new Vector2(-damagePush, damagePush / 3);
 
         GetComponentInChildren<CameraManager>().TriggerShake(1.5f, 10f);
         for (int i = 0; i < dmg; i++)
@@ -249,18 +257,14 @@ public class Player : MonoBehaviour
             if (health > 0)
             {
                 health -= 1;
-                healthBar.GetComponentsInChildren<SpriteRenderer>()[health].enabled = false;
+                healthBar[health].enabled = false;
             }
         }
         if (health <= 0)
         {
             if (dashingTime - 0.5f > Time.time)
             {
-                tr.emitting = false;
-                rb.gravityScale = 10;
-                gameObject.GetComponent<BoxCollider2D>().enabled = true;
-                groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = false;
-                rb.velocity = new Vector2(0, 0);
+                SetDash(false, 10, Vector2.zero);
             }
             StartCoroutine(Die());
         }
@@ -275,11 +279,7 @@ public class Player : MonoBehaviour
         }
         if (dashingTime - 0.5f < Time.time)
         {
-            tr.emitting = false;
-            rb.gravityScale = 10;
-            gameObject.GetComponent<BoxCollider2D>().enabled = true;
-            groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = false;
-            rb.velocity = new Vector2(0, 0);
+            SetDash(false, 10, Vector2.zero);
         }
         if (damagedTime - 0.5 < Time.time)
         {
@@ -289,20 +289,20 @@ public class Player : MonoBehaviour
 
     private IEnumerator EnterAttackState(int n)
     {
-        walled = false;
+        Walled = false;
 
-        if (!interacting &&!healing && (attackingTime - 0.1f)  < Time.time && State != PlayerState.Attack)
+        if (!interacting && !Healing && (attackingTime - 0.1f)  < Time.time && State != PlayerState.Attack && ((energyLevel > 2 && n == 2) || n == 3))
         {
             if (dashingTime - 0.5f > Time.time)
                 yield return new WaitForSeconds(dashingTime - 0.5f - Time.time);
 
-            State = PlayerState.Attack;
-            attackStyle = n;
+             State = PlayerState.Attack;
+            AttackStyle = n;
 
-            if (attackStyle == 2)
+            if (AttackStyle == 2)
                 EnterSlam();
 
-            else if (attackStyle == 3)
+            else if (AttackStyle == 3)
                 EnterSlash();
         }
         yield return null;
@@ -310,47 +310,44 @@ public class Player : MonoBehaviour
 
     private void EnterSlam()
     {
-        if (energyLevel > 2)
+        Debug.Log(energyLevel);
+        StartCoroutine(ChangeEnergy(-3));
+        AttackingDirection = 0;
+        attackFX[0].SetActive(true);
+        foreach (ParticleSystem PS in Trails)
+            PS.emissionRate = 50;
+        GetComponent<SpriteRenderer>().enabled = false;
+        bounceEffect = Vector2.zero;
+        gameObject.GetComponent<BoxCollider2D>().enabled = false;
+        groundCheck.GetComponent<BoxCollider2D>().enabled = true;
+        if (floating)
         {
-            Debug.Log(energyLevel);
-            StartCoroutine(ChangeEnergy(-3));
-            attackingDirection = 0;
-            attackVFX[0].SetActive(true);
-            foreach (ParticleSystem PS in Trails)
-                PS.emissionRate = 50;
-            GetComponent<SpriteRenderer>().enabled = false;
-            bounceEffect = Vector2.zero;
-            gameObject.GetComponent<BoxCollider2D>().enabled = false;
-            groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = true;
-            if (floating)
-            {
-                floating = false;
-                rb.gravityScale = 10;
-            }
+            floating = false;
+            rb.gravityScale = 10;
         }
     }
     private void EnterSlash()
     {
         if ((attackingTime - 0.1f) < Time.time && (attackingTime + 0.1f) < Time.time)
-            doubleAtk = true;
+            DoubleAtk = true;
 
-        if (direction.y > 0)
-            attackingDirection = 2;
-        else if (direction.y < 0 && !grounded)
-            attackingDirection = 0;
+        if (Direction.y > 0)
+            AttackingDirection = 2;
+        else if (Direction.y < 0 && !Grounded)
+            AttackingDirection = 0;
         else
-            attackingDirection = 1;
+            AttackingDirection = 1;
 
-        attackVFX[1].SetActive(true);
+        attackFX[1].SetActive(true);
         if (!facingRight) // VFX
         {
-            attackVFX[1].transform.rotation = Quaternion.Euler(0, 0, (attackingDirection - 2) * -90 - 35);
-            attackVFX[1].transform.position = new Vector2(transform.position.x - attackPos[attackingDirection].x, transform.position.y + attackPos[attackingDirection].y);
+            attackFX[1].transform.rotation = Quaternion.Euler(0, 0, (AttackingDirection - 2) * -90 - 35);
+            attackFX[1].transform.position = new Vector2(transform.position.x - attackPos[AttackingDirection, 0], transform.position.y + attackPos[AttackingDirection, 1]);
         }
         else if (facingRight)
         {
-            attackVFX[1].transform.rotation = Quaternion.Euler(0, 0, (attackingDirection - 2) * 90 + 35);
-            attackVFX[1].transform.position = (Vector2)transform.position + attackPos[attackingDirection];
+            attackFX[1].transform.rotation = Quaternion.Euler(0, 0, (AttackingDirection - 2) * 90 + 35);
+            attackFX[1].transform.position = (Vector2)transform.position + new Vector2(attackPos[AttackingDirection, 0], attackPos[AttackingDirection, 1]);
         }
 
         attackingTime = 0.25f + Time.time;
@@ -358,32 +355,32 @@ public class Player : MonoBehaviour
 
     private void UpdateAttackState()
     {
-        if (attackingTime - 0.2 > Time.time && attackStyle == 3) //last second control
+        if (attackingTime - 0.2 > Time.time && AttackStyle == 3) //last second control
             Flip();
 
-        attackPoint = (Vector2)transform.position + attackPos[attackingDirection];
+        attackPoint = (Vector2)transform.position + new Vector2(attackPos[AttackingDirection, 0], attackPos[AttackingDirection, 1]);
         if (!facingRight)
-            attackPoint = new Vector2(transform.position.x - attackPos[attackingDirection].x, transform.position.y + attackPos[attackingDirection].y);
+            attackPoint = new Vector2(transform.position.x - attackPos[AttackingDirection, 0], transform.position.y + attackPos[AttackingDirection, 1]);
 
         // hitting enemies
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint, 1.55f, Enemy);
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint, 1.55f, enemy);
 
         if (hitEnemies.Length != 0)
             GetComponentInChildren<CameraManager>().TriggerShake(1f, 15f); // camera shake
 
         foreach (Collider2D enemy in hitEnemies)
         {
-            if (!facingRight && attackingDirection == 1)
+            if (!facingRight && AttackingDirection == 1)
             {
                 StartCoroutine(enemy.GetComponent<Enemy>().Hit(damage, 3));
                 AttackBounce(3);
             }
             else
             {
-                StartCoroutine(enemy.GetComponent<Enemy>().Hit(damage, attackingDirection));
-                AttackBounce(attackingDirection);
+                StartCoroutine(enemy.GetComponent<Enemy>().Hit(damage, AttackingDirection));
+                AttackBounce(AttackingDirection);
             }
-            if (attackingDirection == 1)
+            if (AttackingDirection == 1)
             {
                 canDash = true;
             }
@@ -392,9 +389,9 @@ public class Player : MonoBehaviour
         
         Jump();
 
-        if ((attackingTime < Time.time && attackStyle != 2) || (grounded && attackingDirection == 0)) // exit 
+        if ((attackingTime < Time.time && AttackStyle != 2) || (Grounded && AttackingDirection == 0)) // exit 
         {
-            foreach (GameObject VFX in attackVFX) // reset VFX
+            foreach (GameObject VFX in attackFX) // reset VFX
             {
                 VFX.SetActive(false);
             }
@@ -405,18 +402,16 @@ public class Player : MonoBehaviour
             Flip();
             EnterMovementState();
 
-            if (attackStyle == 2) //slamming
+            if (AttackStyle == 2) //slamming
             {
                 jumped = false;
                 bounceEffect = Vector2.zero;
 
-                if (impactPrefab != null)
-                {
-                    var impactVFX = Instantiate(impactPrefab, transform) as GameObject;
-                    Destroy(impactVFX, 1.5f);
-                }
+                var impactVFX = Instantiate(slamImpactFX, transform) as GameObject;
+                Destroy(impactVFX, 1.5f);
+
                 gameObject.GetComponent<BoxCollider2D>().enabled = true;
-                groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+                groundCheck.GetComponent<BoxCollider2D>().enabled = false;
 
                 damagedTime = Time.time + 1f; // invcibility frames
 
@@ -429,9 +424,9 @@ public class Player : MonoBehaviour
         // managing movement from attack
         bounceEffect.x *= 0.5f;
         bounceEffect.y *= 0.95f;
-        if (attackStyle == 3 && (dashingTime - 0.5f) < Time.time)
-            rb.velocity = new Vector2(direction.x * speed * 0.3f, rb.velocity.y) + bounceEffect;
-        else if (attackStyle == 2)
+        if (AttackStyle == 3 && (dashingTime - 0.5f) < Time.time)
+            rb.velocity = new Vector2(Direction.x * speed * 0.3f, rb.velocity.y) + bounceEffect;
+        else if (AttackStyle == 2)
             rb.velocity = new Vector2(0, -40);
     }
 
@@ -463,25 +458,22 @@ public class Player : MonoBehaviour
     {
         // if(wallColliderLeft && direction.x < 0 || wallColliderRight && direction.x > 0) wallHolding = true;
 
-        if (grounded)
+        if (Grounded)
             canDash = true;
 
         if (dashingTime - 0.5f < Time.time)
         {
-            tr.emitting = false;
-            rb.gravityScale = 10;
-            gameObject.GetComponent<BoxCollider2D>().enabled = true;
-            groundCheck.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+            SetDash(false, 10, rb.velocity);
         }
 
-        if (healing && healingTime < Time.time) //heal
+        if (Healing && HealingTime < Time.time) //heal
         {
-            if (!healCancelled && health < 5)
+            if (!HealCancelled && health < 5)
             {
-                healing = false;
+                Healing = false;
                 stoppedHealing = true;
-                healCancelled = true;
-                healthBar.GetComponentsInChildren<SpriteRenderer>()[health].enabled = true;
+                HealCancelled = true;
+                healthBar[health].enabled = true;
                 health += 1;
                 StartCoroutine(ChangeEnergy(-3));
             }
@@ -497,13 +489,13 @@ public class Player : MonoBehaviour
             rSpeedMult += 0.05f;
 
         //walk
-        if (damagedTime - 0.5 < Time.time && !healing)
+        if (damagedTime - 0.5 < Time.time && !Healing)
         {
-            if (direction.x < 0)
-                rb.velocity = new Vector2(direction.x * lSpeedMult * speed, rb.velocity.y) + bounceEffect;
+            if (Direction.x < 0)
+                rb.velocity = new Vector2(Direction.x * lSpeedMult * speed, rb.velocity.y) + bounceEffect;
             else
-                rb.velocity = new Vector2(direction.x * rSpeedMult * speed, rb.velocity.y) + bounceEffect;
-            if (grounded && direction.x != 0)
+                rb.velocity = new Vector2(Direction.x * rSpeedMult * speed, rb.velocity.y) + bounceEffect;
+            if (Grounded && Direction.x != 0)
                 GetComponent<ParticleSystem>().emissionRate = 15;
             else
                 GetComponent<ParticleSystem>().emissionRate = 0;
@@ -513,8 +505,8 @@ public class Player : MonoBehaviour
         if (dashingTime - 0.5f > Time.time)
             rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0);
 
-            walled = IsWalled();
-        if (walled)
+        Walled = IsWalled();
+        if (Walled)
             transform.GetChild(9).GetComponent<ParticleSystem>().emissionRate = 10;
         else
             transform.GetChild(9).GetComponent<ParticleSystem>().emissionRate = 0;
@@ -525,22 +517,22 @@ public class Player : MonoBehaviour
     private void Jump()
     {
         //jump
-        if (!jumped && jumping && grounded && !healing)
+        if (!jumped && jumping && Grounded && !Healing)
         {
             jumped = true;
             rb.velocity = new Vector2(rb.velocity.x, 45);
         }
-        else if (walled && !grounded && !jumped && jumping)
+        else if (Walled && !Grounded && !jumped && jumping)
         {
             jumped = true;
             rb.velocity = new Vector2(rb.velocity.x, 35);
-            bounceEffect.x = direction.x * -140;
-            if (direction.x > 0)
+            bounceEffect.x = Direction.x * -140;
+            if (Direction.x > 0)
                 rSpeedMult = 0.5f;
             else
                 lSpeedMult = 0.5f;
         }
-        else if (grounded && falling)
+        else if (Grounded && falling)
         { // if on ground and finished jumping
             falling = false;
         }
@@ -562,7 +554,7 @@ public class Player : MonoBehaviour
 
     private void Interact()
     {
-        string[] chats = interactable.Dialogue[interactable.dialogueNums].Split(" | ");
+        string[] chats = Interactable.Dialogue[Interactable.DialogueNums].Split(" | ");
         string chat = "";
         if (dialogueCounter < chats.Length)
         {
@@ -575,6 +567,7 @@ public class Player : MonoBehaviour
             StartCoroutine(dialogue.MoveDialogue('D'));
             interacted = true;
             int x = Int32.Parse(chats[dialogueCounter].Split(" / ")[0]);
+            dialogue.ResetSide();
             dialogue.FirstNameAndPicture(spriteList[x], nameList[x]);
             foreach (Enemy E in GameObject.FindObjectsOfType<Enemy>())
             {
@@ -586,7 +579,7 @@ public class Player : MonoBehaviour
         {
             if (!switchingDialogue) //if text hasn't finished displaying
             {
-                dialogue.text.text = chat; // prepare for switching and fully display text
+                dialogue.Text.text = chat; // prepare for switching and fully display text
                 switchingDialogue = true;
             }
             else //if a transition is required
@@ -596,12 +589,12 @@ public class Player : MonoBehaviour
                     dialogueCounter++;
                     int x = Int32.Parse(chats[dialogueCounter].Split(" / ")[0]);
                     StartCoroutine(dialogue.SwitchDialogue(spriteList[x], nameList[x], this)); // SwitchDialogue(sprite, text, player);
-                    dialogue.text.text = "";
+                    dialogue.Text.text = "";
                 }
                 else //interaction finished
                 {
                     StartCoroutine(dialogue.MoveDialogue('U'));
-                    dialogue.text.text = "";
+                    dialogue.Text.text = "";
                     interacting = false;
                     interacted = false;
                     dialogueCounter = 0;
@@ -609,12 +602,12 @@ public class Player : MonoBehaviour
                     {
                         StartCoroutine(E.UnPause());
                     }
-                    if (interactable.Dialogue.Count-1 > interactable.dialogueNums)
-                        interactable.dialogueNums++;
-                    foreach (char item in interactable.ImpactfulNums.ToCharArray())
+                    if (Interactable.Dialogue.Count-1 > Interactable.DialogueNums)
+                        Interactable.DialogueNums++;
+                    foreach (char item in Interactable.ImpactfulNums.ToCharArray())
                     {
-                        if (interactable.dialogueNums == item)
-                            interactable.DialogImpact();
+                        if (Interactable.DialogueNums == item)
+                            Interactable.DialogImpact();
                     }
                 }
                 switchingDialogue = false;
@@ -623,12 +616,12 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if (dialogue.text.text.Length < chat.Length && textTime < Time.time && dialogue.gameObject.GetComponent<Animator>().speed == 0) // if characters remain, all animations have completed, and wait has been completed
+        if (dialogue.Text.text.Length < chat.Length && textTime < Time.time && dialogue.gameObject.GetComponent<Animator>().speed == 0) // if characters remain, all animations have completed, and wait has been completed
         {
-            dialogue.text.text += chat.ToCharArray()[dialogue.text.text.Length];
+            dialogue.Text.text += chat.ToCharArray()[dialogue.Text.text.Length];
             textTime = Time.time + 0.04f;
         }
-        else if (dialogue.text.text.Length == chat.Length)
+        else if (dialogue.Text.text.Length == chat.Length)
             switchingDialogue = true;
     }
 
@@ -637,12 +630,21 @@ public class Player : MonoBehaviour
         switchingDialogue = false;
     }
 
+    private void SetDash(bool trueFalse, int gravity, Vector2 dashSpeed)
+    {
+        tr.emitting = trueFalse;
+        rb.gravityScale = gravity;
+        gameObject.GetComponent<BoxCollider2D>().enabled = !trueFalse;
+        groundCheck.GetComponent<BoxCollider2D>().enabled = trueFalse;
+        rb.velocity = dashSpeed;
+    }
+
     public bool IsGrounded() { return Physics2D.OverlapBox(groundCheck.position, new Vector2(width, 0.1f), 0, groundLayer); }
     public bool IsWalled() 
     {
-        if (Physics2D.OverlapCircle((Vector2)transform.position + wallPos1, wallRadius, groundLayer) && direction.x < 0)
+        if (Physics2D.OverlapCircle((Vector2)transform.position + wallPos1, wallRadius, groundLayer) && Direction.x < 0)
             return true;
-        else if (Physics2D.OverlapCircle((Vector2)transform.position + wallPos2, wallRadius, groundLayer) && direction.x > 0)
+        else if (Physics2D.OverlapCircle((Vector2)transform.position + wallPos2, wallRadius, groundLayer) && Direction.x > 0)
             return true;
         else
             return false;
@@ -650,7 +652,7 @@ public class Player : MonoBehaviour
 
     private void Flip()
     {
-        if (facingRight && direction.x < 0 || !facingRight && direction.x > 0)
+        if (facingRight && Direction.x < 0 || !facingRight && Direction.x > 0)
         {
             facingRight = !facingRight;
             Vector3 localScale = transform.localScale;
@@ -661,19 +663,14 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (((1 << collision.gameObject.layer) & Transition) != 0) // if it's a transition collision
+        if (((1 << collision.gameObject.layer) & transition) != 0 && transitioner != null) // if it's a transition collision
         {
             transitioning = true;
-            if (collision.gameObject.GetComponent<Transitioner>().direction == 'L') // make 'em walk
-            {
-                direction = new Vector2(-1, 0);
-                rb.velocity = new Vector2(direction.x * lSpeedMult * speed, rb.velocity.y) + bounceEffect;
-            }
+            Direction = collision.gameObject.GetComponent<Transitioner>().direction;
+            if (Direction.x <= 0) // make 'em walk
+                rb.velocity = new Vector2(Direction.x * lSpeedMult * speed, rb.velocity.y) + bounceEffect;
             else
-            {
-                direction = new Vector2(1, 0);
-                rb.velocity = new Vector2(direction.x * rSpeedMult * speed, rb.velocity.y) + bounceEffect;
-            }
+                rb.velocity = new Vector2(Direction.x * rSpeedMult * speed, rb.velocity.y) + bounceEffect;
             // prepare any possible cutscenes
             // save player data and input it into next scene
             // output player into the correct location, and make them walk
@@ -693,7 +690,7 @@ public class Player : MonoBehaviour
         deathAnim.Play("DeathAnim");
         yield return new WaitForSeconds(0.9f);
         GetComponent<SpriteRenderer>().enabled = true;
-        State = PlayerState.Movement;
+         State = PlayerState.Movement;
         rb.gravityScale = 10;
     }
 
@@ -708,16 +705,5 @@ public class Player : MonoBehaviour
                 energyOrb.sprite = orbs[energyLevel];
             }
         }
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        if (attackPoint == null)
-            return;
-
-        Gizmos.DrawWireSphere((Vector2)transform.position + wallPos2, wallRadius);
-        Gizmos.DrawWireSphere((Vector2)transform.position + wallPos1, wallRadius);
-        Gizmos.DrawWireSphere((Vector2)transform.position + attackPos[attackingDirection], 1.55f);
-        Gizmos.DrawWireCube(groundCheck.position, new Vector3(width, 0.1f, 1));
     }
 }

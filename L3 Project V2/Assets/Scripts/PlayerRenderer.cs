@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerRenderer : MonoBehaviour
 {
-    private static class Drivers
+    private static class Drivers //used to control ReAnimator
     {
         public const string IsGrounded = "isGrounded";
         public const string GroundMovement = "groundMovement";
@@ -19,32 +19,30 @@ public class PlayerRenderer : MonoBehaviour
         public const string Jump = "jump";
     }
 
+    //variables
     private Player controller;
     private Reanimator reanimator;
-    private ReanimatorListener healListener;
+
     private void Awake()
     {
         controller = GetComponent<Player>();
         reanimator = GetComponent<Reanimator>();
-        reanimator.AddListener (
-        "healFinished",
-        () => controller.healingTime = 0
-        );
+        reanimator.AddListener ("healFinished", () => controller.HealingTime = 0);
     }
 
     private void Update()
     {
         //reanimator.Flip = controller.facingRight;
         reanimator.Set(Drivers.State, (int)controller.State);
-        reanimator.Set(Drivers.IsGrounded, controller.grounded);
-        reanimator.Set(Drivers.GroundMovement, controller.direction.x != 0);
-        if (controller.healing && !controller.healCancelled && controller.healingTime > Time.time) reanimator.Set(Drivers.GroundMovement, 2);
+        reanimator.Set(Drivers.IsGrounded, controller.Grounded);
+        reanimator.Set(Drivers.GroundMovement, controller.Direction.x != 0);
         reanimator.Set(Drivers.JumpDirection, controller.rb.velocity.y > 0);
         reanimator.Set(Drivers.IsRunJumping, controller.rb.velocity.x != 0);
-        reanimator.Set(Drivers.IsJumping, controller.walled);
-        reanimator.Set(Drivers.AttackStyle, controller.attackStyle);
-        reanimator.Set(Drivers.AttackNum, controller.doubleAtk);
-        reanimator.Set(Drivers.BasicHitState, controller.attackingDirection);
+        reanimator.Set(Drivers.IsJumping, controller.Walled);
+        reanimator.Set(Drivers.AttackStyle, controller.AttackStyle);
+        reanimator.Set(Drivers.AttackNum, controller.DoubleAtk);
+        reanimator.Set(Drivers.BasicHitState, controller.AttackingDirection);
+        if (controller.Healing && !controller.HealCancelled && controller.HealingTime > Time.time) { reanimator.Set(Drivers.GroundMovement, 2); } //sort out animation if heal is cancelled
     }
 
 

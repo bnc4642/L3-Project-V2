@@ -9,7 +9,9 @@ using Newtonsoft.Json;
 
 public class Inventory : MonoBehaviour
 {
-    ArrayList stuff = new ArrayList() { };
+    //figure this all out this afternoon
+
+    private ArrayList stuff = new ArrayList() { };
     
     public void AddStuff<T>(int index, T thing)
     {

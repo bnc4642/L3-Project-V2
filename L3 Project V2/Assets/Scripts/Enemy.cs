@@ -39,6 +39,7 @@ public class Enemy : MonoBehaviour
     public virtual void Init()
     {
         anim = GetComponent<Animator>();
+        aiPath.target = plyr.transform;
     }
 
     void Start()

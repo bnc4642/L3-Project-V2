@@ -14,6 +14,7 @@ public class TxtBox : MonoBehaviour
     public int ID;
     private void Start()
     {
+        //subscribe to events
         GameEvents.current.onTxtBoxSelect += TxtBoxSelect;
         GameEvents.current.onTxtBoxDeSelect += TxtBoxDeselect;
         GameEvents.current.onSetTxtBoxValue += SetTxtBoxValue;
@@ -21,6 +22,7 @@ public class TxtBox : MonoBehaviour
         parentRect = GetComponent<RectTransform>();
     }
 
+    //results of events
     public void TxtBoxSelect(int id)
     {
         if (ID == id)
@@ -36,6 +38,8 @@ public class TxtBox : MonoBehaviour
         if (ID == id)
             GetComponent<TMPro.TMP_InputField>().text = value;
     }
+
+    //custom overflow
 
     public void UpdateText()
     {

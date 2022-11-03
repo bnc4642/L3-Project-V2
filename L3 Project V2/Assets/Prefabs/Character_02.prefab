@@ -4859,16 +4859,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 330d616825e299d4f99a5936538938b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xMin: -2.8
-  xMax: 4.8
-  yMin: 0
-  yMax: 6
-  cam: {fileID: 0}
-  shakeTime: 0
-  shakeAmount: 0.2
-  damping: 10
-  pixelScale: 1
-  cameraSpeed: 30
 --- !u!114 &8525106057012846511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4881,8 +4871,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec05901965c912e4d84f058c02b1d25d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  transition: {fileID: 0}
-  transitionTime: 1
+  Transition: {fileID: 0}
 --- !u!1 &1715739779545841953
 GameObject:
   m_ObjectHideFlags: 0
@@ -5020,16 +5009,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c3192c27337858448d40f9c92780839, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthBar: {fileID: 4444484860050659318, guid: 4163089a1525e5a4b8cd66c16533c6eb, type: 3}
-  posOffset: {x: 0, y: 0, z: 0}
-  deathAnim: {fileID: 0}
-  Trails:
-  - {fileID: 2200779953408122937}
-  - {fileID: 2200779953512793320}
-  - {fileID: 2200779954579933986}
   deathFX: {fileID: 2200779953694025412}
-  impactPrefab: {fileID: 121453515958545376, guid: f68bd925368292f4589961eae626865f, type: 3}
-  energyOrb: {fileID: 0}
+  slamImpactFX: {fileID: 121453515958545376, guid: f68bd925368292f4589961eae626865f, type: 3}
+  attackFX:
+  - {fileID: 2200779954153784524}
+  - {fileID: 8525106056286221466}
   orbs:
   - {fileID: 1653977437, guid: 5b67d12e5ec65714a8e35c4177952886, type: 3}
   - {fileID: -1365241438, guid: 5b67d12e5ec65714a8e35c4177952886, type: 3}
@@ -5040,52 +5024,47 @@ MonoBehaviour:
   - {fileID: 575979393, guid: 5b67d12e5ec65714a8e35c4177952886, type: 3}
   - {fileID: -1862377125, guid: 5b67d12e5ec65714a8e35c4177952886, type: 3}
   - {fileID: -333803902, guid: 5b67d12e5ec65714a8e35c4177952886, type: 3}
-  wallRadius: 0.1
-  wallPos1: {x: -0.67, y: -0.25}
-  wallPos2: {x: 0.48, y: -0.25}
-  rb: {fileID: 1715739779545841957}
+  Trails:
+  - {fileID: 7298155535804344182}
   groundCheck: {fileID: 1715739780644857294}
   tr: {fileID: 1715739779545841944}
-  longarrow: {fileID: 4999472352357544752, guid: ea45ebc308a23764fb53a76d775f5791, type: 3}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  Enemy:
+  enemy:
     serializedVersion: 2
     m_Bits: 256
-  Transition:
+  transition:
     serializedVersion: 2
     m_Bits: 512
-  actionReference: {fileID: -8466941522944551171, guid: dae50a7675ab4c548a7f48105e2d5a29, type: 3}
-  transitioner: {fileID: 8525106057012846511}
+  spriteList:
+  - {fileID: -649239621, guid: ecb4a062145419a428aa05add18445c3, type: 3}
+  - {fileID: -333304391, guid: ecb4a062145419a428aa05add18445c3, type: 3}
+  - {fileID: -1855748659, guid: ecb4a062145419a428aa05add18445c3, type: 3}
+  - {fileID: -1661983872, guid: ecb4a062145419a428aa05add18445c3, type: 3}
+  - {fileID: -1788321507, guid: ecb4a062145419a428aa05add18445c3, type: 3}
+  - {fileID: 913865778, guid: ecb4a062145419a428aa05add18445c3, type: 3}
+  - {fileID: 1622919994, guid: ecb4a062145419a428aa05add18445c3, type: 3}
+  nameList:
+  - You
+  - Paul
+  - Sam
+  - Bill
+  - Jenny
+  - Tom
+  - Luke
+  rb: {fileID: 1715739779545841957}
   State: 2
-  attackVFX:
-  - {fileID: 2200779954153784524}
-  - {fileID: 8525106056286221466}
-  attackPos:
-  - {x: 0.21, y: -0.98}
-  - {x: 0.5, y: -0.1}
-  - {x: 0.37, y: 0.57}
-  attackBounce: 40
-  hitBounce: 0
-  width: 1.1
-  health: 5
-  attackStyle: 0
-  attackingDirection: 0
-  doubleAtk: 0
-  direction: {x: 0, y: 0}
-  attackPoint: {x: -0.15, y: -1.81, z: 0}
-  radius: 1.2
-  mourningPeriod: 2.5
-  healingTime: 0
-  healing: 0
-  healCancelled: 0
-  stoppedHealing: 1
-  interactable: {fileID: 0}
-  facingRight: 1
-  grounded: 0
-  walled: 0
-  floating: 0
+  Interactable: {fileID: 0}
+  Direction: {x: 0, y: 0}
+  AttackStyle: 0
+  AttackingDirection: 0
+  HealingTime: 0
+  Grounded: 0
+  Walled: 0
+  DoubleAtk: 0
+  Healing: 0
+  HealCancelled: 0
 --- !u!95 &1715739779545841959
 Animator:
   serializedVersion: 4

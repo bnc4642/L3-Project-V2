@@ -459,6 +459,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4044313776299868757, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
   m_PrefabInstance: {fileID: 1722149805944336012}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &423864623 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2585337539578498167, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
+  m_PrefabInstance: {fileID: 1722149805944336012}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &547775594
 GameObject:
   m_ObjectHideFlags: 0
@@ -818,6 +823,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerPlusCamera
       objectReference: {fileID: 0}
+    - target: {fileID: 3801520336998531286, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4630990544182982844, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6143328176829789546, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
       propertyPath: transitioner
       value: 
@@ -837,6 +850,10 @@ PrefabInstance:
     - target: {fileID: 6143328177094553922, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
       propertyPath: yMin
       value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6630505803124256896, guid: ff138b0ebd2cd8c48a1916a11abbf83d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -998,6 +1015,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1410904144909478472, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
+      propertyPath: Transition
+      value: 
+      objectReference: {fileID: 423864623}
     - target: {fileID: 1773979485056465809, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
       propertyPath: m_Name
       value: LevelLoader

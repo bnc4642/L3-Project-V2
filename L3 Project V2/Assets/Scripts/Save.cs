@@ -4,6 +4,8 @@ using UnityEngine;
 
 class Save
 {
+    //need to figure out which variables are saved in here properly.
+
     public string Name = "";
 
     // public int InkpotNo = 0;

@@ -4,48 +4,53 @@ using UnityEngine;
 
 public class Dialogue : MonoBehaviour
 {
-    public TMPro.TMP_Text text;
+    //variables
+    public TMPro.TMP_Text Text;
     private char side = 'L';
-    public SpriteRenderer portrait;
-    public TMPro.TMP_Text name;
+    public SpriteRenderer Portrait;
+    public TMPro.TMP_Text DialogueName;
 
     void Start()
     {
+        //get variables and stop animations from showing until interaction starts
         GetComponent<Animator>().speed = 0;
-        text = GetComponentInChildren<TMPro.TMP_Text>();
+        Text = GetComponentInChildren<TMPro.TMP_Text>();
     }
 
     public IEnumerator MoveDialogue(char direction) //direction is +/- 1 depending on moving forward or backward
     {
-        GetComponent<Animator>().Play("Dialogue" + direction + side, -1, 0);
+        GetComponent<Animator>().Play("Dialogue" + direction + side, -1, 0); //initiates animation with custom side and direction
         GetComponent<Animator>().speed = 1;
-        yield return new WaitForSeconds(0.85f);
+        yield return new WaitForSeconds(0.85f); //once animation finishes, stop animator
         GetComponent<Animator>().speed = 0;
     }
 
-    public IEnumerator SwitchDialogue(Sprite pic, string Name, Player p) // change these after animation is complete
+    public IEnumerator SwitchDialogue(Sprite pic, string Name, Player p)
     {
+        //start animation
         GetComponent<Animator>().Play("DialogueOpen"+side, -1, 0);
         GetComponent<Animator>().speed = 1;
         yield return new WaitForSeconds(0.3f);
-        portrait.sprite = pic;
-        name.text = Name;
+        //changes these after animation is complete
+        Portrait.sprite = pic;
+        DialogueName.text = Name;
         yield return new WaitForSeconds(0.3f);
+        //sawp sides
         if (side == 'L') side = 'R';
         else side = 'L';
-
+        //stop dialogue and animations
         p.StopSwitchingDialogue();
         GetComponent<Animator>().speed = 0;
     }
 
-    public void ResetSide()
+    public void ResetSide() //on start of interaction
     {
         side = 'L';
     }
 
-    public void FirstNameAndPicture(Sprite pic, string Name)
+    public void FirstNameAndPicture(Sprite pic, string Name) //initial images
     {
-        portrait.sprite = pic;
-        name.text = Name;
+        Portrait.sprite = pic;
+        DialogueName.text = Name;
     }
 }
