@@ -350,7 +350,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4786990982237607553, guid: 8ad3b0b8b92ff57488dc2487c9b47b5e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.8
+      value: -0.7
       objectReference: {fileID: 0}
     - target: {fileID: 4786990982237607553, guid: 8ad3b0b8b92ff57488dc2487c9b47b5e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -389,8 +389,16 @@ PrefabInstance:
       value: SceneChanger (1)
       objectReference: {fileID: 0}
     - target: {fileID: 4786990982237607583, guid: 8ad3b0b8b92ff57488dc2487c9b47b5e, type: 3}
+      propertyPath: id
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4786990982237607583, guid: 8ad3b0b8b92ff57488dc2487c9b47b5e, type: 3}
       propertyPath: nextScene
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4786990982237607583, guid: 8ad3b0b8b92ff57488dc2487c9b47b5e, type: 3}
+      propertyPath: direction.x
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -640,17 +648,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: NewPixelCamera 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2226898973596905570, guid: 467ca4c0304536c49919f8244950ff34, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4131691350813982973, guid: 467ca4c0304536c49919f8244950ff34, type: 3}
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4131691350813982973, guid: 467ca4c0304536c49919f8244950ff34, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 18.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 4131691350813982973, guid: 467ca4c0304536c49919f8244950ff34, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -7.58
+      value: 2.7
       objectReference: {fileID: 0}
     - target: {fileID: 4131691350813982973, guid: 467ca4c0304536c49919f8244950ff34, type: 3}
       propertyPath: m_LocalPosition.z
@@ -936,6 +948,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
+      propertyPath: id
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
       propertyPath: Enemies.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -949,15 +965,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
       propertyPath: xMinToYMax.Array.data[0]
-      value: -20
+      value: -55
       objectReference: {fileID: 0}
     - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
       propertyPath: xMinToYMax.Array.data[1]
-      value: 10
+      value: 2.45
       objectReference: {fileID: 0}
     - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
       propertyPath: xMinToYMax.Array.data[2]
-      value: -5
+      value: 1.3
       objectReference: {fileID: 0}
     - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
       propertyPath: xMinToYMax.Array.data[3]
@@ -973,15 +989,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
       propertyPath: LeftTransistors.Array.data[0].x
+      value: -80
+      objectReference: {fileID: 0}
+    - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
+      propertyPath: LeftTransistors.Array.data[0].y
+      value: -0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
+      propertyPath: LeftTransistors.Array.data[0].z
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
       propertyPath: RightTransistors.Array.data[0].x
-      value: 20.6
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
       propertyPath: RightTransistors.Array.data[0].y
-      value: -0.6
+      value: 0.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects:
@@ -1003,11 +1027,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4786990982237607553, guid: 8ad3b0b8b92ff57488dc2487c9b47b5e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 20.67
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 4786990982237607553, guid: 8ad3b0b8b92ff57488dc2487c9b47b5e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.66
+      value: -0.7
       objectReference: {fileID: 0}
     - target: {fileID: 4786990982237607553, guid: 8ad3b0b8b92ff57488dc2487c9b47b5e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1055,6 +1079,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4786990982237607583, guid: 8ad3b0b8b92ff57488dc2487c9b47b5e, type: 3}
       propertyPath: direction.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4786990982237607583, guid: 8ad3b0b8b92ff57488dc2487c9b47b5e, type: 3}
+      propertyPath: direction.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

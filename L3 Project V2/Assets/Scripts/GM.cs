@@ -8,6 +8,8 @@ public class GM : MonoBehaviour
 
     public int transitionID = 0;
 
+    public int saveID = 0;
+
     public GameObject playerPref;
 
     // level data, gained from LevelData.cs
@@ -29,53 +31,75 @@ public class GM : MonoBehaviour
     public void SpawnPlayer(List<Enemy> Enemies)
     {
         Vector3 position = new Vector3();
+        bool foundIt = false;
 
         //check for id through all transition locations
-        switch (transitionID)
+
+        if (transitionID == 0)
         {
-            case < -20:
-                foreach (Vector3 pos in UpTrans)
+            List<Vector3>[] fullList = { UpTrans, DownTrans, LeftTrans, RightTrans };
+
+            foreach (List<Vector3> collection in fullList)
+            {
+                foreach (Vector3 vect in collection)
                 {
-                    if (transitionID == pos.z)
-                    {
-                        position = pos;
-                        break;
-                    }
+                    position = vect;
+                    break;
                 }
-                break;
-            case < 0:
-                foreach (Vector3 pos in RightTrans)
-                {
-                    if (transitionID == pos.z)
-                    {
-                        position = pos;
-                        break;
-                    }
-                }
-                break;
-            case > 20:
-                foreach (Vector3 pos in DownTrans)
-                {
-                    if (transitionID == pos.z)
-                    {
-                        position = pos;
-                        break;
-                    }
-                }
-                break;
-            case >= 0:
-                foreach (Vector3 pos in LeftTrans)
-                {
-                    if (transitionID == pos.z)
-                    {
-                        position = pos;
-                        break;
-                    }
-                }
-                break;
-            default:
-                break;
+            }
+
         }
+
+        if (!foundIt)
+        {
+            foreach (Vector3 pos in UpTrans)
+            {
+                if (transitionID == pos.z)
+                {
+                    position = pos;
+                    foundIt = true;
+                    break;
+                }
+            }
+        }
+        if (!foundIt)
+        {
+            foreach (Vector3 pos in DownTrans)
+            {
+                if (transitionID == pos.z)
+                {
+                    position = pos;
+                    foundIt = true;
+                    break;
+                }
+            }
+        }
+        if (!foundIt)
+        {
+            foreach (Vector3 pos in LeftTrans)
+            {
+                if (transitionID == pos.z)
+                {
+                    position = pos;
+                    foundIt = true;
+                    break;
+                }
+            }
+        }
+        if (!foundIt)
+        {
+            foreach (Vector3 pos in RightTrans)
+            {
+                if (transitionID == pos.z)
+                {
+                    position = pos;
+                    foundIt = true;
+                    break;
+                }
+            }
+        }
+
+
         if (position != Vector3.zero)
         {
             //spawn player
@@ -87,8 +111,15 @@ public class GM : MonoBehaviour
                 enemy.plyr = a.GetComponent<Player>();
 
             //don't let player just fall back through bottom doors
-            if (transitionID > 20)
-                a.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 20);
         }
+    }
+
+    public void AddToMap(int id)
+    {
+        Save save = Interface.ReadFromJsonFile<Save>(Application.persistentDataPath + "/gamesave" + saveID + ".save");
+        if (!save.mapList.Contains(id.ToString()))
+            save.mapList += id;
+        Interface.WriteToJsonFile(Application.persistentDataPath + "/gamesave" + saveID + ".save", save);
+        Debug.Log(save.mapList + ", " + saveID) ;
     }
 }

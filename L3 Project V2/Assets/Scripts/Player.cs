@@ -96,7 +96,6 @@ public class Player : MonoBehaviour
 
     public void SetLocalVariables()
     {
-        Debug.Log("This");
         healthBar = GameObject.Find("HealthBar").GetComponentsInChildren<SpriteRenderer>();
         dialogue = GameObject.Find("HealthBar").GetComponent<Dialogue>();
         deathAnim = GameObject.Find("NewCam2").GetComponent<Animator>();
@@ -686,7 +685,6 @@ public class Player : MonoBehaviour
 
     private void SetDash(bool trueFalse, int gravity, Vector2 dashSpeed)
     {
-        Debug.Log(trueFalse);
         dashing = trueFalse;
         tr.emitting = trueFalse;
         rb.gravityScale = gravity;
@@ -724,20 +722,44 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (((1 << collision.gameObject.layer) & transition) != 0 && transitioner != null && !firstTransition) // if it's a transition collision
+        if (((1 << collision.gameObject.layer) & transition) != 0 && transitioner != null) // if it's a transition collision
         {
-            transitioning = true;
-            Direction = collision.gameObject.GetComponent<Transitioner>().direction;
-            if (Direction.x <= 0) // make 'em walk
-                rb.velocity = new Vector2(Direction.x * lSpeedMult * speed, rb.velocity.y) + bounceEffect;
+            if (!firstTransition)
+            {
+                StartCoroutine(WalkAnim(collision.gameObject.GetComponent<Transitioner>(), 1));
+                // prepare any possible cutscenes
+                // save player data and input it into next scene
+                // output player into the correct location, and make them walk
+                // (make the corrosponding transitioners have the same name, so you can check for the right one, and output them correctly).
+                GM.Instance.transitionID = collision.gameObject.GetComponent<Transitioner>().id;
+                StartCoroutine(transitioner.LoadLevel(collision.gameObject.GetComponent<Transitioner>().nextScene));
+            }
             else
-                rb.velocity = new Vector2(Direction.x * rSpeedMult * speed, rb.velocity.y) + bounceEffect;
-            // prepare any possible cutscenes
-            // save player data and input it into next scene
-            // output player into the correct location, and make them walk
-            // (make the corrosponding transitioners have the same name, so you can check for the right one, and output them correctly).
-            StartCoroutine(transitioner.LoadLevel(collision.gameObject.GetComponent<Transitioner>().nextScene));
+                StartCoroutine(WalkAnim(collision.gameObject.GetComponent<Transitioner>(), -1));
         }
+    }
+
+    private IEnumerator WalkAnim(Transitioner t, int multiplier)
+    {
+        bool fT = firstTransition;
+        if (fT)
+            yield return new WaitForSeconds(0.4f);
+        transitioning = true;
+        Direction = multiplier * t.direction;
+        transform.localScale = new Vector2(t.direction.x * multiplier, 1);
+        if (facingRight && t.direction.x * multiplier < 0)
+            facingRight = false;
+        if (Direction.x <= 0) // make 'em walk
+            rb.velocity = new Vector2(Direction.x * lSpeedMult * speed, rb.velocity.y) + bounceEffect;
+        else
+            rb.velocity = new Vector2(Direction.x * rSpeedMult * speed, rb.velocity.y) + bounceEffect;
+        if (fT)
+            yield return new WaitForSeconds(0.2f);
+        else
+            yield return new WaitForSeconds(2f);
+        transitioning = false;
+        Direction = Vector2.zero;
+        rb.velocity = Vector2.zero;
     }
     private void OnTriggerExit2D(Collider2D collision)
     {

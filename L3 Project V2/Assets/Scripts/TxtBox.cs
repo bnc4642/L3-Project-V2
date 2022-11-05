@@ -66,7 +66,6 @@ public class TxtBox : MonoBehaviour
     {
         float textWidth = LayoutUtility.GetPreferredWidth(text.rectTransform); // This is the width the text would LIKE to be
         float parentWidth = parentRect.rect.width; // This is the actual width of the text's parent container
-        Debug.Log(longestCharWidth);
         return (textWidth > (parentWidth - longestCharWidth)); // Is the text almost too wide? Stop when the next character could be too wide
     }
 }

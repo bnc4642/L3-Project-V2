@@ -16,7 +16,7 @@ public class Interface : MonoBehaviour
 
     private int id = 0;
 
-    private int pageNum = -1;
+    public int pageNum = -1;
     private bool flipping;
     private bool tabBtnPressed = false;
 
@@ -24,11 +24,13 @@ public class Interface : MonoBehaviour
     public GameObject ExCanvas;
     public GameObject BookCanvas;
 
-    public GameObject[,] Pages = new GameObject[2, 9];
+    public List<GameObject> Pages = new List<GameObject>();
     public GameObject PageFlipper;
 
     public Sprite[] BookSprites;
     private List<Boss> bosses = new List<Boss>(); //for the save file
+
+    private Vector2[] taskPosition = new Vector2[4] { new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), };
 
 
     private void Start()
@@ -52,66 +54,36 @@ public class Interface : MonoBehaviour
 
     public void PreFlipPage(string dir) //called from the input box
     {
-        StartCoroutine(FlipPage(dir)); // this is so that the IEnumerator can be called
+        StartCoroutine(FlipPage(dir, true)); // this is so that the IEnumerator can be called
     }
 
-    private IEnumerator FlipPage(string Dir)
+    private IEnumerator FlipPage(string Dir, bool displayingPages)
     {
         if (flipping && !tabBtnPressed)
             yield return null; // if in the middle of flipping
 
-        if ((pageNum > 0 && Dir.Equals("l")) || (pageNum < 8 && Dir.Equals("r"))) // if navigating through the book
-        {
-            int LeftInput = 0;
-            if (Dir.Equals("l")) { LeftInput = 1; }
-            bool removing = Dir.Equals("l");
+        GetComponent<Animator>().speed = 1;
 
-            flipping = true;
-            PageFlipper.GetComponent<SpriteRenderer>().enabled = true; // show the animation of the page being flipped
-            PageFlipper.GetComponent<Animator>().Play("Flip_l", -1, 0);
-            yield return new WaitForSeconds(0.23f);
-            PageFlipper.GetComponent<SpriteRenderer>().enabled = false; // hide the animation after page has been flipped
-            flipping = false;
-            if (pageNum == 0 + LeftInput) // move the red tag
-            {
-                BookCanvas.transform.GetChild(6).gameObject.SetActive(removing);
-                BookCanvas.transform.GetChild(7).gameObject.SetActive(!removing);
-            }
-            else if (pageNum == 1 + LeftInput) // move the green tag
-            {
-                BookCanvas.transform.GetChild(2).gameObject.SetActive(removing);
-                BookCanvas.transform.GetChild(3).gameObject.SetActive(!removing);
-            }
-            else if (pageNum == 2 + LeftInput) // move the green tag
-            {
-                BookCanvas.transform.GetChild(4).gameObject.SetActive(removing);
-                BookCanvas.transform.GetChild(5).gameObject.SetActive(!removing);
-            }
-
-            if (removing)
-                pageNum--;
-            else
-                pageNum++;
-        }
-
-        else if (Dir.Equals("l") && pageNum == 0) // if turning to the left
+        if (Dir.Equals("l") && pageNum == 0) //close book
         {
             pageNum--;
             GetComponent<Animator>().enabled = true; // animate the closing
             GetComponent<Animator>().SetTrigger("Close"+id);
+            BookCanvas.transform.GetChild(0).gameObject.SetActive(false); // hide the navigation buttons
+            Pages[0].gameObject.SetActive(false);
+            Pages[1].gameObject.SetActive(false);
+            for (int i = 1; i < 8; i += 2)
+                BookCanvas.transform.GetChild(i).gameObject.SetActive(false);
             yield return new WaitForSeconds(0.33f);
+            GetComponent<Animator>().speed = 0;
             BookCanvas.transform.GetChild(8).gameObject.SetActive(true); // show the navigation button in the correct place, and show the return and delete buttons
             BookCanvas.transform.GetChild(12).gameObject.SetActive(true);
             BookCanvas.transform.GetChild(13).gameObject.SetActive(true);
             ExCanvas.transform.GetChild(id).gameObject.SetActive(true); // show the book button
-
-            BookCanvas.transform.GetChild(0).gameObject.SetActive(false); // hide the navigation buttons
-            for (int i = 1; i < 8; i += 2)
-                BookCanvas.transform.GetChild(i).gameObject.SetActive(false);
         }
-        else if (Dir.Equals("r") && pageNum == 0)
+        else if (Dir.Equals("r") && pageNum < 0) //open book
         {
-            GetComponent<Animator>().SetTrigger("Open"+id);
+            GetComponent<Animator>().SetTrigger("Open" + id);
             GetComponent<Animator>().speed = 1;
             BookCanvas.transform.GetChild(8).gameObject.SetActive(false); //remove options like delete save
             BookCanvas.transform.GetChild(12).gameObject.SetActive(false);
@@ -124,7 +96,51 @@ public class Interface : MonoBehaviour
             BookCanvas.transform.GetChild(0).gameObject.SetActive(true); //display the navigation buttons
             for (int i = 1; i < 8; i += 2)
                 BookCanvas.transform.GetChild(i).gameObject.SetActive(true);
-            
+
+            Pages[0].gameObject.SetActive(true);
+            Pages[1].gameObject.SetActive(true);
+        }
+        else if ((pageNum > 0 && Dir.Equals("l")) || (pageNum < 7 && Dir.Equals("r"))) // if navigating through the book
+        {
+            int LeftInput = 0;
+            if (Dir.Equals("l")) { LeftInput = 1; }
+            bool removing = Dir.Equals("l"); //if turning left
+
+            Pages[2 * (pageNum)].gameObject.SetActive(false);
+            Pages[2 * (pageNum) + 1].gameObject.SetActive(false);
+            flipping = true;
+            PageFlipper.GetComponent<SpriteRenderer>().enabled = true; // show the animation of the page being flipped
+            PageFlipper.GetComponent<Animator>().Play("Flip_"+Dir, -1, 0);
+            yield return new WaitForSeconds(0.23f);
+            GetComponent<Animator>().speed = 0;
+            PageFlipper.GetComponent<SpriteRenderer>().enabled = false; // hide the animation after page has been flipped
+            flipping = false;
+            if (pageNum == 0 + LeftInput) // move the red tag
+            {
+                BookCanvas.transform.GetChild(6).gameObject.SetActive(!removing);
+                BookCanvas.transform.GetChild(7).gameObject.SetActive(removing);
+            }
+            else if (pageNum == 1 + LeftInput) // move the green tag
+            {
+                BookCanvas.transform.GetChild(2).gameObject.SetActive(!removing);
+                BookCanvas.transform.GetChild(3).gameObject.SetActive(removing);
+            }
+            else if (pageNum == 2 + LeftInput) // move the green tag
+            {
+                BookCanvas.transform.GetChild(4).gameObject.SetActive(!removing);
+                BookCanvas.transform.GetChild(5).gameObject.SetActive(removing);
+            }
+
+            if (removing)
+                pageNum--;
+            else
+                pageNum++;
+
+            if (displayingPages)
+            {
+                Pages[2 * (pageNum)].gameObject.SetActive(true);
+                Pages[2 * (pageNum) + 1].gameObject.SetActive(true);
+            }
         }
         if (pageNum >= 0 && pageNum<=8)
             GetComponent<SpriteRenderer>().sprite = BookSprites[pageNum];
@@ -137,13 +153,16 @@ public class Interface : MonoBehaviour
         {
             tabBtnPressed = true;
             for (int i = 0; i > n; i--)
-                StartCoroutine(FlipPage("r"));
+            {
+                StartCoroutine(FlipPage("r", i == n + 1));
+                Debug.Log(n + 1 == i);
+            }
         }
         else if (n > 0) //going left
         {
             tabBtnPressed = true;
             for (int i = 0; i < n - 1; i++)
-                StartCoroutine(FlipPage("l"));
+                StartCoroutine(FlipPage("l", i == n - 2));
         }
 
         tabBtnPressed = false; //reset btn
@@ -152,6 +171,7 @@ public class Interface : MonoBehaviour
     public void SelectSave(int ID) //upon selection
     {
         id = ID;
+        GM.Instance.saveID = id;
         if (File.Exists(Application.persistentDataPath + "/gamesave" + ID + ".save")) // save exists
         {
             for (int i = 0; i < 3; i++)
@@ -165,7 +185,7 @@ public class Interface : MonoBehaviour
             GetComponent<Animator>().speed = 0;
 
             //set this object's position
-            transform.position = new Vector2((ID-1) * 13, -3.2f);
+            transform.position = new Vector2((ID-1) * 11.65f, -3.2f);
 
             //set out buttons properly and display this object to prepare for the animations
             GetComponent<SpriteRenderer>().enabled = true;
@@ -177,6 +197,7 @@ public class Interface : MonoBehaviour
             BookCanvas.transform.GetChild(8).gameObject.SetActive(true);
 
             LoadSave(ID);
+            FillBook();
         }
         else // new file
         {
@@ -197,6 +218,8 @@ public class Interface : MonoBehaviour
             WriteToJsonFile(Application.persistentDataPath + "/gamesave" + ID + ".save", FormSave(5, 0));
             ExitSaveTyping(ID, Canvas.transform.GetChild(ID).GetComponentsInChildren<TMPro.TMP_Text>()[1].text);
         }
+        else
+            DenySave(ID);
     }
 
     public void DenySave(int ID) // if save creation process is exited
@@ -221,9 +244,11 @@ public class Interface : MonoBehaviour
     {
         // if any noticable events occured, then save upon closing the book (PD < 0)
         Save save = new Save();
+        Debug.Log(save.Name);
 
         if (saves[id] == null) //if save doesn't exist, create one and set name
         {
+            Debug.Log(save.Name);
             save = new Save();
             save.Name = Canvas.transform.GetChild(id).GetComponentsInChildren<TMPro.TMP_Text>()[1].text;
         }
@@ -237,8 +262,14 @@ public class Interface : MonoBehaviour
             if (!boss.defeated)
                 save.EncounterProgress = encounterProgress;
         }
+        Debug.Log(save.mapList); 
 
         save.Health = health;
+        Debug.Log(save.mapList);
+
+        saves[id] = save;
+
+        Debug.Log(save.mapList);
 
         return save;
     }
@@ -313,6 +344,38 @@ public class Interface : MonoBehaviour
             File.Delete(Application.persistentDataPath + "/gamesave" + id + ".save");
         ExCanvas.transform.GetChild(id).GetComponentInChildren<TMPro.TMP_Text>().text = "New Game"; //reset name
         GameEvents.current.SetTxtBoxValue(id, "New Game");
+        saves[id] = null;
         Return();
+    }
+
+    private void FillBook()
+    {
+        TMPro.TextMeshProUGUI[] skillboxes = Pages[2].GetComponentsInChildren<TMPro.TextMeshProUGUI>();
+        skillboxes[0].text = saves[id].Name; //set name
+
+        skillboxes[2].text = "";
+        for (int i = 0; i < 6; i++)
+            if (saves[id].Skills[i, 1] == "1")
+                skillboxes[2].text += saves[id].Skills[i, 0] + "\n"; //set skills
+
+        Pages[3].GetComponentsInChildren<TMPro.TextMeshProUGUI>()[2].text = "";
+        for (int i = 0; i < 6; i++)
+            foreach (var t in saves[id].Inventory)
+                Pages[3].GetComponentsInChildren<TMPro.TextMeshProUGUI>()[2].text += t.GetType().Name + "\n"; //set inventory
+
+        Debug.Log(id + ", " + saves[id].mapList);
+        foreach (char scene in saves[id].mapList.ToCharArray())
+        {
+            int n = Int32.Parse(scene.ToString());
+            if (n > 9)
+                Pages[4].transform.GetChild(n-9).gameObject.SetActive(true);
+            else if (n < 9)
+                Pages[5].transform.GetChild(n).gameObject.SetActive(true);
+            else
+            {
+                Pages[4].transform.GetChild(0).gameObject.SetActive(true);
+                Pages[5].transform.GetChild(n).gameObject.SetActive(true);
+            }
+        }
     }
 }

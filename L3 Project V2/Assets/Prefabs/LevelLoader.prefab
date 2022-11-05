@@ -148,6 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc36a28ff57382e408e719615f51f56c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 0
   xMinToYMax: []
   UpTransistors: []
   DownTransistors: []

@@ -5054,6 +5054,7 @@ MonoBehaviour:
   - Tom
   - Luke
   rb: {fileID: 1715739779545841957}
+  dialogue: {fileID: 0}
   State: 2
   Interactable: {fileID: 0}
   Direction: {x: 0, y: 0}

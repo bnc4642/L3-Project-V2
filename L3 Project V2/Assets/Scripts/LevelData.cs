@@ -5,6 +5,8 @@ using UnityEngine;
 public class LevelData : MonoBehaviour
 {
     //variables
+    public int id;
+
     public List<float> xMinToYMax = new List<float>(4); // xMin, xMax, yMin, yMax
 
     public List<Vector3> UpTransistors = new List<Vector3>();
@@ -25,5 +27,7 @@ public class LevelData : MonoBehaviour
         GM.Instance.RightTrans = RightTransistors;
 
         GM.Instance.SpawnPlayer(Enemies);
+
+        GM.Instance.AddToMap(id);
     }
 }
