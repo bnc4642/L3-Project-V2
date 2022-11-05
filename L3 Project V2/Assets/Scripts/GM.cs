@@ -6,11 +6,15 @@ public class GM : MonoBehaviour
 {
     public static GM Instance { get; private set; }
 
+    public TaskManager TaskManager;
+
     public int transitionID = 0;
 
     public int saveID = 0;
 
     public GameObject playerPref;
+
+    public GameObject Player;
 
     // level data, gained from LevelData.cs
     public List<float> xToY = new List<float>(); // 4 floats, from xMin to yMin to xMax to yMax
@@ -103,12 +107,8 @@ public class GM : MonoBehaviour
         if (position != Vector3.zero)
         {
             //spawn player
-            GameObject a = Instantiate(playerPref, position, Quaternion.Euler(0, 0, 0));
-            a.GetComponent<Player>().SetLocalVariables();
-
-            //give references
-            foreach (Enemy enemy in Enemies)
-                enemy.plyr = a.GetComponent<Player>();
+            Player = Instantiate(playerPref, position, Quaternion.Euler(0, 0, 0));
+            Player.GetComponent<Player>().SetLocalVariables();
 
             //don't let player just fall back through bottom doors
         }

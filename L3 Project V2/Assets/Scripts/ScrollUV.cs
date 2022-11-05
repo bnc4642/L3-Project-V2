@@ -4,16 +4,26 @@ using UnityEngine;
 
 public class ScrollUV : MonoBehaviour
 {
-    void Update()
+    public Transform cam;
+    public float Speed = 1;
+
+    float length;
+
+    Vector2 physicalOffset;
+    void Start()
     {
-        MeshRenderer mr = GetComponent<MeshRenderer>();
+        physicalOffset = transform.position;
+        length = GetComponent<SpriteRenderer>().bounds.size.x;
+    }
 
-        Material mat = mr.material;
+    void FixedUpdate()
+    {
+        float temp = cam.position.x * (1 - Speed);
+        Vector2 offset = cam.position * Speed;
 
-        Vector2 offset = mat.mainTextureOffset;
+        transform.position = physicalOffset + offset;
 
-        offset.x += Time.deltaTime * 0.02f;
-
-        mat.mainTextureOffset = offset;
+        if (temp > physicalOffset.x + length) physicalOffset.x += length;
+        else if (temp < physicalOffset.x - length) physicalOffset.x -= length;
     }
 }

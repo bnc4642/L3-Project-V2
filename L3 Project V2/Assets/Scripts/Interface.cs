@@ -28,6 +28,7 @@ public class Interface : MonoBehaviour
     public GameObject PageFlipper;
 
     public Sprite[] BookSprites;
+    public GameObject TaskObject;
     private List<Boss> bosses = new List<Boss>(); //for the save file
 
     private Vector2[] taskPosition = new Vector2[4] { new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), };
@@ -375,6 +376,25 @@ public class Interface : MonoBehaviour
             {
                 Pages[4].transform.GetChild(0).gameObject.SetActive(true);
                 Pages[5].transform.GetChild(n).gameObject.SetActive(true);
+            }
+        }
+
+        int taskCounter = 0;
+        int secondaryCounter = 6;
+        foreach (Task task in GM.Instance.TaskManager.Tasks)
+        {
+            GameObject t = Instantiate(TaskObject);
+            t.transform.position = taskPosition[taskCounter];
+            t.transform.parent = Pages[secondaryCounter].transform;
+            TMPro.TextMeshProUGUI[] texts = t.GetComponentsInChildren<TMPro.TextMeshProUGUI>();
+            texts[0].text = task.Title;
+            texts[1].text = task.Description;
+
+            if (taskCounter < 4) taskCounter++;
+            else
+            {
+                secondaryCounter++;
+                taskCounter = 0;
             }
         }
     }

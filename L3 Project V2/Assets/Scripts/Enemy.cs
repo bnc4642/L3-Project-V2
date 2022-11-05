@@ -23,7 +23,6 @@ public class Enemy : MonoBehaviour
     private float timeDisabled = 0.1f;
     public float invinciFrames = 0.2f;
     public LayerMask player;
-    public Player plyr;
     public LayerMask playerWeapon;
 
     public bool startled = false;
@@ -38,8 +37,9 @@ public class Enemy : MonoBehaviour
 
     public virtual void Init()
     {
+
         anim = GetComponent<Animator>();
-        aiPath.target = plyr.transform;
+        aiPath.target = GM.Instance.Player.transform;
     }
 
     void Start()
@@ -71,7 +71,7 @@ public class Enemy : MonoBehaviour
             currentState = state;
         }
         if (hitting)
-            plyr.EnterHitState(this.gameObject, dmg);
+            GM.Instance.Player.GetComponent<Player>().EnterHitState(this.gameObject, dmg);
     }
 
     public virtual int ToAttack()
