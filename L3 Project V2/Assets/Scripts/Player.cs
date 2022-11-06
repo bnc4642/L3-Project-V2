@@ -311,9 +311,7 @@ public class Player : MonoBehaviour
         if (health <= 0)
         {
             if (dashingTime - 0.5f > Time.time)
-            {
                 SetDash(false, 10, Vector2.zero);
-            }
             StartCoroutine(Die());
         }
     }
@@ -808,5 +806,25 @@ public class Player : MonoBehaviour
         }
         else if (floating)
             floating = false;
+    }
+
+    public void SetStates(int Health, int EnergyLevel)
+    {
+        int dmg = 5 - Health;
+        for (int i = 0; i < dmg; i++)
+        {
+            health -= 1;
+            healthBar[health].enabled = false;
+        }
+        energyLevel = EnergyLevel;
+        energyOrb.sprite = orbs[energyLevel];
+        //which skills are allowed at this point
+    }
+
+    private void OnDisable()
+    {
+        //store state
+        GM.Instance.health = health;
+        GM.Instance.energyLevel = energyLevel;
     }
 }

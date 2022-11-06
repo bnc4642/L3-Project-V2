@@ -2921,7 +2921,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
       propertyPath: xMinToYMax.Array.data[0]
-      value: 0
+      value: -9
       objectReference: {fileID: 0}
     - target: {fileID: 8619144187648911847, guid: 7b1a33e20664d3b4c8557a0768333ad1, type: 3}
       propertyPath: xMinToYMax.Array.data[1]

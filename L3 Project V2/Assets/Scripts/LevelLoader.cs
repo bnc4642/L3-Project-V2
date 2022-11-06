@@ -10,6 +10,15 @@ public class LevelLoader : MonoBehaviour
 
     public void OnEscape()
     {
+        foreach (Enemy E in GameObject.FindObjectsOfType<Enemy>())
+        {
+            E.Pause();
+        }
+
+        //GM.Instance.Player.Pause()
+
+        Debug.Log("Escape");
+
         StartCoroutine(LoadLevel(0)); //exit levels and just go to inventory scene. Needs some custom code desperately
     }
 

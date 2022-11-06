@@ -24,6 +24,9 @@ public class GM : MonoBehaviour
     public List<Vector3> LeftTrans = new List<Vector3>();
     public List<Vector3> RightTrans = new List<Vector3>();
 
+    public int health = 5;
+    public int energyLevel = 0;
+
     void Awake()
     {
         if (Instance == null) 
@@ -109,6 +112,7 @@ public class GM : MonoBehaviour
             //spawn player
             Player = Instantiate(playerPref, position, Quaternion.Euler(0, 0, 0));
             Player.GetComponent<Player>().SetLocalVariables();
+            Player.GetComponent<Player>().SetStates(health, energyLevel);
 
             //don't let player just fall back through bottom doors
         }
@@ -120,6 +124,5 @@ public class GM : MonoBehaviour
         if (!save.mapList.Contains(id.ToString()))
             save.mapList += id;
         Interface.WriteToJsonFile(Application.persistentDataPath + "/gamesave" + saveID + ".save", save);
-        Debug.Log(save.mapList + ", " + saveID) ;
     }
 }
