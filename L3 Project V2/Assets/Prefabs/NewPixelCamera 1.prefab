@@ -661,6 +661,7 @@ GameObject:
   - component: {fileID: 6741541919235543957}
   - component: {fileID: 6741541919235543956}
   - component: {fileID: 6741541919235543954}
+  - component: {fileID: 2026410946539971831}
   m_Layer: 0
   m_Name: NewCam1
   m_TagString: Untagged
@@ -760,6 +761,33 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &2026410946539971831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6741541919235543953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d7460f1d3ac25243b1b9fecf3405b59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settings:
+    pixelsPerUnit: 6
+    renderingLayerMask:
+      mask: 0
+    layerMask:
+      serializedVersion: 2
+      m_Bits: 32768
+    textureScale: 1
+    preview: 0
+  simulation:
+    stiffness: 60
+    damping: 3
+    blurStrength: 0.5
+    maxDeltaTime: 0.034
+  blitShader: {fileID: 4800000, guid: f34315e2ae49499e9bad3c7cee74f676, type: 3}
 --- !u!1 &6741541919539777318
 GameObject:
   m_ObjectHideFlags: 0

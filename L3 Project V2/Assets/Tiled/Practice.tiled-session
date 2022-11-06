@@ -5,8 +5,8 @@
     },
     "activeFile": "Forest1.tmx",
     "expandedProjectPaths": [
-        "TilesetPacks",
-        "."
+        ".",
+        "TilesetPacks"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
@@ -15,10 +15,10 @@
         },
         "Forest1.tmx": {
             "scale": 1.5,
-            "selectedLayer": 1,
+            "selectedLayer": -1,
             "viewCenter": {
-                "x": 238.66666666666666,
-                "y": 75.33333333333331
+                "x": 256,
+                "y": 85.33333333333331
             }
         },
         "Forest2.tmx": {
@@ -77,7 +77,7 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 400,
-                "y": 399
+                "y": 399.5
             }
         },
         "rule1.tmx": {
@@ -118,6 +118,7 @@
     ],
     "project": "Practice.tiled-project",
     "recentFiles": [
+        "Forest1.tmx",
         "mapPractice.tmx",
         "TilesetPacks/Forest.tsx",
         "rule1.tmx",
@@ -126,7 +127,6 @@
         "TilesetPacks/BetterGrassTerain.tsx",
         "Forest2.tmx",
         "TilesetPacks/ForestObjects.tsx",
-        "Forest1.tmx",
         "TavernExterior.tmx",
         "Test.tmx",
         "tileRule1.tmx"

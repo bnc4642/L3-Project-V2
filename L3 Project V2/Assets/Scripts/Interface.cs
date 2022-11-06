@@ -156,7 +156,6 @@ public class Interface : MonoBehaviour
             for (int i = 0; i > n; i--)
             {
                 StartCoroutine(FlipPage("r", i == n + 1));
-                Debug.Log(n + 1 == i);
             }
         }
         else if (n > 0) //going left
@@ -245,11 +244,9 @@ public class Interface : MonoBehaviour
     {
         // if any noticable events occured, then save upon closing the book (PD < 0)
         Save save = new Save();
-        Debug.Log(save.Name);
 
         if (saves[id] == null) //if save doesn't exist, create one and set name
         {
-            Debug.Log(save.Name);
             save = new Save();
             save.Name = Canvas.transform.GetChild(id).GetComponentsInChildren<TMPro.TMP_Text>()[1].text;
         }
@@ -262,15 +259,11 @@ public class Interface : MonoBehaviour
         {
             if (!boss.defeated)
                 save.EncounterProgress = encounterProgress;
-        }
-        Debug.Log(save.mapList); 
+        } 
 
         save.Health = health;
-        Debug.Log(save.mapList);
 
         saves[id] = save;
-
-        Debug.Log(save.mapList);
 
         return save;
     }
@@ -364,7 +357,7 @@ public class Interface : MonoBehaviour
             foreach (var t in saves[id].Inventory)
                 Pages[3].GetComponentsInChildren<TMPro.TextMeshProUGUI>()[2].text += t.GetType().Name + "\n"; //set inventory
 
-        Debug.Log(id + ", " + saves[id].mapList);
+
         foreach (char scene in saves[id].mapList.ToCharArray())
         {
             int n = Int32.Parse(scene.ToString());
