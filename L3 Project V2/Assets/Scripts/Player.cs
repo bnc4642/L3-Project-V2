@@ -33,7 +33,7 @@ public class Player : MonoBehaviour
 
     //the locations for checks
     private readonly float[,] attackPos = new float[3,2] { { 0.21f, -0.98f }, { 1f, -0.1f }, { 0.37f, 0.57f } };
-    private const float width = 1.1f; //used once
+    private const float groundCheckwidth = 1f;
     private const float wallRadius = 0.15f;
     private readonly Vector2 wallPos1 = new Vector2(-0.67f, -0.25f);
     private readonly Vector2 wallPos2 = new Vector2(0.48f, -0.25f);
@@ -206,7 +206,7 @@ public class Player : MonoBehaviour
             yield return new WaitForSeconds(dashingTime - 0.5f - Time.time);
         if (attackingTime > Time.time)
             yield return new WaitForSeconds(attackingTime - Time.time);
-        if (!Healing || energyLevel < 3) yield break;
+        if (!Healing || energyLevel < 3 || health == 5) yield break;
         HealingTime = Time.time + 1;
         HealCancelled = false;
         rb.velocity = Vector2.zero;
@@ -252,7 +252,13 @@ public class Player : MonoBehaviour
         {
             StartCoroutine(ChangeEnergy(-1));
             floatTimer = Time.time + 0.4f;
-            
+            if (energyLevel < 1)
+            {
+                floating = false;
+                rb.gravityScale = 10;
+                floatTimer = 0;
+                Debug.Log("Working");
+            }
         }
     }
 
@@ -529,8 +535,12 @@ public class Player : MonoBehaviour
 
         if (bounceEffect.x > 0.05 || bounceEffect.x < -0.05)
             bounceEffect.x *= 0.5f;
+        else
+            bounceEffect.x = 0;
         if (bounceEffect.y > 0.05f)
             bounceEffect.y *= 0.6f;
+        else
+            bounceEffect.y = 0;
         if (lSpeedMult < 1)
             lSpeedMult += 0.05f;
         if (rSpeedMult < 1)
@@ -698,12 +708,12 @@ public class Player : MonoBehaviour
         }
     }
 
-    public bool IsGrounded() { return Physics2D.OverlapBox(groundCheck.position, new Vector2(width, 0.1f), 0, groundLayer); }
+    public bool IsGrounded() { return Physics2D.OverlapBox(groundCheck.position, new Vector2(groundCheckwidth, 0.1f), 0, groundLayer); }
     public bool IsWalled() 
     {
-        if (Physics2D.OverlapCircle((Vector2)transform.position + wallPos1, wallRadius, groundLayer) && Direction.x < 0)
+        if (Physics2D.OverlapCircle((Vector2)transform.position + wallPos1, wallRadius, LayerMask.GetMask("Walls")) && Direction.x < 0)
             return true;
-        else if (Physics2D.OverlapCircle((Vector2)transform.position + wallPos2, wallRadius, groundLayer) && Direction.x > 0)
+        else if (Physics2D.OverlapCircle((Vector2)transform.position + wallPos2, wallRadius, LayerMask.GetMask("Walls")) && Direction.x > 0)
             return true;
         else
             return false;

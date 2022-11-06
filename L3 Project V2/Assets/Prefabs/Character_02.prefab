@@ -4966,7 +4966,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1647647506, guid: 530c7fa1c1bd31b4a9d45ee8ccc6f41b, type: 3}
+  m_Sprite: {fileID: 34635174, guid: cd344794e90bc004ea15613ab9713eb9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5100,18 +5100,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.09219277, y: -0.15298456}
+  m_Offset: {x: -0.417324, y: -0.41115272}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.16666667, y: 0.57894737}
-    oldSize: {x: 3, y: 3.1666667}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 3.3333333, y: 3.3333333}
     newSize: {x: 19.249998, y: 19.25206}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.16184, y: 3.362533}
+  m_Size: {x: 1.1828157, y: 2.5259044}
   m_EdgeRadius: 0
 --- !u!96 &1715739779545841944
 TrailRenderer:
@@ -10113,7 +10113,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1715739780644857293}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.08, y: -1.85, z: 0}
+  m_LocalPosition: {x: -0.33, y: -1.85, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10133,18 +10133,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.00284639, y: 1.5971802}
+  m_Offset: {x: -0.337324, y: 1.438848}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.47058824, y: 0.45454547}
-    oldSize: {x: 1.0625, y: 1.375}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 3.3333333, y: 3.3333333}
     newSize: {x: 19.249998, y: 19.25206}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.1493618, y: 3.167908}
+  m_Size: {x: 1.1828157, y: 2.5259044}
   m_EdgeRadius: 0
 --- !u!1 &2200779953408122916
 GameObject:
