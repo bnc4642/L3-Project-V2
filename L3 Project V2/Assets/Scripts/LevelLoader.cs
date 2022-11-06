@@ -8,16 +8,14 @@ public class LevelLoader : MonoBehaviour
 {
     public Animator Transition;
 
-    public void OnEscape()
+    public void EnterGame()
     {
-        foreach (Enemy E in GameObject.FindObjectsOfType<Enemy>())
-        {
-            E.Pause();
-        }
+        Interface interf = GameObject.FindObjectOfType<Interface>();
 
-        //GM.Instance.Player.Pause()
+        foreach (Transform btn in interf.BookCanvas.GetComponentsInChildren<Transform>())
+            btn.gameObject.SetActive(false);
 
-        Debug.Log("Escape");
+        Save s = Interface.ReadFromJsonFile<Save>(Application.persistentDataPath + "/gamesave" + GM.Instance.saveID + ".save");
 
         StartCoroutine(LoadLevel(0)); //exit levels and just go to inventory scene. Needs some custom code desperately
     }

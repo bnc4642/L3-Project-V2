@@ -22,9 +22,7 @@ public class GameEvents : MonoBehaviour
     public void TxtBoxSelect(int id)
     {
         if (onTxtBoxSelect != null)
-        {
             onTxtBoxSelect(id); //call event to subscribers
-        }
     }
     public void TxtBoxDeselect(int id)
     {

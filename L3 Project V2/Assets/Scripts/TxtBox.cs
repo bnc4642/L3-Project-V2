@@ -12,7 +12,7 @@ public class TxtBox : MonoBehaviour
     bool callBack = false;
 
     public int ID;
-    private void Start()
+    private void Awake()
     {
         //subscribe to events
         GameEvents.current.onTxtBoxSelect += TxtBoxSelect;

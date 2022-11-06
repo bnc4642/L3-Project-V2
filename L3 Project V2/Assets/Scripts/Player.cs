@@ -116,7 +116,21 @@ public class Player : MonoBehaviour
             jumped = false;
     }
 
-    public void OnStab(InputValue value)
+    public void OnEscape(InputValue value)
+    {
+        foreach (Enemy E in GameObject.FindObjectsOfType<Enemy>())
+        {
+            E.Pause();
+        }
+
+        //Player.Pause()
+
+        Debug.Log("Escape");
+
+        StartCoroutine(transitioner.LoadLevel(0)); //exit levels and just go to inventory scene. Needs some custom code desperately
+    }
+
+        public void OnStab(InputValue value)
     {
         StartCoroutine(EnterAttackState(3));
     }

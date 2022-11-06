@@ -14,7 +14,7 @@ public class Interface : MonoBehaviour
     //variables
     private Save[] saves = new Save[3];
 
-    private int id = 0;
+    public int id = 0;
 
     public int pageNum = -1;
     private bool flipping;
@@ -80,6 +80,7 @@ public class Interface : MonoBehaviour
             BookCanvas.transform.GetChild(8).gameObject.SetActive(true); // show the navigation button in the correct place, and show the return and delete buttons
             BookCanvas.transform.GetChild(12).gameObject.SetActive(true);
             BookCanvas.transform.GetChild(13).gameObject.SetActive(true);
+            BookCanvas.transform.GetChild(14).gameObject.SetActive(false);
             ExCanvas.transform.GetChild(id).gameObject.SetActive(true); // show the book button
         }
         else if (Dir.Equals("r") && pageNum < 0) //open book
@@ -100,6 +101,7 @@ public class Interface : MonoBehaviour
 
             Pages[0].gameObject.SetActive(true);
             Pages[1].gameObject.SetActive(true);
+            BookCanvas.transform.GetChild(14).gameObject.SetActive(true);
         }
         else if ((pageNum > 0 && Dir.Equals("l")) || (pageNum < 7 && Dir.Equals("r"))) // if navigating through the book
         {
@@ -357,6 +359,11 @@ public class Interface : MonoBehaviour
             foreach (var t in saves[id].Inventory)
                 Pages[3].GetComponentsInChildren<TMPro.TextMeshProUGUI>()[2].text += t.GetType().Name + "\n"; //set inventory
 
+
+        foreach (Transform location in Pages[4].transform.GetComponentsInChildren<Transform>())
+            location.gameObject.SetActive(false);
+        foreach (Transform location in Pages[5].transform.GetComponentsInChildren<Transform>())
+            location.gameObject.SetActive(false);
 
         foreach (char scene in saves[id].mapList.ToCharArray())
         {
