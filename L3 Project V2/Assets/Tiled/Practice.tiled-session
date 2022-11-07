@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "TavernExterior.tmx",
+    "activeFile": "Forest4.tmx",
     "expandedProjectPaths": [
         "TilesetPacks",
         "."
@@ -35,6 +35,14 @@
             "viewCenter": {
                 "x": 273,
                 "y": 104
+            }
+        },
+        "Forest4.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 382.66666666666663,
+                "y": 221.33333333333331
             }
         },
         "TavernExterior.tmx": {
@@ -115,12 +123,16 @@
     "map.width": 32,
     "openFiles": [
         "TilesetPacks/Bricks.tsx",
-        "TavernExterior.tmx"
+        "TavernExterior.tmx",
+        "Forest3.tmx",
+        "Forest4.tmx"
     ],
     "project": "Practice.tiled-project",
     "recentFiles": [
         "TilesetPacks/Bricks.tsx",
         "TavernExterior.tmx",
+        "Forest3.tmx",
+        "Forest4.tmx",
         "mapPractice.tmx",
         "TilesetPacks/ForestObjects.tsx",
         "TilesetPacks/BetterGrassTerain.tsx",
@@ -128,9 +140,7 @@
         "rule1.tmx",
         "TilesetPacks/Forest.tsx",
         "Forest2.tmx",
-        "Forest1.tmx",
-        "Test.tmx",
-        "tileRule1.tmx"
+        "Forest1.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

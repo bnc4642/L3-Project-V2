@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask groundLayer; //the layermasks are used to check collisions
     [SerializeField] private LayerMask enemy;
     [SerializeField] private LayerMask transition;
+    [SerializeField] private LayerMask items;
     [SerializeField] private List<Sprite> spriteList = new List<Sprite>(); //used in dialogue
     [SerializeField] private List<string> nameList = new List<string>(); //parallel with spriteList
     public Rigidbody2D rb;
@@ -125,9 +126,7 @@ public class Player : MonoBehaviour
             GM.Instance.InVentory = true;
 
             foreach (Enemy E in GameObject.FindObjectsOfType<Enemy>())
-            {
                 E.Pause();
-            }
 
             StartCoroutine(TotalPostponer(true));
             Pausing = true;
@@ -776,6 +775,15 @@ public class Player : MonoBehaviour
             }
             else
                 StartCoroutine(WalkAnim(collision.gameObject.GetComponent<Transitioner>(), -1));
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (((1 << collision.gameObject.layer) & items) != 0) // if it's an item collision
+        {
+            GM.Instance.Save.InventCount[0]++;
+            Destroy(collision.gameObject);
         }
     }
 

@@ -178,6 +178,7 @@ public class Interface : MonoBehaviour
     {
         id = ID;
         GM.Instance.saveID = id;
+        GM.Instance.Save = saves[id];
         if (saves[id] != null) // save exists
         {
             for (int i = 0; i < 3; i++)
@@ -202,7 +203,6 @@ public class Interface : MonoBehaviour
             BookCanvas.transform.GetChild(8).GetComponent<RectTransform>().localPosition = btnPos;
             BookCanvas.transform.GetChild(8).gameObject.SetActive(true);
 
-            LoadSave(ID);
             FillBook();
         }
         else // new file
@@ -224,14 +224,6 @@ public class Interface : MonoBehaviour
 
             Save save = new Save();
             save.Name = Canvas.transform.GetChild(id).GetComponentsInChildren<TMPro.TMP_Text>()[1].text;
-
-            //set important variables within save to be saved
-
-            foreach (Boss boss in bosses)
-            {
-                if (!boss.defeated)
-                    save.EncounterProgress = 0;
-            }
 
             saves[id] = save;
 
@@ -258,38 +250,6 @@ public class Interface : MonoBehaviour
         GameEvents.current.TxtBoxDeselect(ID);
         ExCanvas.transform.GetChild(ID).GetChild(0).gameObject.SetActive(true);
         ExCanvas.transform.GetChild(ID).GetComponentInChildren<TMPro.TextMeshProUGUI>().text = name; //display and set text on button
-    }
-
-    private Save FormSave(int health, int encounterProgress) // should be called upon pressing esc, saving the world, and upon random points. The values are updated upon changes like interactions.
-    {
-        // if any noticable events occured, then save upon closing the book (PD < 0)
-        Save save = new Save();
-
-        if (saves[id] == null) //if save doesn't exist, create one and set name
-        {
-            save = new Save();
-            save.Name = Canvas.transform.GetChild(id).GetComponentsInChildren<TMPro.TMP_Text>()[1].text;
-        }
-        else
-            save = saves[id];
-
-        //set important variables within save to be saved
-
-        foreach (Boss boss in bosses)
-        {
-            if (!boss.defeated)
-                save.EncounterProgress = encounterProgress;
-        }
-
-        saves[id] = save;
-
-        return save;
-    }
-
-    private void LoadSave(int ID) // should be called upon entering the game. It forms the world.
-    {
-        //player.health = saves[ID].Health;
-        // close the book, and create an instance of the inventory(values)
     }
 
     public static void WriteToJsonFile<T>(string filePath, T objectToWrite, bool append = false) where T : new() //physically save the save files onto device
@@ -383,8 +343,9 @@ public class Interface : MonoBehaviour
 
         Pages[3].GetComponentsInChildren<TMPro.TextMeshProUGUI>()[2].text = "";
         for (int i = 0; i < 6; i++)
-            foreach (var t in saves[id].Inventory)
-                Pages[3].GetComponentsInChildren<TMPro.TextMeshProUGUI>()[2].text += t.GetType().Name + "\n"; //set inventory
+            foreach (int t in GM.Instance.Save.InventCount)
+                if (t > 0)
+                    Pages[3].GetComponentsInChildren<TMPro.TextMeshProUGUI>()[2].text += GM.Instance.Save.Items[i] + " x" + t + "\n"; //set inventory
 
 
         foreach (Transform location in Pages[4].transform.GetComponentsInChildren<Transform>())

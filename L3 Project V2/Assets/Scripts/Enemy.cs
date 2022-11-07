@@ -35,6 +35,8 @@ public class Enemy : MonoBehaviour
     public int dmg = 3;
     private bool paused = false;
 
+    public GameObject Food;
+
     public virtual void Init()
     {
 
@@ -177,6 +179,11 @@ public class Enemy : MonoBehaviour
         GetComponentsInChildren<ParticleSystem>()[2].Play();
 
         GetComponent<SpriteRenderer>().enabled = false;
+        for (int i = 0; i < Random.Range(1, 3); i++)
+        {
+            GameObject f = Instantiate(Food);
+            f.transform.position = transform.position;
+        }
 
         GetComponent<Collider2D>().enabled = false;
         GetComponentInParent<AIPath>().enabled = false;

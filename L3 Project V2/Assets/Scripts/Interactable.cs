@@ -31,4 +31,14 @@ public class Interactable : MonoBehaviour
         // switch case style
         //custom for each interaction script
     }
+
+    private void Awake()
+    {
+        DialogueNums = GM.Instance.Save.MinorInteractions[id];
+    }
+
+    private void OnDisable()
+    {
+        GM.Instance.Save.MinorInteractions[id] = DialogueNums;
+    }
 }

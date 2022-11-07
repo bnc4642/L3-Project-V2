@@ -15,7 +15,7 @@ public class GM : MonoBehaviour
 
     public GameObject playerPref;
 
-    public Save Save = new Save();
+    public Save Save;
     public GameObject Player;
 
     // level data, gained from LevelData.cs
@@ -33,6 +33,8 @@ public class GM : MonoBehaviour
 
     void Awake()
     {
+        Save = Interface.ReadFromJsonFile<Save>(Application.persistentDataPath + "/gamesave" + 0 + ".save");
+
         if (Instance == null)
         {
             Instance = this; // this is a singleton, so only one can exist in the scene
@@ -129,5 +131,10 @@ public class GM : MonoBehaviour
         if (!Save.mapList.Contains(id.ToString()))
             Save.mapList += id;
         Interface.WriteToJsonFile(Application.persistentDataPath + "/gamesave" + saveID + ".save", Save);
+    }
+
+    public void SaveLocation(int index)
+    {
+        Save.SavePoint = new int[] { index, transitionID };
     }
 }

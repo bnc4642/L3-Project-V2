@@ -45,8 +45,9 @@ public class Ventory : MonoBehaviour
 
         Pages[3].GetComponentsInChildren<TMPro.TextMeshProUGUI>()[2].text = "";
         for (int i = 0; i < 6; i++)
-            foreach (var t in GM.Instance.Save.Inventory)
-                Pages[3].GetComponentsInChildren<TMPro.TextMeshProUGUI>()[2].text += t.GetType().Name + "\n"; //set inventory
+            foreach (int t in GM.Instance.Save.InventCount)
+                if (t > 0)
+                    Pages[3].GetComponentsInChildren<TMPro.TextMeshProUGUI>()[2].text += GM.Instance.Save.Items[i] + " x" + GM.Instance.Save.InventCount[i] + "\n"; //set inventory
 
 
         foreach (Transform location in Pages[4].transform.GetComponentsInChildren<Transform>())
@@ -217,6 +218,8 @@ public class Ventory : MonoBehaviour
         GM.Instance.Player.GetComponent<Player>().rb.gravityScale = 10;
         GM.Instance.Player.GetComponentInChildren<CameraManager>().Pause(false); // camera unpause
         GM.Instance.InVentory = false;
+        foreach (Enemy E in GameObject.FindObjectsOfType<Enemy>())
+            E.Pause();
         SceneManager.UnloadSceneAsync(6);
     }
 

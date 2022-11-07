@@ -5038,6 +5038,9 @@ MonoBehaviour:
   transition:
     serializedVersion: 2
     m_Bits: 512
+  items:
+    serializedVersion: 2
+    m_Bits: 65536
   spriteList:
   - {fileID: -649239621, guid: ecb4a062145419a428aa05add18445c3, type: 3}
   - {fileID: -333304391, guid: ecb4a062145419a428aa05add18445c3, type: 3}
@@ -5062,6 +5065,7 @@ MonoBehaviour:
   AttackStyle: 0
   AttackingDirection: 0
   HealingTime: 0
+  Pausing: 0
   Grounded: 0
   Walled: 0
   DoubleAtk: 0

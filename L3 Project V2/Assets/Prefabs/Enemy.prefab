@@ -9878,7 +9878,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 632ae7eb1d4ce49d38a1e38ee7efe7c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guid: 9564d062db3fa9b6-75c36ec8099ce5bf
+  guid: 721e73ac4fb9fc9c-c47a1b5f0f11d50c
 --- !u!1 &3816226684780231719
 GameObject:
   m_ObjectHideFlags: 0
@@ -10010,7 +10010,6 @@ MonoBehaviour:
   player:
     serializedVersion: 2
     m_Bits: 128
-  plyr: {fileID: 0}
   playerWeapon:
     serializedVersion: 2
     m_Bits: 1024
@@ -10022,6 +10021,7 @@ MonoBehaviour:
   attackingRange: 5
   damagePush: 15
   dmg: 3
+  Food: {fileID: 8419201741802750702, guid: edff7c29d16809d40b128c5920cbbd39, type: 3}
 --- !u!58 &3816226684780231714
 CircleCollider2D:
   m_ObjectHideFlags: 0
