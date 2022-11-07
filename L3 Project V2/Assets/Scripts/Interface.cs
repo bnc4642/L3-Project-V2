@@ -33,6 +33,9 @@ public class Interface : MonoBehaviour
 
     private Vector2[] taskPosition = new Vector2[4] { new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), };
 
+    public GameObject confirmPrefab;
+    public GameObject cP;
+
 
     private void Start()
     {
@@ -50,6 +53,7 @@ public class Interface : MonoBehaviour
     }
     public void OnEnter(InputValue value) //called upon pressing enter while in an input box
     {
+        Debug.Log("This");
         ConfirmSave(id); // should this be the only method of confirming? Probably not
     }
 
@@ -336,14 +340,34 @@ public class Interface : MonoBehaviour
         BookCanvas.transform.GetChild(12).gameObject.SetActive(false);
         BookCanvas.transform.GetChild(13).gameObject.SetActive(false);
     }
-    public void DeleteSave()
+    public void Confirm()
     {
+        CancelConfirm();
+
         if (File.Exists(Application.persistentDataPath + "/gamesave" + id + ".save")) //delete save
             File.Delete(Application.persistentDataPath + "/gamesave" + id + ".save");
         ExCanvas.transform.GetChild(id).GetComponentInChildren<TMPro.TMP_Text>().text = "New Game"; //reset name
         GameEvents.current.SetTxtBoxValue(id, "New Game");
         saves[id] = null;
         Return();
+    }
+
+    public void CancelConfirm()
+    {
+        cP.GetComponentInChildren<Animator>().SetTrigger("Close");
+
+        foreach (Transform btn in BookCanvas.GetComponentsInChildren<Transform>())
+            if (btn.GetComponent<Button>() != null)
+                btn.GetComponent<Button>().enabled = true;
+    }
+
+    public void DeleteSave()
+    {
+        cP.GetComponentInChildren<Animator>().SetTrigger("Open");
+
+        foreach (Transform btn in BookCanvas.GetComponentsInChildren<Transform>())
+            if (btn.GetComponent<Button>() != null)
+                btn.GetComponent<Button>().enabled = false;
     }
 
     private void FillBook()

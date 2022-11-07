@@ -15,6 +15,8 @@ public class Ventory : MonoBehaviour
     //variables
     public int id = 0;
 
+    private GameObject cP;
+
     public int pageNum = 0;
     private bool flipping;
     private bool tabBtnPressed = false;
@@ -216,6 +218,23 @@ public class Ventory : MonoBehaviour
         GM.Instance.Player.GetComponentInChildren<CameraManager>().Pause(false); // camera unpause
         GM.Instance.InVentory = false;
         SceneManager.UnloadSceneAsync(6);
+    }
+
+    public void CancelConfirm()
+    {
+        cP.GetComponentInChildren<Animator>().SetTrigger("Close");
+
+        foreach (Transform btn in BookCanvas.GetComponents<Transform>())
+            btn.GetComponent<Button>().enabled = true;
+    }
+
+    public void Exit()
+    {
+        cP.transform.position = transform.position;
+        cP.GetComponentInChildren<Animator>().SetTrigger("Open");
+
+        foreach (Transform btn in BookCanvas.GetComponents<Transform>())
+            btn.GetComponent<Button>().enabled = false;
     }
 
     public void GoToInventory()

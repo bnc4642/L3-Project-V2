@@ -29,6 +29,14 @@
                 "y": 160
             }
         },
+        "Forest3.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 273,
+                "y": 104
+            }
+        },
         "TavernExterior.tmx": {
             "scale": 1.14890625,
             "selectedLayer": 2,
@@ -99,12 +107,12 @@
     },
     "last.exportedFilePath": "C:/Users/Ben/OneDrive - Central Hawkes Bay College/Documents/Tiled Maps",
     "last.imagePath": "D:/GitHub-L3/L3-Project-V2/L3 Project V2/Assets/Sprites/Assorted/Grass",
-    "map.height": 16,
+    "map.height": 22,
     "map.lastUsedExportFilter": "Tiled map files (*.tmx *.xml)",
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
-    "map.width": 40,
+    "map.width": 32,
     "openFiles": [
         "TilesetPacks/Bricks.tsx",
         "TavernExterior.tmx"
