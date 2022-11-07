@@ -12,8 +12,10 @@ public class GM : MonoBehaviour
 
     public int saveID = 0;
 
+
     public GameObject playerPref;
 
+    public Save Save = new Save();
     public GameObject Player;
 
     // level data, gained from LevelData.cs
@@ -27,10 +29,12 @@ public class GM : MonoBehaviour
     public int health = 5;
     public int energyLevel = 0;
 
+    public bool InVentory = false;
+
     void Awake()
     {
-        if (Instance == null) 
-        { 
+        if (Instance == null)
+        {
             Instance = this; // this is a singleton, so only one can exist in the scene
         }
     }
@@ -116,13 +120,14 @@ public class GM : MonoBehaviour
 
             //don't let player just fall back through bottom doors
         }
+
+        Interface.WriteToJsonFile<Save>(Application.persistentDataPath + "/gamesave" + saveID + ".save", Save);
     }
 
     public void AddToMap(int id)
     {
-        Save save = Interface.ReadFromJsonFile<Save>(Application.persistentDataPath + "/gamesave" + saveID + ".save");
-        if (!save.mapList.Contains(id.ToString()))
-            save.mapList += id;
-        Interface.WriteToJsonFile(Application.persistentDataPath + "/gamesave" + saveID + ".save", save);
+        if (!Save.mapList.Contains(id.ToString()))
+            Save.mapList += id;
+        Interface.WriteToJsonFile(Application.persistentDataPath + "/gamesave" + saveID + ".save", Save);
     }
 }

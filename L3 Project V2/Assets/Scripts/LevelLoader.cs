@@ -22,10 +22,15 @@ public class LevelLoader : MonoBehaviour
 
     public IEnumerator LoadLevel(int levelIndex) //levels are controlled by index within the build settings
     {
-        Transition.SetTrigger("Start");
+        if (levelIndex != 6)
+        {
+            Transition.SetTrigger("Start");
 
-        yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(1);
 
-        SceneManager.LoadScene(levelIndex);
+            SceneManager.LoadScene(levelIndex);
+        }
+        else
+            SceneManager.LoadScene(levelIndex, LoadSceneMode.Additive);
     }
 }

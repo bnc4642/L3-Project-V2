@@ -23,5 +23,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Home.unity
     guid: 3aa6baf237a45534ca0f7c8aef973a46
+  - enabled: 1
+    path: Assets/Scenes/EscapeVentory.unity
+    guid: 8450eb0335b8236488987b6e1900e543
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: e86ddb99a2130fa48a226a2e6468b9d7, type: 2}

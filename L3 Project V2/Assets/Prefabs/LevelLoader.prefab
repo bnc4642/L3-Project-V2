@@ -155,6 +155,7 @@ MonoBehaviour:
   LeftTransistors: []
   RightTransistors: []
   Enemies: []
+  Interactions: []
 --- !u!1 &4962408589907843995
 GameObject:
   m_ObjectHideFlags: 0

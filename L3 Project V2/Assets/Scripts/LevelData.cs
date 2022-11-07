@@ -16,6 +16,7 @@ public class LevelData : MonoBehaviour
     // check transID from all lists to find the right one, check which direction it's in, and then instant player with correct velocity.
 
     public List<Enemy> Enemies = new List<Enemy>();
+    public List<Interactable> Interactions = new List<Interactable>();
 
     private void Awake() //set up the global controller, and this way there's no need for camera or player references
     {
@@ -29,5 +30,9 @@ public class LevelData : MonoBehaviour
         GM.Instance.SpawnPlayer(Enemies);
 
         GM.Instance.AddToMap(id);
+
+        foreach (Interactable interaction in Interactions)
+            if (GM.Instance.Save.MinorInteractions.Count > interaction.id++)
+                interaction.DialogueNums += GM.Instance.Save.MinorInteractions[interaction.id];
     }
 }

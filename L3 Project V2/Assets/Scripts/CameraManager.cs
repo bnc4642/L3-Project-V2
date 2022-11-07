@@ -11,6 +11,7 @@ public class CameraManager : MonoBehaviour
     private float damping = 10;
     private Vector3 initPos;
     private Vector3 velocity = new Vector3(5, 5, 5);
+    private bool paused = false;
 
     private void Awake()
     {
@@ -20,6 +21,7 @@ public class CameraManager : MonoBehaviour
 
     void Update()
     {
+        if (paused) return;
         //make sure camera doesn't display outside of level boundaries
         Vector3 targetPosition = transform.position;
         targetPosition.x = Mathf.Clamp(targetPosition.x, GM.Instance.xToY[0], GM.Instance.xToY[1]);
@@ -42,5 +44,10 @@ public class CameraManager : MonoBehaviour
         //initiates shake
         shakeTime = t;
         initPos = cam.localPosition;
+    }
+
+    public void Pause(bool pause)
+    {
+        paused = pause;
     }
 }

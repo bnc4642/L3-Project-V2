@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 using Aarthificial.Reanimation;
 using UnityEngine.VFX;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -32,7 +33,7 @@ public class Player : MonoBehaviour
     public Dialogue dialogue; //contains dialogue object
 
     //the locations for checks
-    private readonly float[,] attackPos = new float[3,2] { { 0.21f, -0.98f }, { 1f, -0.1f }, { 0.37f, 0.57f } };
+    private readonly float[,] attackPos = new float[3, 2] { { 0.21f, -0.98f }, { 1f, -0.1f }, { 0.37f, 0.57f } };
     private const float groundCheckwidth = 1f;
     private const float wallRadius = 0.15f;
     private readonly Vector2 wallPos1 = new Vector2(-0.67f, -0.25f);
@@ -72,6 +73,7 @@ public class Player : MonoBehaviour
     private float floatTimer = 0;
 
     //bools
+    public bool Pausing = false;
     public bool Grounded = false;
     public bool Walled = false;
     public bool DoubleAtk = false; //kinda unsure about this..
@@ -105,7 +107,7 @@ public class Player : MonoBehaviour
 
     public void OnMove(InputValue value)
     {
-        if (interacting || transitioning) return;
+        if (interacting || transitioning || Pausing) return;
         Direction = value.Get<Vector2>();
     }
 
@@ -118,19 +120,30 @@ public class Player : MonoBehaviour
 
     public void OnEscape(InputValue value)
     {
-        foreach (Enemy E in GameObject.FindObjectsOfType<Enemy>())
+        if (!GM.Instance.InVentory)
         {
-            E.Pause();
+            GM.Instance.InVentory = true;
+
+            foreach (Enemy E in GameObject.FindObjectsOfType<Enemy>())
+            {
+                E.Pause();
+            }
+
+            StartCoroutine(TotalPostponer(true));
+            Pausing = true;
+
+            //and then use this code in that confirm button. Unpause() everything from return button
+
+            Interface.WriteToJsonFile<Save>(Application.persistentDataPath + "/gamesave" + GM.Instance.saveID + ".save", GM.Instance.Save);
+            StartCoroutine(transitioner.LoadLevel(6)); //exit levels and just go to inventory scene. Needs some custom code desperately
         }
-
-        //Player.Pause()
-
-        Debug.Log("Escape");
-
-        StartCoroutine(transitioner.LoadLevel(0)); //exit levels and just go to inventory scene. Needs some custom code desperately
+        else
+        {
+            StartCoroutine(GameObject.FindObjectOfType<Ventory>().CloseVentory());
+        }
     }
 
-        public void OnStab(InputValue value)
+    public void OnStab(InputValue value)
     {
         StartCoroutine(EnterAttackState(3));
     }
@@ -145,15 +158,15 @@ public class Player : MonoBehaviour
         if (Interactable != null)
         {
             if (!interacting)
-                StartCoroutine(InteractionPostponer());
+                StartCoroutine(TotalPostponer(false));
             else
                 skipBtnPressed = true;
         }
     }
 
-    private IEnumerator InteractionPostponer()
+    private IEnumerator TotalPostponer(bool pausing)
     {
-        if (State == PlayerState.Attack)
+        if (State == PlayerState.Attack && !pausing)
         {
             if (AttackStyle == 2)
                 Grounded = true;
@@ -173,14 +186,22 @@ public class Player : MonoBehaviour
         }
         rb.velocity = Vector3.zero;
         Direction = Vector2.zero;
-        interacting = true;
 
-        Interact();
+        if (!pausing)
+        {
+            interacting = true;
+            Interact();
+        }
+        else
+        {
+            GetComponentInChildren<CameraManager>().Pause(true); // camera pause
+            rb.gravityScale = 0;
+        }
     }
 
     public void OnFloat(InputValue value)
     {
-        if (value.Get<float>() > 0.5f && !(Healing && HealingTime < Time.time) && !interacting && dashingTime - 0.5f < Time.time && (State != PlayerState.Attack || AttackStyle == 3) && energyLevel > 0)
+        if (value.Get<float>() > 0.5f && !(Healing && HealingTime < Time.time) && !Pausing && !interacting && dashingTime - 0.5f < Time.time && (State != PlayerState.Attack || AttackStyle == 3) && energyLevel > 0)
         {
             floating = true;
             rb.gravityScale = 0;
@@ -201,7 +222,7 @@ public class Player : MonoBehaviour
 
     public void OnHeal(InputValue value)
     {
-        Healing = value.Get<float>() > 0.5f &&  State == PlayerState.Movement && Grounded && !interacting;
+        Healing = value.Get<float>() > 0.5f && State == PlayerState.Movement && Grounded && !interacting && !Pausing;
 
         if (stoppedHealing && Healing && energyLevel > 2) // Is true after pressing button down
         {
@@ -230,7 +251,7 @@ public class Player : MonoBehaviour
     {
         Grounded = IsGrounded();
 
-        if (transitioning || (Healing && HealingTime > Time.time))
+        if (transitioning || (Healing && HealingTime > Time.time) || Pausing)
             return;
         if (interacting)
         {
@@ -281,7 +302,7 @@ public class Player : MonoBehaviour
         if (State == PlayerState.Attack && AttackStyle == 3 && attackingTime - 0.15f < Time.time)
             yield return new WaitForSeconds(attackingTime - Time.time);
 
-        if (interacting || !canDash || dashingTime > Time.time || (Healing && HealingTime < Time.time) || health <= 0 || (State == PlayerState.Attack && AttackStyle == 2)) yield break;
+        if (interacting || Pausing || !canDash || dashingTime > Time.time || (Healing && HealingTime < Time.time) || health <= 0 || (State == PlayerState.Attack && AttackStyle == 2)) yield break;
 
         canDash = false;
         if (Walled)
@@ -304,7 +325,7 @@ public class Player : MonoBehaviour
         GetComponent<SpriteRenderer>().material.shader = Shader.Find("GUI/Text Shader");
         GetComponent<SpriteRenderer>().color = Color.white;
 
-         State = PlayerState.Hit;
+        State = PlayerState.Hit;
 
         damagedTime = Time.time + 0.8f;
         transitioner.Transition.SetTrigger("Hurt");
@@ -332,7 +353,7 @@ public class Player : MonoBehaviour
 
     private void UpdateHitState()
     {
-        if (damagedTime -0.65 < Time.time)
+        if (damagedTime - 0.65 < Time.time)
         {
             GetComponent<SpriteRenderer>().material.shader = Shader.Find("Sprites/Default");
             GetComponent<SpriteRenderer>().color = Color.white;
@@ -354,7 +375,7 @@ public class Player : MonoBehaviour
         if (n == 2 && attackingTime < Time.time)
             yield return new WaitForSeconds(attackingTime - Time.time);
 
-        if (!interacting && !(Healing && HealingTime > Time.time) && (attackingTime + 0.1f)  < Time.time && State != PlayerState.Attack && ((energyLevel > 2 && n == 2) || n == 3))
+        if (!interacting && !Pausing && !(Healing && HealingTime > Time.time) && (attackingTime + 0.1f) < Time.time && State != PlayerState.Attack && ((energyLevel > 2 && n == 2) || n == 3))
         {
             if (dashingTime - 0.5f > Time.time)
                 yield return new WaitForSeconds(dashingTime - 0.5f - Time.time);
@@ -449,7 +470,7 @@ public class Player : MonoBehaviour
             }
         }
         // finished hitting enemies
-        
+
         StartCoroutine(Jump());
 
         if ((attackingTime < Time.time && AttackStyle != 2) || (Grounded && AttackingDirection == 0)) // exit 
@@ -575,7 +596,7 @@ public class Player : MonoBehaviour
         if (dashingTime - 0.5f > Time.time)
             rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0);
 
-        Walled = IsWalled() && !(Healing && HealingTime > Time.time) && !floating && State != PlayerState.Attack && !interacting;
+        Walled = IsWalled() && !(Healing && HealingTime > Time.time) && !floating && State != PlayerState.Attack && !interacting && !Pausing;
         if (Walled && dashingTime - 0.5f > Time.time && !startDashWalled)
             SetDash(false, 10, Vector2.zero);
         if (Walled)
@@ -593,7 +614,7 @@ public class Player : MonoBehaviour
         {
             if (dashingTime - 0.5f > Time.time)
                 yield return new WaitForSeconds(dashingTime - 0.5f - Time.time);
-            
+
             jumped = true;
             rb.velocity = new Vector2(rb.velocity.x, 45);
         }
@@ -677,12 +698,12 @@ public class Player : MonoBehaviour
                     {
                         StartCoroutine(E.UnPause());
                     }
-                    if (Interactable.Dialogue.Count-1 > Interactable.DialogueNums)
+                    if (Interactable.Dialogue.Count - 1 > Interactable.DialogueNums)
                         Interactable.DialogueNums++;
                     foreach (char item in Interactable.ImpactfulNums.ToCharArray())
                     {
                         if (Interactable.DialogueNums == item)
-                            Interactable.DialogImpact();
+                            Interactable.DialogImpact(Int32.Parse(item.ToString()));
                     }
                 }
                 switchingDialogue = false;
@@ -721,7 +742,7 @@ public class Player : MonoBehaviour
     }
 
     public bool IsGrounded() { return Physics2D.OverlapBox(groundCheck.position, new Vector2(groundCheckwidth, 0.1f), 0, groundLayer); }
-    public bool IsWalled() 
+    public bool IsWalled()
     {
         if (Physics2D.OverlapCircle((Vector2)transform.position + wallPos1, wallRadius, LayerMask.GetMask("Walls")) && Direction.x < 0)
             return true;
@@ -749,10 +770,7 @@ public class Player : MonoBehaviour
             if (!firstTransition)
             {
                 StartCoroutine(WalkAnim(collision.gameObject.GetComponent<Transitioner>(), 1));
-                // prepare any possible cutscenes
-                // save player data and input it into next scene
                 // output player into the correct location, and make them walk
-                // (make the corrosponding transitioners have the same name, so you can check for the right one, and output them correctly).
                 GM.Instance.transitionID = collision.gameObject.GetComponent<Transitioner>().id;
                 StartCoroutine(transitioner.LoadLevel(collision.gameObject.GetComponent<Transitioner>().nextScene));
             }
@@ -790,7 +808,7 @@ public class Player : MonoBehaviour
                 firstTransition = false;
     }
 
-        public IEnumerator Die()
+    public IEnumerator Die()
     {
         State = PlayerState.Death;
         rb.gravityScale = 0;
@@ -801,7 +819,7 @@ public class Player : MonoBehaviour
         deathAnim.Play("DeathAnim");
         yield return new WaitForSeconds(0.9f);
         GetComponent<SpriteRenderer>().enabled = true;
-         State = PlayerState.Movement;
+        State = PlayerState.Movement;
         rb.gravityScale = 10;
     }
 
@@ -837,7 +855,7 @@ public class Player : MonoBehaviour
 
     private void OnDisable()
     {
-        //store state
+        //store state for the next scene.
         GM.Instance.health = health;
         GM.Instance.energyLevel = energyLevel;
     }

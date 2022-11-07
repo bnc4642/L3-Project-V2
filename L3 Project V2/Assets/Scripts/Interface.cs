@@ -174,7 +174,7 @@ public class Interface : MonoBehaviour
     {
         id = ID;
         GM.Instance.saveID = id;
-        if (File.Exists(Application.persistentDataPath + "/gamesave" + ID + ".save")) // save exists
+        if (saves[id] != null) // save exists
         {
             for (int i = 0; i < 3; i++)
                 ExCanvas.transform.Find("Button " + i).gameObject.SetActive(false); //remove all buttons
@@ -217,7 +217,21 @@ public class Interface : MonoBehaviour
         if (Canvas.transform.GetChild(ID).GetChild(0).GetComponentsInChildren<TMPro.TextMeshProUGUI>()[1].text != "") // Check not null
         {
             //create empty save file
-            WriteToJsonFile(Application.persistentDataPath + "/gamesave" + ID + ".save", FormSave(5, 0));
+
+            Save save = new Save();
+            save.Name = Canvas.transform.GetChild(id).GetComponentsInChildren<TMPro.TMP_Text>()[1].text;
+
+            //set important variables within save to be saved
+
+            foreach (Boss boss in bosses)
+            {
+                if (!boss.defeated)
+                    save.EncounterProgress = 0;
+            }
+
+            saves[id] = save;
+
+            WriteToJsonFile(Application.persistentDataPath + "/gamesave" + ID + ".save", save);
             ExitSaveTyping(ID, Canvas.transform.GetChild(ID).GetComponentsInChildren<TMPro.TMP_Text>()[1].text);
         }
         else
@@ -261,9 +275,7 @@ public class Interface : MonoBehaviour
         {
             if (!boss.defeated)
                 save.EncounterProgress = encounterProgress;
-        } 
-
-        save.Health = health;
+        }
 
         saves[id] = save;
 
@@ -312,16 +324,6 @@ public class Interface : MonoBehaviour
         }
     }
 
-    public void ChangeScene()
-    {
-        //disable canvases
-        Canvas.gameObject.SetActive(false);
-        ExCanvas.gameObject.SetActive(false);
-
-        GetComponent<SpriteRenderer>().enabled = true;
-        BookCanvas.SetActive(true);
-    }
-
     public void Return()
     {
         ExCanvas.SetActive(true);
@@ -347,6 +349,7 @@ public class Interface : MonoBehaviour
     private void FillBook()
     {
         TMPro.TextMeshProUGUI[] skillboxes = Pages[2].GetComponentsInChildren<TMPro.TextMeshProUGUI>();
+        Debug.Log(saves[id].Name);
         skillboxes[0].text = saves[id].Name; //set name
 
         skillboxes[2].text = "";

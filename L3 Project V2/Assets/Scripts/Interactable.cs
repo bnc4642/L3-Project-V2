@@ -5,6 +5,8 @@ using UnityEngine;
 public class Interactable : MonoBehaviour
 {
     //variables
+    public int id;
+
     public List<string> Dialogue = new List<string>();
     public int DialogueNums = 0;
     public string ImpactfulNums = ""; //the numbers of interactions that will alter stuff within the game
@@ -23,7 +25,7 @@ public class Interactable : MonoBehaviour
                 collision.GetComponent<Player>().Interactable = null;
     }
 
-    public virtual void DialogImpact() //is called upon impactful numbers of interactions
+    public virtual void DialogImpact(int num) //is called upon impactful numbers of interactions
     {
         // move some stuff, and add conditions to scenes when they load;
         // switch case style
