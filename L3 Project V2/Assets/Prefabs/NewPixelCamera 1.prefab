@@ -319,9 +319,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '
-
-'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e71a745db191e574e8a509f3c4964536, type: 2}
   m_sharedMaterial: {fileID: -4155800175000174883, guid: e71a745db191e574e8a509f3c4964536, type: 2}
@@ -1303,3 +1301,4 @@ MonoBehaviour:
   Portrait: {fileID: 6093986698105479627}
   DialogueName: {fileID: 1277172547977417125}
   Cutscene: 0
+  switching: 0

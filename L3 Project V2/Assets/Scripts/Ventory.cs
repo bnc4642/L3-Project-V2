@@ -30,7 +30,7 @@ public class Ventory : MonoBehaviour
     public Sprite[] BookSprites;
     public GameObject TaskObject;
 
-    private Vector2[] taskPosition = new Vector2[4] { new Vector2(0, 3), new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), };
+    private Vector2[] taskPosition = new Vector2[4] { new Vector2(0, 3), new Vector2(0, -297), new Vector2(480, 3), new Vector2(480, -297), };
 
 
     private void Start()
@@ -225,7 +225,6 @@ public class Ventory : MonoBehaviour
         GM.Instance.Player.GetComponent<Player>().rb.gravityScale = 10;
         GM.Instance.Player.GetComponentInChildren<CameraManager>().Pause(false); // camera unpause
         GM.Instance.InVentory = false;
-        Debug.Log("2");
         foreach (Enemy E in GameObject.FindObjectsOfType<Enemy>())
         {
             E.UnPause();
@@ -243,6 +242,7 @@ public class Ventory : MonoBehaviour
 
     public void Exit()
     {
+        GM.Instance.InVentory = false; //reset everything and leave
         cP.transform.position = transform.position;
         cP.GetComponentInChildren<Animator>().SetTrigger("Open");
 
@@ -252,11 +252,11 @@ public class Ventory : MonoBehaviour
 
     public void GoToInventory()
     {
+        GM.Instance.InVentory = false;
         foreach (Transform btn in BookCanvas.GetComponents<Transform>())
             btn.gameObject.SetActive(false);
         foreach (GameObject page in Pages)
             page.SetActive(false);
-
         Interface.WriteToJsonFile<Save>(Application.persistentDataPath + "/gamesave" + GM.Instance.saveID + ".save", GM.Instance.Save);
         StartCoroutine(GameObject.Find("LevelLoader").GetComponent<LevelLoader>().LoadLevel(0));
     }

@@ -17,6 +17,9 @@ public class LevelLoader : MonoBehaviour
 
         GM.Instance.transitionID = GM.Instance.Save.SavePoint[1];
 
+        GM.Instance.health = 5;
+        GM.Instance.energyLevel = 0;
+
         StartCoroutine(LoadLevel(GM.Instance.Save.SavePoint[0])); //exit inventory scene and enter level at last save point. Needs some custom code desperately
     }
 
@@ -24,7 +27,8 @@ public class LevelLoader : MonoBehaviour
     {
         if (levelIndex != 6)
         {
-            GM.Instance.SaveLocation(levelIndex);
+            if (levelIndex != 0)
+                GM.Instance.SaveLocation(levelIndex);
 
             Transition.SetTrigger("Start");
 

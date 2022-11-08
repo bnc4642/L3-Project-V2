@@ -47,7 +47,6 @@ public class GM : MonoBehaviour
     {
         if (Save.MajorInteractions == "")
         {
-            Debug.Log("THissssss");
             Player = Instantiate(playerPref, new Vector2(7.1f, -5.45f), Quaternion.Euler(0, 0, 0));
             Player.GetComponent<Player>().SetLocalVariables();
             Player.GetComponent<Player>().SetStates(5, 0);

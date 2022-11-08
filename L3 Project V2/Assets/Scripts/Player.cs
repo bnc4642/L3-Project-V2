@@ -291,7 +291,6 @@ public class Player : MonoBehaviour
                 floating = false;
                 rb.gravityScale = 10;
                 floatTimer = 0;
-                Debug.Log("Working");
             }
         }
     }
@@ -393,7 +392,6 @@ public class Player : MonoBehaviour
 
     private void EnterSlam()
     {
-        Debug.Log(energyLevel);
         StartCoroutine(ChangeEnergy(-3));
         AttackingDirection = 0;
         attackFX[0].SetActive(true);
@@ -683,11 +681,14 @@ public class Player : MonoBehaviour
             {
                 if (dialogueCounter < chats.Length - 1) //dialogue remains for display
                 {
-                    dialogueCounter++;
-                    int x = Int32.Parse(chats[dialogueCounter].Split(" / ")[0]);
-                    if (x != Int32.Parse(chats[dialogueCounter - 1].Split(" / ")[0]))
-                        StartCoroutine(dialogue.SwitchDialogue(spriteList[x], nameList[x], this)); // SwitchDialogue(sprite, text, player);
-                    dialogue.Text.text = "";
+                    if (!dialogue.switching)
+                    {
+                        dialogueCounter++;
+                        int x = Int32.Parse(chats[dialogueCounter].Split(" / ")[0]);
+                        if (x != Int32.Parse(chats[dialogueCounter - 1].Split(" / ")[0]))
+                            StartCoroutine(dialogue.SwitchDialogue(spriteList[x], nameList[x], this)); // SwitchDialogue(sprite, text, player);
+                        dialogue.Text.text = "";
+                    }
                 }
                 else //interaction finished
                 {
@@ -705,6 +706,8 @@ public class Player : MonoBehaviour
                     }
                     if (Interactable.Dialogue.Count - 1 > Interactable.DialogueNums)
                         Interactable.DialogueNums++;
+
+                    GM.Instance.Save.MinorInteractions[Interactable.id] = Interactable.DialogueNums;
                 }
                 switchingDialogue = false;
             }
@@ -773,6 +776,7 @@ public class Player : MonoBehaviour
                 // output player into the correct location, and make them walk
                 GM.Instance.transitionID = collision.gameObject.GetComponent<Transitioner>().id;
                 StartCoroutine(transitioner.LoadLevel(collision.gameObject.GetComponent<Transitioner>().nextScene));
+                FirstTransition = true;
             }
             else
                 StartCoroutine(WalkAnim(collision.gameObject.GetComponent<Transitioner>(), -1));
@@ -813,8 +817,12 @@ public class Player : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (((1 << collision.gameObject.layer) & transition) != 0 && transitioner != null) // if it's a transition collision
+        {
             if (FirstTransition)
+            {
                 FirstTransition = false;
+            }
+        }
     }
 
     public IEnumerator Die()

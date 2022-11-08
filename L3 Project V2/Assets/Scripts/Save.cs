@@ -18,7 +18,7 @@ public class Save
 
     public string mapList = "1";
     public List<string> Items = new List<string>() { "food", "drink", "coins", "etc", "etc", "etc" };
-    public List<int> InventCount = new List<int>() { 0, 0, 0, 0, 0, 0 };
+    public List<int> InventCount = new List<int>() { 5, 0, 0, 0, 0, 0 };
 
     public List<Task> Tasks = new List<Task>();
 

@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class One : Interactable
 {
-    public override void DialogImpact()
+    public override void DialogImpact() //custom impacts
     {
-        if (DialogueNums == 0)
+        if (DialogueNums == 0) //first one
         {
             GM.Instance.Save.MapMarker = new float[] { 1.11f, -1.15f };
             GM.Instance.TaskManager.AddTask("Feed The Kids", "Kill the mosquitos and bring back food so that the younger villagers can eat");
         }
-        else
+        else //second one
         {
             GM.Instance.TaskManager.CompleteTask(0);
         }
         Interface.WriteToJsonFile<Save>(Application.persistentDataPath + "/gamesave" + GM.Instance.saveID + ".save", GM.Instance.Save);
     }
 
-    public override void CheckDialogChanges()
+    public override void CheckDialogChanges() // custom checks
     {
         if (GM.Instance.Save.InventCount[0] > 0 && GM.Instance.Save.InventCount[0] < 6)
             Dialogue[1] = "1 / That won't be enough. They'll need at least 6!";

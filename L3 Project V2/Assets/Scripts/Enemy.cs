@@ -202,6 +202,5 @@ public class Enemy : MonoBehaviour
     {
         GetComponentInParent<AIPath>().enabled = true;
         paused = false;
-        Debug.Log(paused);
     }
 }

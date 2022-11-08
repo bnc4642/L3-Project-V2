@@ -11,6 +11,8 @@ public class Dialogue : MonoBehaviour
     public TMPro.TMP_Text DialogueName;
     public bool Cutscene = false;
 
+    public bool switching = false;
+
     void Start()
     {
         //get variables and stop animations from showing until interaction starts
@@ -29,6 +31,7 @@ public class Dialogue : MonoBehaviour
 
     public IEnumerator SwitchDialogue(Sprite pic, string Name, Player p)
     {
+        switching = true;
         //start animation
         GetComponent<Animator>().Play("DialogueOpen"+side, -1, 0);
         GetComponent<Animator>().speed = 1;
@@ -43,6 +46,7 @@ public class Dialogue : MonoBehaviour
         //stop dialogue and animations
         p.StopSwitchingDialogue();
         GetComponent<Animator>().speed = 0;
+        switching = false;
     }
 
     public void ResetSide() //on start of interaction
