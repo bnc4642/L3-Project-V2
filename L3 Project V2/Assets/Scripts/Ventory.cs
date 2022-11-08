@@ -25,16 +25,17 @@ public class Ventory : MonoBehaviour
 
     public List<GameObject> Pages = new List<GameObject>();
     public GameObject PageFlipper;
+    public GameObject MapMarker;
 
     public Sprite[] BookSprites;
     public GameObject TaskObject;
-    private List<Boss> bosses = new List<Boss>(); //for the save file
 
-    private Vector2[] taskPosition = new Vector2[4] { new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), };
+    private Vector2[] taskPosition = new Vector2[4] { new Vector2(0, 3), new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), };
 
 
     private void Start()
     {
+        //skills
         TMPro.TextMeshProUGUI[] skillboxes = Pages[2].GetComponentsInChildren<TMPro.TextMeshProUGUI>();
         skillboxes[0].text = GM.Instance.Save.Name; //set name
 
@@ -43,17 +44,23 @@ public class Ventory : MonoBehaviour
             if (GM.Instance.Save.Skills[i, 1] == "1")
                 skillboxes[2].text += GM.Instance.Save.Skills[i, 0] + "\n"; //set skills
 
+        //inventory
         Pages[3].GetComponentsInChildren<TMPro.TextMeshProUGUI>()[2].text = "";
         for (int i = 0; i < 6; i++)
-            foreach (int t in GM.Instance.Save.InventCount)
-                if (t > 0)
-                    Pages[3].GetComponentsInChildren<TMPro.TextMeshProUGUI>()[2].text += GM.Instance.Save.Items[i] + " x" + GM.Instance.Save.InventCount[i] + "\n"; //set inventory
+                Pages[3].GetComponentsInChildren<TMPro.TextMeshProUGUI>()[2].text += GM.Instance.Save.Items[i] + " x" + GM.Instance.Save.InventCount[i] + "\n"; //set inventory
 
 
+        //map
         foreach (Transform location in Pages[4].transform.GetComponentsInChildren<Transform>())
             location.gameObject.SetActive(false);
         foreach (Transform location in Pages[5].transform.GetComponentsInChildren<Transform>())
             location.gameObject.SetActive(false);
+        if (GM.Instance.Save.MapMarker[0] != 0 && GM.Instance.Save.MapMarker[1] != 0 && Pages[4].transform.childCount < 20)
+        {
+            GameObject mm = Instantiate(MapMarker);
+            mm.transform.position = new Vector2(GM.Instance.Save.MapMarker[0], GM.Instance.Save.MapMarker[1]);
+            mm.transform.parent = Pages[4].transform;
+        }
 
         foreach (char scene in GM.Instance.Save.mapList.ToCharArray())
         {
@@ -71,14 +78,14 @@ public class Ventory : MonoBehaviour
 
         int taskCounter = 0;
         int secondaryCounter = 6;
-        foreach (Task task in GM.Instance.TaskManager.Tasks)
+        foreach (Task task in GM.Instance.Save.Tasks)
         {
             GameObject t = Instantiate(TaskObject);
             t.transform.position = taskPosition[taskCounter];
             t.transform.parent = Pages[secondaryCounter].transform;
             TMPro.TextMeshProUGUI[] texts = t.GetComponentsInChildren<TMPro.TextMeshProUGUI>();
             texts[0].text = task.Title;
-            texts[1].text = task.Description;
+            texts[2].text = task.Description;
 
             if (taskCounter < 4) taskCounter++;
             else
@@ -129,7 +136,7 @@ public class Ventory : MonoBehaviour
 
         if (Dir.Equals("l") && pageNum == 0) //close book
         {
-            Debug.Log("Unload scene");
+            StartCoroutine(CloseVentory());
         }
         if ((pageNum > 0 && Dir.Equals("l")) || (pageNum < 7 && Dir.Equals("r"))) // if navigating through the book
         {
@@ -218,8 +225,11 @@ public class Ventory : MonoBehaviour
         GM.Instance.Player.GetComponent<Player>().rb.gravityScale = 10;
         GM.Instance.Player.GetComponentInChildren<CameraManager>().Pause(false); // camera unpause
         GM.Instance.InVentory = false;
+        Debug.Log("2");
         foreach (Enemy E in GameObject.FindObjectsOfType<Enemy>())
-            E.Pause();
+        {
+            E.UnPause();
+        }
         SceneManager.UnloadSceneAsync(6);
     }
 

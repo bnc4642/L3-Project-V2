@@ -26,19 +26,29 @@ public class Interface : MonoBehaviour
 
     public List<GameObject> Pages = new List<GameObject>();
     public GameObject PageFlipper;
+    public GameObject MapMarker;
+    public GameObject DeathMessage;
 
     public Sprite[] BookSprites;
     public GameObject TaskObject;
-    private List<Boss> bosses = new List<Boss>(); //for the save file
 
-    private Vector2[] taskPosition = new Vector2[4] { new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), };
+    private Vector2[] taskPosition = new Vector2[4] { new Vector2(0, -66.8f), new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), };
 
-    public GameObject confirmPrefab;
     public GameObject cP;
 
 
     private void Start()
     {
+        if (GM.Instance.Died)
+        {
+            Confirm(true);
+
+            GameObject dm = Instantiate(DeathMessage);
+            Destroy(dm, 1.5f);
+            //reset
+            GM.Instance.Died = false;
+        }
+
         for (int i = 0; i < 3; i++)
         {
             saves[i] = ReadFromJsonFile<Save>(Application.persistentDataPath + "/gamesave" + i + ".save"); // get saves
@@ -53,7 +63,6 @@ public class Interface : MonoBehaviour
     }
     public void OnEnter(InputValue value) //called upon pressing enter while in an input box
     {
-        Debug.Log("This");
         ConfirmSave(id); // should this be the only method of confirming? Probably not
     }
 
@@ -218,7 +227,7 @@ public class Interface : MonoBehaviour
 
     public void ConfirmSave(int ID) //exiting input box
     {
-        if (Canvas.transform.GetChild(ID).GetChild(0).GetComponentsInChildren<TMPro.TextMeshProUGUI>()[1].text != "") // Check not null
+        if (Canvas.transform.GetChild(ID).GetChild(0).GetComponentsInChildren<TMPro.TextMeshProUGUI>()[1].text.Length > 2) // Check not null
         {
             //create empty save file
 
@@ -287,6 +296,18 @@ public class Interface : MonoBehaviour
                 reader.Close(); //close reader
         }
     }
+    public void Confirm(bool died)
+    {
+        CancelConfirm();
+
+        if (File.Exists(Application.persistentDataPath + "/gamesave" + GM.Instance.saveID + ".save")) //delete save
+            File.Delete(Application.persistentDataPath + "/gamesave" + GM.Instance.saveID + ".save");
+        ExCanvas.transform.GetChild(id).GetComponentInChildren<TMPro.TMP_Text>().text = "New Game"; //reset name
+        GameEvents.current.SetTxtBoxValue(id, "New Game");
+        saves[id] = null;
+        if (!died)
+            Return();
+    }
 
     public void Return()
     {
@@ -300,16 +321,14 @@ public class Interface : MonoBehaviour
         BookCanvas.transform.GetChild(12).gameObject.SetActive(false);
         BookCanvas.transform.GetChild(13).gameObject.SetActive(false);
     }
-    public void Confirm()
-    {
-        CancelConfirm();
 
-        if (File.Exists(Application.persistentDataPath + "/gamesave" + id + ".save")) //delete save
-            File.Delete(Application.persistentDataPath + "/gamesave" + id + ".save");
-        ExCanvas.transform.GetChild(id).GetComponentInChildren<TMPro.TMP_Text>().text = "New Game"; //reset name
-        GameEvents.current.SetTxtBoxValue(id, "New Game");
-        saves[id] = null;
-        Return();
+    public void DeleteSave()
+    {
+        cP.GetComponentInChildren<Animator>().SetTrigger("Open");
+
+        foreach (Transform btn in BookCanvas.GetComponentsInChildren<Transform>())
+            if (btn.GetComponent<Button>() != null)
+                btn.GetComponent<Button>().enabled = false;
     }
 
     public void CancelConfirm()
@@ -321,33 +340,24 @@ public class Interface : MonoBehaviour
                 btn.GetComponent<Button>().enabled = true;
     }
 
-    public void DeleteSave()
-    {
-        cP.GetComponentInChildren<Animator>().SetTrigger("Open");
-
-        foreach (Transform btn in BookCanvas.GetComponentsInChildren<Transform>())
-            if (btn.GetComponent<Button>() != null)
-                btn.GetComponent<Button>().enabled = false;
-    }
-
     private void FillBook()
     {
         TMPro.TextMeshProUGUI[] skillboxes = Pages[2].GetComponentsInChildren<TMPro.TextMeshProUGUI>();
-        Debug.Log(saves[id].Name);
         skillboxes[0].text = saves[id].Name; //set name
 
+        //character page - slightly useless atm
         skillboxes[2].text = "";
         for (int i = 0; i < 6; i++)
             if (saves[id].Skills[i, 1] == "1")
                 skillboxes[2].text += saves[id].Skills[i, 0] + "\n"; //set skills
 
+        //inventory
         Pages[3].GetComponentsInChildren<TMPro.TextMeshProUGUI>()[2].text = "";
         for (int i = 0; i < 6; i++)
-            foreach (int t in GM.Instance.Save.InventCount)
-                if (t > 0)
-                    Pages[3].GetComponentsInChildren<TMPro.TextMeshProUGUI>()[2].text += GM.Instance.Save.Items[i] + " x" + t + "\n"; //set inventory
+            Pages[3].GetComponentsInChildren<TMPro.TextMeshProUGUI>()[2].text += GM.Instance.Save.Items[i] + " x" + GM.Instance.Save.InventCount[i] + "\n"; //set inventory
 
 
+        //maps
         foreach (Transform location in Pages[4].transform.GetComponentsInChildren<Transform>())
             location.gameObject.SetActive(false);
         foreach (Transform location in Pages[5].transform.GetComponentsInChildren<Transform>())
@@ -367,18 +377,26 @@ public class Interface : MonoBehaviour
             }
         }
 
+        if (GM.Instance.Save.MapMarker[0] != 0 && GM.Instance.Save.MapMarker[1] != 0)
+        {
+            GameObject mm = Instantiate(MapMarker);
+            mm.transform.position = new Vector2( GM.Instance.Save.MapMarker[0], GM.Instance.Save.MapMarker[1] );
+            mm.transform.parent = Pages[4].transform;
+        }
+
+        //tasks
         int taskCounter = 0;
         int secondaryCounter = 6;
-        foreach (Task task in GM.Instance.TaskManager.Tasks)
+        foreach (Task task in GM.Instance.Save.Tasks)
         {
             GameObject t = Instantiate(TaskObject);
             t.transform.position = taskPosition[taskCounter];
             t.transform.parent = Pages[secondaryCounter].transform;
             TMPro.TextMeshProUGUI[] texts = t.GetComponentsInChildren<TMPro.TextMeshProUGUI>();
             texts[0].text = task.Title;
-            texts[1].text = task.Description;
+            texts[2].text = task.Description;
 
-            if (taskCounter < 4) taskCounter++;
+            if (taskCounter < 3) taskCounter++;
             else
             {
                 secondaryCounter++;

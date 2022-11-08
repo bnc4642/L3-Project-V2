@@ -9,11 +9,13 @@ public class Dialogue : MonoBehaviour
     private char side = 'L';
     public SpriteRenderer Portrait;
     public TMPro.TMP_Text DialogueName;
+    public bool Cutscene = false;
 
     void Start()
     {
         //get variables and stop animations from showing until interaction starts
-        GetComponent<Animator>().speed = 0;
+        if (!Cutscene)
+            GetComponent<Animator>().speed = 0;
         Text = GetComponentInChildren<TMPro.TMP_Text>();
     }
 

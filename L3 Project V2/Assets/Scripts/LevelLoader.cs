@@ -34,5 +34,7 @@ public class LevelLoader : MonoBehaviour
         }
         else
             SceneManager.LoadScene(levelIndex, LoadSceneMode.Additive);
+
+        Interface.WriteToJsonFile<Save>(Application.persistentDataPath + "/gamesave" + GM.Instance.saveID + ".save", GM.Instance.Save);
     }
 }

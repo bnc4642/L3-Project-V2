@@ -80,6 +80,7 @@ public class Player : MonoBehaviour
     public bool DoubleAtk = false; //kinda unsure about this..
     public bool Healing = false; //used a lot for checks
     public bool HealCancelled = false;
+    public bool FirstTransition = true;
     private bool facingRight = true;
     private bool floating = false;
     private bool stoppedHealing = true;
@@ -92,7 +93,6 @@ public class Player : MonoBehaviour
     private bool skipBtnPressed = false;
     private bool switchingDialogue = false;
     private bool interacted = false;
-    private bool firstTransition = true;
     private bool startDashWalled = false;
     private bool dashing = false;
 
@@ -163,7 +163,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private IEnumerator TotalPostponer(bool pausing)
+    public IEnumerator TotalPostponer(bool pausing)
     {
         if (State == PlayerState.Attack && !pausing)
         {
@@ -649,7 +649,10 @@ public class Player : MonoBehaviour
 
     private void Interact()
     {
-        string[] chats = Interactable.Dialogue[Interactable.DialogueNums].Split(" | ");
+        if (!interacted)
+            Interactable.CheckDialogChanges();
+
+        string[] chats = Interactable.Dialogue[Interactable.DialogueNums].Split(" |");
         string chat = "";
         if (dialogueCounter < chats.Length)
         {
@@ -661,13 +664,12 @@ public class Player : MonoBehaviour
             //move down the dialogue box, set up picture + name, make it the right orrientation
             StartCoroutine(dialogue.MoveDialogue('D'));
             interacted = true;
+            dialogue.Cutscene = true;
             int x = Int32.Parse(chats[dialogueCounter].Split(" / ")[0]);
             dialogue.ResetSide();
             dialogue.FirstNameAndPicture(spriteList[x], nameList[x]);
             foreach (Enemy E in GameObject.FindObjectsOfType<Enemy>())
-            {
                 E.Pause();
-            }
         }
 
         if (skipBtnPressed)
@@ -683,7 +685,8 @@ public class Player : MonoBehaviour
                 {
                     dialogueCounter++;
                     int x = Int32.Parse(chats[dialogueCounter].Split(" / ")[0]);
-                    StartCoroutine(dialogue.SwitchDialogue(spriteList[x], nameList[x], this)); // SwitchDialogue(sprite, text, player);
+                    if (x != Int32.Parse(chats[dialogueCounter - 1].Split(" / ")[0]))
+                        StartCoroutine(dialogue.SwitchDialogue(spriteList[x], nameList[x], this)); // SwitchDialogue(sprite, text, player);
                     dialogue.Text.text = "";
                 }
                 else //interaction finished
@@ -694,16 +697,14 @@ public class Player : MonoBehaviour
                     interacted = false;
                     dialogueCounter = 0;
                     foreach (Enemy E in GameObject.FindObjectsOfType<Enemy>())
+                        E.UnPause();
+                    foreach (char item in Interactable.ImpactfulNums.ToCharArray())
                     {
-                        StartCoroutine(E.UnPause());
+                        if (Interactable.DialogueNums == Int32.Parse(item.ToString()))
+                            Interactable.DialogImpact();
                     }
                     if (Interactable.Dialogue.Count - 1 > Interactable.DialogueNums)
                         Interactable.DialogueNums++;
-                    foreach (char item in Interactable.ImpactfulNums.ToCharArray())
-                    {
-                        if (Interactable.DialogueNums == item)
-                            Interactable.DialogImpact(Int32.Parse(item.ToString()));
-                    }
                 }
                 switchingDialogue = false;
             }
@@ -766,7 +767,7 @@ public class Player : MonoBehaviour
     {
         if (((1 << collision.gameObject.layer) & transition) != 0 && transitioner != null) // if it's a transition collision
         {
-            if (!firstTransition)
+            if (!FirstTransition)
             {
                 StartCoroutine(WalkAnim(collision.gameObject.GetComponent<Transitioner>(), 1));
                 // output player into the correct location, and make them walk
@@ -789,7 +790,7 @@ public class Player : MonoBehaviour
 
     private IEnumerator WalkAnim(Transitioner t, int multiplier)
     {
-        bool fT = firstTransition;
+        bool fT = FirstTransition;
         if (fT)
             yield return new WaitForSeconds(0.4f);
         transitioning = true;
@@ -812,8 +813,8 @@ public class Player : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (((1 << collision.gameObject.layer) & transition) != 0 && transitioner != null) // if it's a transition collision
-            if (firstTransition)
-                firstTransition = false;
+            if (FirstTransition)
+                FirstTransition = false;
     }
 
     public IEnumerator Die()
@@ -825,6 +826,9 @@ public class Player : MonoBehaviour
         rb.velocity = Vector2.zero;
         GetComponent<SpriteRenderer>().enabled = false;
         deathAnim.Play("DeathAnim");
+        transitioning = true;
+        GM.Instance.Died = true;
+        StartCoroutine(transitioner.LoadLevel(0));
         yield return new WaitForSeconds(0.9f);
         GetComponent<SpriteRenderer>().enabled = true;
         State = PlayerState.Movement;

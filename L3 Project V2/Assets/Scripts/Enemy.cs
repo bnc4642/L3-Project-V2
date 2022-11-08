@@ -39,7 +39,6 @@ public class Enemy : MonoBehaviour
 
     public virtual void Init()
     {
-
         anim = GetComponent<Animator>();
         aiPath.target = GM.Instance.Player.transform;
     }
@@ -57,7 +56,6 @@ public class Enemy : MonoBehaviour
         int state = 0; 
         if (Time.time < lockedTill)
             return;
-
         if (Physics2D.OverlapCircle(transform.position, attackingRange, player) && Time.time > attackingTime)
         {
             state = ToAttack();
@@ -200,10 +198,10 @@ public class Enemy : MonoBehaviour
         anim.CrossFade(Animator.StringToHash("Idle"), 0, 0);
     }
 
-    public IEnumerator UnPause() // After interaction
+    public void UnPause() // After interaction
     {
-        yield return new WaitForSeconds(0.8f);
         GetComponentInParent<AIPath>().enabled = true;
         paused = false;
+        Debug.Log(paused);
     }
 }

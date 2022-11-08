@@ -100,6 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Tasks: []
   TaskCompletionPrefab: {fileID: 3627885054940151354, guid: 5ea62e9d38c0fc84b9d88a234724fda9, type: 3}
+  NewTaskPrefab: {fileID: 6831219231929600105, guid: 38a3728b6e86cdb40bc872e6ea078e06, type: 3}
 --- !u!114 &396251685661743586
 MonoBehaviour:
   m_ObjectHideFlags: 0

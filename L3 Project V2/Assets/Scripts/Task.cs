@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Task : MonoBehaviour
+public class Task
 {
     public string Title = "";
     public string Description = "";

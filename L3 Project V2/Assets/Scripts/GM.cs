@@ -31,6 +31,8 @@ public class GM : MonoBehaviour
 
     public bool InVentory = false;
 
+    public bool Died;
+
     void Awake()
     {
         Save = Interface.ReadFromJsonFile<Save>(Application.persistentDataPath + "/gamesave" + 0 + ".save");
@@ -43,6 +45,19 @@ public class GM : MonoBehaviour
 
     public void SpawnPlayer(List<Enemy> Enemies)
     {
+        if (Save.MajorInteractions == "")
+        {
+            Debug.Log("THissssss");
+            Player = Instantiate(playerPref, new Vector2(7.1f, -5.45f), Quaternion.Euler(0, 0, 0));
+            Player.GetComponent<Player>().SetLocalVariables();
+            Player.GetComponent<Player>().SetStates(5, 0);
+            Player.GetComponent<Player>().FirstTransition = false;
+            Player.GetComponent<Player>().Interactable = FindObjectOfType<Interactable>();
+            StartCoroutine(Player.GetComponent<Player>().TotalPostponer(false));
+            Save.MajorInteractions = "1";
+            return;
+        }
+
         Vector3 position = new Vector3();
         bool foundIt = false;
 
@@ -119,7 +134,6 @@ public class GM : MonoBehaviour
             Player = Instantiate(playerPref, position, Quaternion.Euler(0, 0, 0));
             Player.GetComponent<Player>().SetLocalVariables();
             Player.GetComponent<Player>().SetStates(health, energyLevel);
-
             //don't let player just fall back through bottom doors
         }
 
