@@ -5547,14 +5547,16 @@ MonoBehaviour:
 
     Dash: <lshift>
 
-    Heal: <a>
-
     Slam: <c>
+
+    Float: <a>
 
     Interact: <d>
 
     Pause:
-    <esc>'
+    <esc>
+
+    Heal: <s. >'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8bb6f28ea0de61041ac03fcc7f47dc8b, type: 2}
   m_sharedMaterial: {fileID: -549192594356050666, guid: 8bb6f28ea0de61041ac03fcc7f47dc8b, type: 2}
@@ -5890,10 +5892,11 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Made using Unity, Tiled and Aseprite.
 
+    Thanks goes out to Mr. Habberton,
+    and all the stack overflow users who did it wrong before me.
 
-    Thanks also goes out to Mr.
-    Habberton, and all of the youtuber and stack overflow users out there who did
-    it wrong before me.'
+    Font: CG pixel_4x5
+    by "vyznev"'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8bb6f28ea0de61041ac03fcc7f47dc8b, type: 2}
   m_sharedMaterial: {fileID: -549192594356050666, guid: 8bb6f28ea0de61041ac03fcc7f47dc8b, type: 2}
