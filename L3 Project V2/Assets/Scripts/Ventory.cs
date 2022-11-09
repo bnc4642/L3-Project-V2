@@ -30,7 +30,7 @@ public class Ventory : MonoBehaviour
     public Sprite[] BookSprites;
     public GameObject TaskObject;
 
-    private Vector2[] taskPosition = new Vector2[4] { new Vector2(0, 3), new Vector2(0, -297), new Vector2(480, 3), new Vector2(480, -297), };
+    private Vector2[] taskPosition = new Vector2[4] { new Vector2(-150f, -90), new Vector2(-150, 90), new Vector2(150, -90), new Vector2(150, -90) };
 
 
     private void Start()

@@ -32,7 +32,7 @@ public class Interface : MonoBehaviour
     public Sprite[] BookSprites;
     public GameObject TaskObject;
 
-    private Vector2[] taskPosition = new Vector2[4] { new Vector2(0, -66.8f), new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), };
+    private Vector2[] taskPosition = new Vector2[4] { new Vector2(-150, -175f), new Vector2(-150, 175), new Vector2(150, -175), new Vector2(150, 175) };
 
     public GameObject cP;
 

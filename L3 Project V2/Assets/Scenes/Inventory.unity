@@ -12204,6 +12204,10 @@ PrefabInstance:
       propertyPath: field of view
       value: 121
       objectReference: {fileID: 0}
+    - target: {fileID: 162620244888975924, guid: b136ff09536ab1a48a6a347833042cdd, type: 3}
+      propertyPath: orthographic size
+      value: 9.53
+      objectReference: {fileID: 0}
     - target: {fileID: 206426327340229837, guid: b136ff09536ab1a48a6a347833042cdd, type: 3}
       propertyPath: m_IsActive
       value: 0
